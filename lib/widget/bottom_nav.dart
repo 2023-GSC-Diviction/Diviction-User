@@ -1,3 +1,4 @@
+import 'package:diviction_user/screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,9 +36,7 @@ class BottomNavigation extends ConsumerWidget {
       ),
       body: SafeArea(
         child: [
-          Container(
-            color: Colors.black,
-          ),
+          HomeSceen(),
           Container(
             color: Colors.red,
           ),
@@ -62,7 +61,7 @@ class BottomNavigation extends ConsumerWidget {
                   Icons.home,
                   color: unSelected,
                 ),
-                label: 'home'),
+                label: ''),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.chat,
