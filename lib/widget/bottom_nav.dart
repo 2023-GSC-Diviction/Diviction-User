@@ -68,7 +68,7 @@ class BottomNavigation extends ConsumerWidget {
                   color: selected,
                 ),
                 activeIcon: Icon(
-                  Icons.home,
+                  Icons.chat,
                   color: unSelected,
                 ),
                 label: ''),
@@ -78,7 +78,7 @@ class BottomNavigation extends ConsumerWidget {
                   color: selected,
                 ),
                 activeIcon: Icon(
-                  Icons.home,
+                  Icons.article_rounded,
                   color: unSelected,
                 ),
                 label: ''),
@@ -88,7 +88,7 @@ class BottomNavigation extends ConsumerWidget {
                   color: selected,
                 ),
                 activeIcon: Icon(
-                  Icons.home,
+                  Icons.account_circle_rounded,
                   color: unSelected,
                 ),
                 label: ''),
