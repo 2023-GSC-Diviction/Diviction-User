@@ -1,4 +1,5 @@
 import 'package:diviction_user/screen/counselor_screen.dart';
+import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,7 @@ class BottomNavigation extends ConsumerWidget {
         child: [
           HomeSceen(),
           CounselorScreen(),
-          Container(
-            color: Colors.yellow,
-          ),
+          DayCheckScreen(),
           Container(
             color: Colors.blue,
           )
