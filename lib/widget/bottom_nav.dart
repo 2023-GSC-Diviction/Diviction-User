@@ -1,19 +1,13 @@
+import 'package:diviction_user/screen/counselor_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../provider/bottom_nav_provider.dart';
+
 final bottomNavProvider =
     StateNotifierProvider<BottomNavState, int>((ref) => BottomNavState());
-
-class BottomNavState extends StateNotifier<int> {
-  BottomNavState() : super(0);
-
-  @override
-  set state(int value) {
-    super.state = value;
-  }
-}
 
 class BottomNavigation extends ConsumerWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -25,21 +19,10 @@ class BottomNavigation extends ConsumerWidget {
     final currentPage = ref.watch(bottomNavProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
-        backgroundColor: Colors.white,
-        title: const Text(
-          'Diviction',
-          style: TextStyle(color: Colors.black54),
-        ),
-        elevation: 10,
-      ),
       body: SafeArea(
         child: [
           HomeSceen(),
-          Container(
-            color: Colors.red,
-          ),
+          CounselorScreen(),
           Container(
             color: Colors.yellow,
           ),
@@ -55,41 +38,41 @@ class BottomNavigation extends ConsumerWidget {
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
-                  color: selected,
+                  color: unSelected,
                 ),
                 activeIcon: Icon(
                   Icons.home,
-                  color: unSelected,
+                  color: selected,
                 ),
                 label: ''),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.chat,
-                  color: selected,
+                  color: unSelected,
                 ),
                 activeIcon: Icon(
                   Icons.chat,
-                  color: unSelected,
+                  color: selected,
                 ),
                 label: ''),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.article_rounded,
-                  color: selected,
+                  color: unSelected,
                 ),
                 activeIcon: Icon(
                   Icons.article_rounded,
-                  color: unSelected,
+                  color: selected,
                 ),
                 label: ''),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.account_circle_rounded,
-                  color: selected,
+                  color: unSelected,
                 ),
                 activeIcon: Icon(
                   Icons.account_circle_rounded,
-                  color: unSelected,
+                  color: selected,
                 ),
                 label: ''),
           ],
