@@ -1,3 +1,4 @@
+import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/widget/chat/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -24,8 +25,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget topBar() {
     return Container(
+      color: Colors.blue[100],
+      padding: EdgeInsets.all(20),
       child: Row(
-        children: [Text('@@@ 상담사님')],
+        children: [
+          Text(
+            '@@@ 상담사님',
+            style: TextStyles.mainTextStyle,
+          )
+        ],
       ),
     );
   }
@@ -40,14 +48,22 @@ class _ChatScreenState extends State<ChatScreen> {
             child: TextField(
               maxLines: null,
               controller: _controller,
-              decoration: InputDecoration(labelText: 'Send a message...'),
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.send),
+                  color: Colors.blue,
+                ),
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                      width: 1, color: Color.fromARGB(67, 28, 28, 28)),
+                ),
+                labelText: 'Send a message...',
+                enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(width: 1, color: Colors.blue)),
+              ),
               onChanged: (value) {},
             ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.send),
-            color: Colors.blue,
           ),
         ],
       ),

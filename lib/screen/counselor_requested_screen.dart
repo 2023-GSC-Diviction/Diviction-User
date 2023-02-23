@@ -1,7 +1,8 @@
-import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+
+import '../config/style.dart';
 
 class CounselorRequestedScreen extends StatefulWidget {
   const CounselorRequestedScreen({super.key});
@@ -28,8 +29,7 @@ class _CounselorScreenState extends State<CounselorRequestedScreen> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
-                child: Text('보낸 요청',
-                    style: Theme.of(context).textTheme.titleTextStyle),
+                child: Text('보낸 요청', style: TextStyles.titleTextStyle),
               ),
               counselorList()
             ],
@@ -72,12 +72,11 @@ class _CounselorScreenState extends State<CounselorRequestedScreen> {
                       Text.rich(
                         TextSpan(
                             text: '${counselorList[index]}님\n',
-                            style: Theme.of(context).textTheme.mainTextStyle,
+                            style: TextStyles.mainTextStyle,
                             children: <TextSpan>[
                               TextSpan(
                                 text: '@@상담센터',
-                                style:
-                                    Theme.of(context).textTheme.shadowTextStyle,
+                                style: TextStyles.shadowTextStyle,
                               )
                             ]),
                         textAlign: TextAlign.start,

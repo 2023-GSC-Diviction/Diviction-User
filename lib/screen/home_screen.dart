@@ -1,7 +1,7 @@
-import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../config/style.dart';
 import '../widget/appbar.dart';
 
 class HomeSceen extends StatefulWidget {
@@ -48,11 +48,9 @@ class _HomeSceenState extends State<HomeSceen> {
         child: Text.rich(
           TextSpan(
               text: '지난 참은 일수 \'13일\'\n',
-              style: Theme.of(context).textTheme.titleTextStyle,
+              style: TextStyles.titleTextStyle,
               children: <TextSpan>[
-                TextSpan(
-                    text: '잘 하고 있어요!',
-                    style: Theme.of(context).textTheme.titleTextStyle)
+                TextSpan(text: '잘 하고 있어요!', style: TextStyles.titleTextStyle)
               ]),
           textAlign: TextAlign.start,
         ));
@@ -64,7 +62,7 @@ class _HomeSceenState extends State<HomeSceen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('체크리스트', style: Theme.of(context).textTheme.mainTextStyle),
+        Text('체크리스트', style: TextStyles.mainTextStyle),
         ListView.builder(
             shrinkWrap: true,
             itemCount: list.length,

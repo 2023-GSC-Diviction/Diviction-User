@@ -1,3 +1,4 @@
+import 'package:diviction_user/screen/chat_screen.dart';
 import 'package:diviction_user/screen/counselor_screen.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
@@ -21,14 +22,8 @@ class BottomNavigation extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: [
-          HomeSceen(),
-          CounselorScreen(),
-          DayCheckScreen(),
-          Container(
-            color: Colors.blue,
-          )
-        ].elementAt(currentPage),
+        child: [HomeSceen(), CounselorScreen(), DayCheckScreen(), ChatScreen()]
+            .elementAt(currentPage),
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

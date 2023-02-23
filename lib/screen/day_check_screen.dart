@@ -17,8 +17,7 @@ class DayCheckScreen extends StatelessWidget {
         child: Stack(
           children: [
             Center(
-              child: Text('어제는 잘 참으셨나요?',
-                  style: Theme.of(context).textTheme.titleTextStyle),
+              child: Text('어제는 잘 참으셨나요?', style: TextStyles.titleTextStyle),
             ),
             Positioned(
                 bottom: 0,
@@ -48,7 +47,7 @@ class DayCheckScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
                 child: Text(data == true ? 'Yes 😁' : 'No 😂',
-                    style: Theme.of(context).textTheme.mainTextStyle))));
+                    style: TextStyles.mainTextStyle))));
   }
 
   saveData(bool data) async {
