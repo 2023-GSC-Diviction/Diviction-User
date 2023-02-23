@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widget/bottom_nav.dart';
+import 'bottom_nav.dart';
 
 class DayCheckScreen extends StatelessWidget {
   const DayCheckScreen({super.key});
@@ -27,58 +27,36 @@ class DayCheckScreen extends StatelessWidget {
             ),
             Positioned(
                 bottom: 0,
-                child: Container(
+                child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Row(
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                                onTap: () {
-                                  saveData(false);
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()),
-                                      (route) => false);
-                                },
-                                child: Container(
-                                    margin: EdgeInsets.all(20),
-                                    padding: EdgeInsets.all(20),
-                                    alignment: Alignment.center,
-                                    width: double.infinity,
-                                    child: const Text('No 😂',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600))))),
-                        Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                                onTap: () {
-                                  saveData(true);
-                                  Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BottomNavigation()),
-                                      (route) => false);
-                                },
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.all(20),
-                                    padding: EdgeInsets.all(20),
-                                    width: double.infinity,
-                                    child: const Text('Yes 😁',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600)))))
-                      ],
+                      children: [button(context, false), button(context, true)],
                     )))
           ],
         ));
+  }
+
+  Widget button(BuildContext context, bool data) {
+    return Flexible(
+        flex: 1,
+        child: GestureDetector(
+            onTap: () {
+              saveData(data);
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => BottomNavigation()),
+                  (route) => false);
+            },
+            child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
+                width: double.infinity,
+                child: Text(data == true ? 'Yes 😁' : 'No 😂',
+                    style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600)))));
   }
 
   saveData(bool data) async {

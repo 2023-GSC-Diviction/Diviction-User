@@ -1,5 +1,5 @@
 import 'package:diviction_user/screen/splash_screen.dart';
-import 'package:diviction_user/widget/bottom_nav.dart';
+import 'package:diviction_user/screen/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
