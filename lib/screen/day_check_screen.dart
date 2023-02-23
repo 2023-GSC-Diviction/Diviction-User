@@ -1,4 +1,4 @@
-import 'package:diviction_user/widget/style.dart';
+import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';

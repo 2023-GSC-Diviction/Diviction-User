@@ -1,4 +1,4 @@
-import 'package:diviction_user/widget/style.dart';
+import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -12,7 +12,6 @@ class HomeSceen extends StatefulWidget {
 }
 
 class _HomeSceenState extends State<HomeSceen> {
-  ColorStyles _colorStyles = ColorStyles();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +64,7 @@ class _HomeSceenState extends State<HomeSceen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('체크리스트', style: Theme.of(context).textTheme.titleTextStyle),
+        Text('체크리스트', style: Theme.of(context).textTheme.mainTextStyle),
         ListView.builder(
             shrinkWrap: true,
             itemCount: list.length,
@@ -79,7 +78,7 @@ class _HomeSceenState extends State<HomeSceen> {
                       }),
                   Text(list[index],
                       style: TextStyle(
-                          fontSize: 16, color: _colorStyles.mainTextColor)),
+                          fontSize: 16, color: Palette.mainTextColor)),
                 ],
               );
             })

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 extension TextStyles on TextTheme {
@@ -24,6 +22,6 @@ extension TextStyles on TextTheme {
       color: Color.fromRGBO(82, 82, 82, 0.644));
 }
 
-class ColorStyles {
-  Color get mainTextColor => const Color.fromRGBO(51, 51, 51, 1);
+class Palette {
+  static const Color mainTextColor = Color.fromRGBO(51, 51, 51, 1);
 }
