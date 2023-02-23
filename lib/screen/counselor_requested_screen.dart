@@ -1,3 +1,4 @@
+import 'package:diviction_user/widget/counselor_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -14,6 +15,18 @@ class CounselorRequestedScreen extends StatefulWidget {
 class _CounselorScreenState extends State<CounselorRequestedScreen> {
   @override
   Widget build(BuildContext context) {
+    List<String> counselorList = [
+      '수딩',
+      '혜진',
+      '우중',
+      '주원',
+      '태영',
+      '수딩',
+      '혜진',
+      '우중',
+      '주원',
+      '태영'
+    ];
     return Scaffold(
         appBar: AppBar(
             leading: IconButton(
@@ -27,62 +40,13 @@ class _CounselorScreenState extends State<CounselorRequestedScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text('보낸 요청', style: TextStyles.titleTextStyle),
               ),
-              counselorList()
+              Expanded(child: CounselorList(counselorList: counselorList))
             ],
           ),
         ));
-  }
-
-  Widget counselorList() {
-    List<String> counselorList = [
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영',
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영'
-    ];
-    return Expanded(
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: counselorList.length,
-            itemBuilder: (context, index) {
-              return Container(
-                  margin: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: const Icon(
-                          Icons.person,
-                          size: 50,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text.rich(
-                        TextSpan(
-                            text: '${counselorList[index]}님\n',
-                            style: TextStyles.mainTextStyle,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '@@상담센터',
-                                style: TextStyles.shadowTextStyle,
-                              )
-                            ]),
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
-                  ));
-            }));
   }
 }

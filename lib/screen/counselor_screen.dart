@@ -1,5 +1,6 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/screen/counselor_requested_screen.dart';
+import 'package:diviction_user/widget/counselor_list.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,27 +18,37 @@ class _CounselorScreenState extends State<CounselorScreen>
   late TabController _tabController;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<String> counselorList = [
+      '수딩',
+      '혜진',
+      '우중',
+      '주원',
+      '태영',
+      '수딩',
+      '혜진',
+      '우중',
+      '주원',
+      '태영'
+    ];
     return Stack(children: [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text('상담사 찾기',
-                  style: Theme.of(context).textTheme.titleTextStyle),
+              child: Text('상담사 찾기', style: TextStyles.titleTextStyle),
             ),
             searchBar(),
             optionButton(),
-            counselorList()
+            Expanded(child: CounselorList(counselorList: counselorList))
           ],
         ),
       ),
@@ -107,57 +118,6 @@ class _CounselorScreenState extends State<CounselorScreen>
     );
   }
 
-  Widget counselorList() {
-    List<String> counselorList = [
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영',
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영'
-    ];
-    return Expanded(
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: counselorList.length,
-            padding: const EdgeInsets.only(bottom: 40, top: 20),
-            itemBuilder: (context, index) {
-              return Container(
-                  margin: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: const Icon(
-                          Icons.person,
-                          size: 50,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text.rich(
-                        TextSpan(
-                            text: '${counselorList[index]}님\n',
-                            style: Theme.of(context).textTheme.mainTextStyle,
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: '@@상담센터',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .shadowTextStyle),
-                            ]),
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
-                  ));
-            }));
-  }
-
   Widget bottomBar() {
     return InkWell(
         onTap: () {
@@ -179,8 +139,7 @@ class _CounselorScreenState extends State<CounselorScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text('내가 한 요청 보기',
-                    style: Theme.of(context).textTheme.bottomTextStyle),
+                Text('내가 한 요청 보기', style: TextStyles.bottomTextStyle),
                 const Icon(Icons.arrow_right_sharp)
               ],
             )));
@@ -195,10 +154,22 @@ class _CounselorScreenState extends State<CounselorScreen>
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15.0),
                 topRight: Radius.circular(15.0))),
-        builder: (BuildContext context) => optionWidget());
+        builder: (BuildContext context) => OptionBottomSheet(
+              tabIndex: option,
+              tabController: _tabController,
+            ));
   }
+}
 
-  Widget optionWidget() {
+class OptionBottomSheet extends StatelessWidget {
+  const OptionBottomSheet(
+      {required this.tabIndex, required this.tabController, super.key});
+
+  final int tabIndex;
+  final TabController tabController;
+
+  @override
+  Widget build(BuildContext context) {
     List<String> regions = [
       '전국',
       '서울',
@@ -231,8 +202,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                   text: '지역',
                 )
               ],
-              onTap: (value) => _tabController.animateTo(value),
-              controller: _tabController,
+              onTap: (value) => tabController.animateTo(value),
+              controller: tabController,
               labelColor: Colors.blue[300],
               unselectedLabelColor: Colors.black54,
               labelStyle:
@@ -240,7 +211,7 @@ class _CounselorScreenState extends State<CounselorScreen>
         ),
         SizedBox(
             height: 600,
-            child: TabBarView(controller: _tabController, children: [
+            child: TabBarView(controller: tabController, children: [
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: drugTypes.length,
