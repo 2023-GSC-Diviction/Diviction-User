@@ -1,5 +1,5 @@
 import 'package:diviction_user/screen/day_check_screen.dart';
-import 'package:diviction_user/widget/bottom_nav.dart';
+import 'package:diviction_user/screen/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,15 +12,14 @@ class SplashScreen extends StatelessWidget {
 
     Future.delayed(const Duration(milliseconds: 1000), () async {
       final SharedPreferences pref = await SharedPreferences.getInstance();
-      if (pref.getBool(today) == null) {
+      bool? result = pref.getBool(today);
+      if (context.mounted) {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const DayCheckScreen()),
-            (route) => false);
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const BottomNavigation()),
+            MaterialPageRoute(
+                builder: (context) => result == null
+                    ? const DayCheckScreen()
+                    : const BottomNavigation()),
             (route) => false);
       }
     });

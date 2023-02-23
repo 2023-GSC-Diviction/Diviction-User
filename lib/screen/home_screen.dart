@@ -1,8 +1,8 @@
+import 'package:diviction_user/widget/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../widget/appbar.dart';
 
 class HomeSceen extends StatefulWidget {
   const HomeSceen({super.key});
@@ -12,9 +12,11 @@ class HomeSceen extends StatefulWidget {
 }
 
 class _HomeSceenState extends State<HomeSceen> {
+  ColorStyles _colorStyles = ColorStyles();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: const MyAppbar(),
         backgroundColor: Colors.white,
         body: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -22,11 +24,11 @@ class _HomeSceenState extends State<HomeSceen> {
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
                     recordText(),
-                    calendarWidget(),
+                    CalendarWidget(),
                     checkList(),
                     InkWell(
                         child: Container(
@@ -43,34 +45,18 @@ class _HomeSceenState extends State<HomeSceen> {
   Widget recordText() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-        child: const Text.rich(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Text.rich(
           TextSpan(
               text: '지난 참은 일수 \'13일\'\n',
-              style: TextStyle(
-                  fontSize: 22,
-                  color: Color.fromRGBO(51, 51, 51, 1),
-                  height: 1.4,
-                  letterSpacing: 0.02,
-                  fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleTextStyle,
               children: <TextSpan>[
                 TextSpan(
                     text: '잘 하고 있어요!',
-                    style: TextStyle(
-                        fontSize: 22,
-                        letterSpacing: 0.04,
-                        color: Color.fromRGBO(51, 51, 51, 1),
-                        fontWeight: FontWeight.w800))
+                    style: Theme.of(context).textTheme.titleTextStyle)
               ]),
           textAlign: TextAlign.start,
         ));
-  }
-
-  Widget calendarWidget() {
-    return TableCalendar(
-        focusedDay: DateTime.now(),
-        firstDay: DateTime.utc(2023, 1, 1),
-        lastDay: DateTime.utc(2023, 12, 31));
   }
 
   Widget checkList() {
@@ -79,11 +65,7 @@ class _HomeSceenState extends State<HomeSceen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('체크리스트',
-            style: TextStyle(
-                fontSize: 22,
-                color: Color.fromRGBO(51, 51, 51, 1),
-                fontWeight: FontWeight.w800)),
+        Text('체크리스트', style: Theme.of(context).textTheme.titleTextStyle),
         ListView.builder(
             shrinkWrap: true,
             itemCount: list.length,
@@ -97,11 +79,23 @@ class _HomeSceenState extends State<HomeSceen> {
                       }),
                   Text(list[index],
                       style: TextStyle(
-                          fontSize: 16, color: Color.fromRGBO(51, 51, 51, 1))),
+                          fontSize: 16, color: _colorStyles.mainTextColor)),
                 ],
               );
             })
       ],
     );
+  }
+}
+
+class CalendarWidget extends StatelessWidget {
+  const CalendarWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCalendar(
+        focusedDay: DateTime.now(),
+        firstDay: DateTime.utc(2023, 1, 1),
+        lastDay: DateTime.utc(2023, 12, 31));
   }
 }

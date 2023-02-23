@@ -1,3 +1,4 @@
+import 'package:diviction_user/widget/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -15,15 +16,9 @@ class DayCheckScreen extends StatelessWidget {
         color: Colors.white,
         child: Stack(
           children: [
-            const Center(
-              child: Text(
-                '어제는 잘 참으셨나요?',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+            Center(
+              child: Text('어제는 잘 참으셨나요?',
+                  style: Theme.of(context).textTheme.titleTextStyle),
             ),
             Positioned(
                 bottom: 0,
@@ -53,10 +48,7 @@ class DayCheckScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
                 child: Text(data == true ? 'Yes 😁' : 'No 😂',
-                    style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600)))));
+                    style: Theme.of(context).textTheme.mainTextStyle))));
   }
 
   saveData(bool data) async {

@@ -1,4 +1,5 @@
 import 'package:diviction_user/screen/counselor_requested_screen.dart';
+import 'package:diviction_user/widget/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -28,13 +29,10 @@ class _CounselorScreenState extends State<CounselorScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text('상담사 찾기',
-                  style: TextStyle(
-                      fontSize: 22,
-                      color: Color.fromRGBO(51, 51, 51, 1),
-                      fontWeight: FontWeight.w800)),
+                  style: Theme.of(context).textTheme.titleTextStyle),
             ),
             searchBar(),
             optionButton(),
@@ -54,15 +52,15 @@ class _CounselorScreenState extends State<CounselorScreen>
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
-              borderSide:
-                  BorderSide(width: 1, color: Color.fromARGB(67, 28, 28, 28))),
-          contentPadding: EdgeInsets.all(0),
+              borderSide: const BorderSide(
+                  width: 1, color: Color.fromARGB(67, 28, 28, 28))),
+          contentPadding: const EdgeInsets.all(0),
           hintText: '#태그',
           border: OutlineInputBorder(
-              borderSide:
-                  BorderSide(width: 1, color: Color.fromARGB(67, 28, 28, 28)),
+              borderSide: const BorderSide(
+                  width: 1, color: Color.fromARGB(67, 28, 28, 28)),
               borderRadius: BorderRadius.circular(40)),
-          prefixIcon: Padding(
+          prefixIcon: const Padding(
               padding: EdgeInsets.only(left: 13), child: Icon(Icons.search))),
     );
   }
@@ -73,33 +71,33 @@ class _CounselorScreenState extends State<CounselorScreen>
       children: [
         OutlinedButton(
             style: OutlinedButton.styleFrom(
-                side:
-                    BorderSide(width: 1, color: Color.fromARGB(67, 28, 28, 28)),
+                side: const BorderSide(
+                    width: 1, color: Color.fromARGB(67, 28, 28, 28)),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18))),
             onPressed: () {
               optionSheet(0);
             },
             child: Row(
-              children: [
+              children: const [
                 Text('종류', style: TextStyle(color: Colors.black87)),
                 Icon(Icons.arrow_drop_down, color: Colors.black87)
               ],
             )),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         OutlinedButton(
             style: OutlinedButton.styleFrom(
-                side:
-                    BorderSide(width: 1, color: Color.fromARGB(67, 28, 28, 28)),
+                side: const BorderSide(
+                    width: 1, color: Color.fromARGB(67, 28, 28, 28)),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18))),
             onPressed: () {
               optionSheet(1);
             },
             child: Row(
-              children: [
+              children: const [
                 Text('지역', style: TextStyle(color: Colors.black87)),
                 Icon(Icons.arrow_drop_down, color: Colors.black87)
               ],
@@ -125,10 +123,10 @@ class _CounselorScreenState extends State<CounselorScreen>
         child: ListView.builder(
             shrinkWrap: true,
             itemCount: counselorList.length,
-            padding: EdgeInsets.only(bottom: 40, top: 20),
+            padding: const EdgeInsets.only(bottom: 40, top: 20),
             itemBuilder: (context, index) {
               return Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   child: Row(
                     children: [
                       ClipRRect(
@@ -144,18 +142,13 @@ class _CounselorScreenState extends State<CounselorScreen>
                       Text.rich(
                         TextSpan(
                             text: '${counselorList[index]}님\n',
-                            style: const TextStyle(
-                                fontSize: 18,
-                                color: Color.fromRGBO(51, 51, 51, 1),
-                                fontWeight: FontWeight.w800),
+                            style: Theme.of(context).textTheme.mainTextStyle,
                             children: <TextSpan>[
                               TextSpan(
                                   text: '@@상담센터',
-                                  style: const TextStyle(
-                                    letterSpacing: 0.04,
-                                    fontSize: 14,
-                                    color: Color.fromRGBO(82, 82, 82, 0.644),
-                                  ))
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .shadowTextStyle),
                             ]),
                         textAlign: TextAlign.start,
                       ),
@@ -170,10 +163,10 @@ class _CounselorScreenState extends State<CounselorScreen>
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CounselorRequestedScreen()));
+                  builder: (context) => const CounselorRequestedScreen()));
         },
         child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               border: Border.symmetric(
                   horizontal:
@@ -184,13 +177,10 @@ class _CounselorScreenState extends State<CounselorScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
-              children: const [
+              children: [
                 Text('내가 한 요청 보기',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Color.fromRGBO(51, 51, 51, 1),
-                        fontWeight: FontWeight.w600)),
-                Icon(Icons.arrow_right_sharp)
+                    style: Theme.of(context).textTheme.bottomTextStyle),
+                const Icon(Icons.arrow_right_sharp)
               ],
             )));
   }
@@ -229,7 +219,7 @@ class _CounselorScreenState extends State<CounselorScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          margin: EdgeInsets.only(left: 20, top: 10),
+          margin: const EdgeInsets.only(left: 20, top: 10),
           width: 130,
           child: TabBar(
               tabs: const [
@@ -268,15 +258,15 @@ class _CounselorScreenState extends State<CounselorScreen>
                               null,
                               0.4),
                         ), //
-                        margin: EdgeInsets.only(bottom: 13),
-                        padding: EdgeInsets.only(bottom: 13),
+                        margin: const EdgeInsets.only(bottom: 13),
+                        padding: const EdgeInsets.only(bottom: 13),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
                               drugTypes[index],
-                              style: TextStyle(fontSize: 17),
+                              style: const TextStyle(fontSize: 17),
                             ),
                           ],
                         ));
@@ -299,17 +289,17 @@ class _CounselorScreenState extends State<CounselorScreen>
                               null,
                               0.4),
                         ), //
-                        margin: EdgeInsets.only(bottom: 13),
-                        padding: EdgeInsets.only(bottom: 13),
+                        margin: const EdgeInsets.only(bottom: 13),
+                        padding: const EdgeInsets.only(bottom: 13),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Text(
                               regions[index],
-                              style: TextStyle(fontSize: 17),
+                              style: const TextStyle(fontSize: 17),
                             ),
-                            Icon(Icons.arrow_drop_down_outlined)
+                            const Icon(Icons.arrow_drop_down_outlined)
                           ],
                         ));
                   }),

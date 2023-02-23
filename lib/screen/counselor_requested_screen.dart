@@ -1,3 +1,4 @@
+import 'package:diviction_user/widget/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -25,13 +26,10 @@ class _CounselorScreenState extends State<CounselorRequestedScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text('보낸 요청',
-                    style: TextStyle(
-                        fontSize: 30,
-                        color: Color.fromRGBO(51, 51, 51, 1),
-                        fontWeight: FontWeight.w800)),
+                    style: Theme.of(context).textTheme.titleTextStyle),
               ),
               counselorList()
             ],
@@ -74,18 +72,13 @@ class _CounselorScreenState extends State<CounselorRequestedScreen> {
                       Text.rich(
                         TextSpan(
                             text: '${counselorList[index]}님\n',
-                            style: const TextStyle(
-                                fontSize: 18,
-                                color: Color.fromRGBO(51, 51, 51, 1),
-                                fontWeight: FontWeight.w800),
+                            style: Theme.of(context).textTheme.mainTextStyle,
                             children: <TextSpan>[
                               TextSpan(
-                                  text: '@@상담센터',
-                                  style: const TextStyle(
-                                    letterSpacing: 0.04,
-                                    fontSize: 14,
-                                    color: Color.fromRGBO(82, 82, 82, 0.644),
-                                  ))
+                                text: '@@상담센터',
+                                style:
+                                    Theme.of(context).textTheme.shadowTextStyle,
+                              )
                             ]),
                         textAlign: TextAlign.start,
                       ),
