@@ -3,6 +3,7 @@ import 'package:diviction_user/widget/chat/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -13,12 +14,14 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
+  bool isChoosedPicture = false;
+  String path = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [topBar(), Expanded(child: Messages()), sendMesssage()],
+        children: [topBar(), const Expanded(child: Messages()), sendMesssage()],
       ),
     );
   }
@@ -26,10 +29,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget topBar() {
     return Container(
       color: Colors.blue[100],
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          Text(
+          const Text(
             '@@@ 상담사님',
             style: TextStyles.mainTextStyle,
           )
@@ -40,10 +43,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget sendMesssage() {
     return Container(
-      margin: EdgeInsets.only(top: 8),
-      padding: EdgeInsets.all(8),
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
+          IconButton(
+            onPressed: onProfileImagePressed,
+            icon: const Icon(Icons.attach_file),
+            color: Colors.blue,
+          ),
           Expanded(
             child: TextField(
               maxLines: null,
@@ -51,16 +59,16 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   color: Colors.blue,
                 ),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(
                       width: 1, color: Color.fromARGB(67, 28, 28, 28)),
                 ),
                 labelText: 'Send a message...',
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(width: 1, color: Colors.blue)),
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.blue)),
               ),
               onChanged: (value) {},
             ),
@@ -68,5 +76,24 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
+  }
+
+  onProfileImagePressed() async {
+    print("onProfileImagePressed 실행완료");
+
+    final picker = ImagePicker();
+    try {
+      final image = await picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        setState(() {
+          isChoosedPicture = true;
+          path = image.path;
+        });
+      }
+      print(image);
+    } catch (e) {
+      print(e);
+    }
   }
 }
