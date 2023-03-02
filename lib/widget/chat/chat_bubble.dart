@@ -2,6 +2,8 @@ import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 
+import '../profile_image.dart';
+
 class ChatBubbles extends StatelessWidget {
   const ChatBubbles(this.message, this.isMe, this.userName, {Key? key})
       : super(key: key);
@@ -28,45 +30,43 @@ class ChatBubbles extends StatelessWidget {
                 ),
                 child: Text(
                   message,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyles.blueBottonTextStyle,
                 ),
               ),
             ),
           ),
         if (!isMe)
-          Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            ProfileImage(
+              onProfileImagePressed: () {},
+              isChoosedPicture: false,
+              path: null,
+              type: 1,
+              imageSize: 30,
+            ),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(userName, style: TextStyles.chatNicknameTextStyle),
+              ChatBubble(
+                clipper: ChatBubbleClipper8(type: BubbleType.receiverBubble),
+                backGroundColor: Palette.chatGrayColor,
+                margin: const EdgeInsets.only(top: 10),
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.7,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        message,
+                        style: TextStyles.chatNotMeBubbleTextStyle,
                       ),
-                    ),
-                    ChatBubble(
-                      clipper:
-                          ChatBubbleClipper8(type: BubbleType.receiverBubble),
-                      backGroundColor: Palette.chatGrayColor,
-                      margin: const EdgeInsets.only(top: 10),
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.7,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              message,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ]))
+                    ],
+                  ),
+                ),
+              ),
+            ])
+          ]),
       ],
     );
   }
