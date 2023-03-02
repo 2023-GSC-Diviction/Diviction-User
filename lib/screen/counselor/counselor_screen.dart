@@ -85,7 +85,7 @@ class _CounselorScreenState extends State<CounselorScreen> {
                   color: Colors.white,
                   border: Border.symmetric(
                       horizontal: BorderSide(
-                          width: 1, color: Color.fromARGB(10, 0, 0, 0))),
+                          width: 1, color: Palette.bottomBoxBorderColor)),
                 ),
                 padding: const EdgeInsets.all(12),
                 width: MediaQuery.of(context).size.width,
@@ -93,7 +93,7 @@ class _CounselorScreenState extends State<CounselorScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(_selectedIndex == 1 ? '내가 한 요청 보기' : '상담사 찾기',
+                    Text(_selectedIndex == 0 ? '내가 한 요청 보기' : '상담사 찾기',
                         style: TextStyles.bottomTextStyle),
                     Icon(_selectedIndex == 0
                         ? Icons.arrow_right_sharp

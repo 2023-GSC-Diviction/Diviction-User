@@ -47,6 +47,9 @@ class _CounselorScreenState extends State<FindCounselorScreen>
               child: Text('상담사 찾기', style: TextStyles.titleTextStyle),
             ),
             searchBar(),
+            SizedBox(
+              height: 10,
+            ),
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               optionButton(0),
               const SizedBox(
@@ -66,8 +69,8 @@ class _CounselorScreenState extends State<FindCounselorScreen>
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
-              borderSide: const BorderSide(
-                  width: 1, color: Color.fromARGB(67, 28, 28, 28))),
+              borderSide:
+                  const BorderSide(width: 1, color: Palette.borderColor)),
           contentPadding: const EdgeInsets.all(0),
           hintText: '#태그',
           border: OutlineInputBorder(
@@ -82,8 +85,7 @@ class _CounselorScreenState extends State<FindCounselorScreen>
   Widget optionButton(int type) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
-            side: const BorderSide(
-                width: 1, color: Color.fromARGB(67, 28, 28, 28)),
+            side: const BorderSide(width: 1, color: Palette.borderColor),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18))),
         onPressed: () {
@@ -163,7 +165,7 @@ class OptionBottomSheet extends StatelessWidget {
                   const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
         ),
         SizedBox(
-            height: 600,
+            height: MediaQuery.of(context).size.height * 0.6,
             child: TabBarView(controller: tabController, children: [
               optionList(drugTypes),
               optionList(regions),
