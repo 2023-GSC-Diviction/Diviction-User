@@ -24,6 +24,10 @@ class TextStyles {
       letterSpacing: 0.04,
       fontSize: 14,
       color: Color.fromRGBO(255, 255, 255, 1));
+  static const TextStyle chatNicknameTextStyle =
+      TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600);
+  static const TextStyle chatNotMeBubbleTextStyle =
+      TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400);
 }
 
 class Palette {
