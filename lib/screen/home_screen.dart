@@ -27,14 +27,17 @@ class _HomeSceenState extends State<HomeSceen> {
                 child: Column(
                   children: [
                     recordText(),
-                    CalendarWidget(),
+                    const CalendarWidget(),
                     checkList(),
-                    InkWell(
-                        child: Container(
-                      width: double.infinity,
-                      child: Image.asset(
-                          'assets/icons/psychological_test_icon.png'),
-                    ))
+                    TestButton(
+                      type: 0,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TestButton(
+                      type: 1,
+                    )
                   ],
                 ),
               ),
@@ -45,7 +48,7 @@ class _HomeSceenState extends State<HomeSceen> {
     return Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Text.rich(
+        child: const Text.rich(
           TextSpan(
               text: '지난 참은 일수 \'13일\'\n',
               style: TextStyles.titleTextStyle,
@@ -76,11 +79,52 @@ class _HomeSceenState extends State<HomeSceen> {
                           checkBoxList[checkBoxList.indexOf(e)] = value!;
                         }),
                     Text(list[checkBoxList.indexOf(e)],
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, color: Palette.mainTextColor)),
                   ],
                 ))
             .toList());
+  }
+}
+
+class TestButton extends StatelessWidget {
+  TestButton({required this.type, super.key});
+
+  int type;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => CounselorDetailScreen()));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Palette.borderColor)),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          width: double.infinity,
+          child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(type == 0 ? 'psychological Test' : 'self-diagnosis Test',
+                    style: const TextStyle(
+                        fontSize: 16, color: Palette.mainTextColor)),
+                ClipOval(
+                    child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/icons/psychological_icon.png'),
+                                fit: BoxFit.cover)))),
+              ]),
+        ));
   }
 }
 
