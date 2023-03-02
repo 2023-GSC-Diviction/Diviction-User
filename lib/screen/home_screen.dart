@@ -81,25 +81,6 @@ class _HomeSceenState extends State<HomeSceen> {
                   ],
                 ))
             .toList());
-    //     ListView.builder(
-    //         shrinkWrap: true,
-    //         itemCount: list.length,
-    //         itemBuilder: (context, index) {
-    //           return Row(
-    //             children: [
-    //               Checkbox(
-    //                   value: checkBoxList[index],
-    //                   onChanged: (value) {
-    //                     checkBoxList[index] = value!;
-    //                   }),
-    //               Text(list[index],
-    //                   style: TextStyle(
-    //                       fontSize: 16, color: Palette.mainTextColor)),
-    //             ],
-    //           );
-    //         })
-    //   ],
-    // );
   }
 }
 

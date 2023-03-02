@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
 import '../config/style.dart';
 
 class CounselorList extends StatelessWidget {
@@ -18,7 +14,7 @@ class CounselorList extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 40, top: 20),
         itemBuilder: (context, index) {
           return Container(
-              margin: const EdgeInsets.all(10),
+              margin: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 children: [
                   ClipRRect(

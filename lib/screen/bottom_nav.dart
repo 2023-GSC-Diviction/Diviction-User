@@ -1,5 +1,5 @@
 import 'package:diviction_user/screen/chat_screen.dart';
-import 'package:diviction_user/screen/counselor_screen.dart';
+import 'package:diviction_user/screen/counselor/counselor_screen.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
