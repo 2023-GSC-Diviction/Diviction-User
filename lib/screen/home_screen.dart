@@ -57,31 +57,49 @@ class _HomeSceenState extends State<HomeSceen> {
   }
 
   Widget checkList() {
-    List<bool> checkBoxList = [false, true, false];
-    List<String> list = ['한시간 이상 운동하기', '물 많이 마시기', '약 챙겨먹기'];
+    List<bool> checkBoxList = [false, true, false, true, false];
+    List<String> list = [
+      '한시간 이상 운동하기',
+      '물 많이 마시기',
+      '약 챙겨먹기',
+      '물 많이 마시기',
+      '약 챙겨먹기'
+    ];
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('체크리스트', style: TextStyles.mainTextStyle),
-        ListView.builder(
-            shrinkWrap: true,
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  Checkbox(
-                      value: checkBoxList[index],
-                      onChanged: (value) {
-                        checkBoxList[index] = value!;
-                      }),
-                  Text(list[index],
-                      style: TextStyle(
-                          fontSize: 16, color: Palette.mainTextColor)),
-                ],
-              );
-            })
-      ],
-    );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: checkBoxList
+            .map((e) => Row(
+                  children: [
+                    Checkbox(
+                        value: e,
+                        onChanged: (value) {
+                          checkBoxList[checkBoxList.indexOf(e)] = value!;
+                        }),
+                    Text(list[checkBoxList.indexOf(e)],
+                        style: TextStyle(
+                            fontSize: 16, color: Palette.mainTextColor)),
+                  ],
+                ))
+            .toList());
+    //     ListView.builder(
+    //         shrinkWrap: true,
+    //         itemCount: list.length,
+    //         itemBuilder: (context, index) {
+    //           return Row(
+    //             children: [
+    //               Checkbox(
+    //                   value: checkBoxList[index],
+    //                   onChanged: (value) {
+    //                     checkBoxList[index] = value!;
+    //                   }),
+    //               Text(list[index],
+    //                   style: TextStyle(
+    //                       fontSize: 16, color: Palette.mainTextColor)),
+    //             ],
+    //           );
+    //         })
+    //   ],
+    // );
   }
 }
 
