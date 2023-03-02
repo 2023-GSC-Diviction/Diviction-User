@@ -1,3 +1,4 @@
+import 'package:diviction_user/screen/chat_screen.dart';
 import 'package:diviction_user/widget/profile_image.dart';
 import 'package:flutter/material.dart';
 import '../config/style.dart';
@@ -57,18 +58,25 @@ class CounselorList extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    width: 100,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Center(
-                      child:
-                          Text('문의하기', style: TextStyles.blueBottonTextStyle),
-                    ),
-                  )
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatScreen()));
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Center(
+                          child: Text('문의하기',
+                              style: TextStyles.blueBottonTextStyle),
+                        ),
+                      ))
                 ],
               ));
         });
