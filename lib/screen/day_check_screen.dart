@@ -17,7 +17,7 @@ class DayCheckScreen extends StatelessWidget {
         child: Stack(
           children: [
             Center(
-              child: Text('어제는 잘 참으셨나요?', style: TextStyles.titleTextStyle),
+              child: Text('Success?', style: TextStyles.titleTextStyle),
             ),
             Positioned(
                 bottom: 0,

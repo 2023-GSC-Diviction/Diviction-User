@@ -17,31 +17,47 @@ class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
   bool isChoosedPicture = false;
   String path = '';
+  final sendBoxSize = 55.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppbar(
+        appBar: const MyAppbar(
           isMain: false,
         ),
         extendBodyBehindAppBar: false,
         body: Container(
-          child: Column(
-            children: [const Expanded(child: Messages()), sendMesssage()],
-          ),
-        ));
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            child: Column(
+              children: [const Expanded(child: Messages()), sendMesssage()],
+            )));
   }
 
   Widget sendMesssage() {
     return Container(
-      margin: const EdgeInsets.only(top: 8, bottom: 10),
-      padding: const EdgeInsets.all(8),
+      height: sendBoxSize,
+      margin: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          IconButton(
-            onPressed: onProfileImagePressed,
-            icon: const Icon(Icons.attach_file),
-            color: Colors.blue,
+          Container(
+            width: sendBoxSize,
+            height: sendBoxSize,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: Colors.blue,
+            ),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: onSendImagePressed,
+              icon: const Icon(Icons.attach_file),
+              color: Colors.white,
+              iconSize: 25,
+            ),
+          ),
+          SizedBox(
+            width: 10,
           ),
           Expanded(
             child: TextField(
@@ -69,9 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  onProfileImagePressed() async {
-    print("onProfileImagePressed 실행완료");
-
+  onSendImagePressed() async {
     final picker = ImagePicker();
     try {
       final image = await picker.pickImage(source: ImageSource.gallery);

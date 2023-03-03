@@ -1,4 +1,5 @@
 import 'package:diviction_user/config/style.dart';
+import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 
@@ -19,7 +20,7 @@ class ChatBubbles extends StatelessWidget {
       children: [
         if (isMe)
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 16, 20),
+            padding: const EdgeInsets.only(bottom: 20),
             child: ChatBubble(
               clipper: ChatBubbleClipper8(type: BubbleType.sendBubble),
               alignment: Alignment.topRight,
@@ -38,14 +39,17 @@ class ChatBubbles extends StatelessWidget {
         if (!isMe)
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             ProfileImage(
-              onProfileImagePressed: () {},
+              onProfileImagePressed: () => onProfilePressed(context),
               isChoosedPicture: false,
               path: null,
               type: 1,
               imageSize: 30,
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(userName, style: TextStyles.chatNicknameTextStyle),
+              GestureDetector(
+                  onTap: () => onProfilePressed(context),
+                  child:
+                      Text(userName, style: TextStyles.chatNicknameTextStyle)),
               ChatBubble(
                 clipper: ChatBubbleClipper8(type: BubbleType.receiverBubble),
                 backGroundColor: Palette.chatGrayColor,
@@ -69,5 +73,10 @@ class ChatBubbles extends StatelessWidget {
           ]),
       ],
     );
+  }
+
+  onProfilePressed(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => DayCheckScreen()));
   }
 }

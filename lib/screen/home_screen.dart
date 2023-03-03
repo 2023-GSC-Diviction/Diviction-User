@@ -52,7 +52,7 @@ class _HomeSceenState extends State<HomeSceen> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: const Text.rich(
           TextSpan(
-              text: '지난 참은 일수 \'13일\'\n',
+              text: '이번달 참은 일 수 \'13일\'\n',
               style: TextStyles.titleTextStyle,
               children: <TextSpan>[
                 TextSpan(text: '잘 하고 있어요!', style: TextStyles.titleTextStyle)
@@ -135,9 +135,45 @@ class CalendarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final defalutBoxDeco = BoxDecoration(
+      color: Colors.grey[200], // 평일 색상지정
+      borderRadius: BorderRadius.circular(6),
+    );
+    final defaultTextStyle = TextStyle(
+      color: Colors.grey[600], // 평일 색상지정
+      fontWeight: FontWeight.w700,
+    );
+    const PRIMARY_COLOR = Color(0xFF0DB2B2);
     return TableCalendar(
-        focusedDay: DateTime.now(),
-        firstDay: DateTime.utc(2023, 1, 1),
-        lastDay: DateTime.utc(2023, 12, 31));
+      locale: 'en_US',
+      focusedDay: DateTime.now(),
+      firstDay: DateTime.utc(2023, 1, 1),
+      lastDay: DateTime.utc(2023, 12, 31),
+      calendarStyle: CalendarStyle(
+          isTodayHighlighted: false, // 오늘 날짜를 하이라이트 처리할지 말지에 대해
+
+          // 평일 날짜 디자인
+          defaultDecoration: defalutBoxDeco,
+          defaultTextStyle: defaultTextStyle,
+          // 주말
+          weekendDecoration: defalutBoxDeco,
+          weekendTextStyle: defaultTextStyle,
+          // 선택한 날짜
+          selectedDecoration: BoxDecoration(
+            color: Colors.white, // 평일 색상지정
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: PRIMARY_COLOR,
+              width: 1,
+            ),
+          ),
+          selectedTextStyle: defaultTextStyle.copyWith(
+            color: PRIMARY_COLOR,
+          ),
+          // 해당 월이 아닌 이전달의 날이나 다음달의 날들
+          outsideDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+          )),
+    );
   }
 }

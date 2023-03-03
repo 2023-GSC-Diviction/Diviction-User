@@ -1,4 +1,5 @@
 import 'package:diviction_user/screen/chat_screen.dart';
+import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/widget/profile_image.dart';
 import 'package:flutter/material.dart';
 import '../config/style.dart';
@@ -15,7 +16,7 @@ class CounselorList extends StatelessWidget {
     return ListView.builder(
         shrinkWrap: true,
         itemCount: counselorList.length,
-        padding: const EdgeInsets.only(bottom: 40, top: 20),
+        padding: const EdgeInsets.only(bottom: 40),
         itemBuilder: (context, index) {
           return Container(
               decoration: BoxDecoration(
@@ -28,16 +29,12 @@ class CounselorList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => CounselorDetailScreen()));
-                    },
+                    onTap: () => onProfilePressed(context),
                     child: Row(
                       children: [
                         ProfileImage(
-                          onProfileImagePressed: () {},
+                          onProfileImagePressed: () =>
+                              onProfilePressed(context),
                           isChoosedPicture: false,
                           path: null,
                           type: 1,
@@ -52,7 +49,7 @@ class CounselorList extends StatelessWidget {
                               style: TextStyles.mainTextStyle,
                               children: <TextSpan>[
                                 const TextSpan(
-                                    text: ' @@상담센터',
+                                    text: 'Counseling Center',
                                     style: TextStyles.shadowTextStyle),
                               ]),
                           textAlign: TextAlign.start,
@@ -75,12 +72,17 @@ class CounselorList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
-                          child: Text(requested ? '문의채팅' : '문의하기',
+                          child: Text(requested ? 'chat' : 'consult',
                               style: TextStyles.blueBottonTextStyle),
                         ),
                       ))
                 ],
               ));
         });
+  }
+
+  onProfilePressed(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => DayCheckScreen()));
   }
 }

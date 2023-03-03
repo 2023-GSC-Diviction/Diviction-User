@@ -25,16 +25,15 @@ class _CounselorScreenState extends State<FindCounselorScreen>
   @override
   Widget build(BuildContext context) {
     List<String> counselorList = [
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영',
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영'
+      'Michael',
+      'David',
+      'William',
+      'Anthony',
+      'Donald',
+      'Brian',
+      'Edward',
+      'Christopher',
+      'Kenneth',
     ];
     return Stack(children: [
       Container(
@@ -72,15 +71,15 @@ class _CounselorScreenState extends State<FindCounselorScreen>
     return TextField(
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(10),
               borderSide:
                   const BorderSide(width: 1, color: Palette.borderColor)),
           contentPadding: const EdgeInsets.all(0),
-          hintText: '#태그',
+          hintText: '#Tag search',
           border: OutlineInputBorder(
               borderSide: const BorderSide(
                   width: 1, color: Color.fromARGB(67, 28, 28, 28)),
-              borderRadius: BorderRadius.circular(40)),
+              borderRadius: BorderRadius.circular(10)),
           prefixIcon: const Padding(
               padding: EdgeInsets.only(left: 13), child: Icon(Icons.search))),
     );
@@ -97,7 +96,7 @@ class _CounselorScreenState extends State<FindCounselorScreen>
         },
         child: Row(
           children: [
-            Text(type == 1 ? '종류' : '지역',
+            Text(type == 1 ? 'type' : 'region',
                 style: TextStyle(color: Colors.black87)),
             const Icon(Icons.arrow_drop_down, color: Colors.black87)
           ],
@@ -150,15 +149,15 @@ class OptionBottomSheet extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          margin: const EdgeInsets.only(left: 20, top: 10),
-          width: 130,
+          margin: const EdgeInsets.only(left: 10, top: 10),
+          width: 160,
           child: TabBar(
               tabs: const [
                 Tab(
-                  text: '종류',
+                  text: 'type',
                 ),
                 Tab(
-                  text: '지역',
+                  text: 'region',
                 )
               ],
               onTap: (value) => tabController.animateTo(value),

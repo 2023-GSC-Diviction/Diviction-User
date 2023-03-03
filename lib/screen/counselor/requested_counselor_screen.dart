@@ -16,16 +16,15 @@ class _CounselorScreenState extends State<RequestedCounselorScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> counselorList = [
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영',
-      '수딩',
-      '혜진',
-      '우중',
-      '주원',
-      '태영'
+      'Michael',
+      'David',
+      'William',
+      'Anthony',
+      'Donald',
+      'Brian',
+      'Edward',
+      'Christopher',
+      'Kenneth',
     ];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
