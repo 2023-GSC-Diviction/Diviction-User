@@ -15,7 +15,9 @@ class _HomeSceenState extends State<HomeSceen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const MyAppbar(),
+        appBar: const MyAppbar(
+          isMain: true,
+        ),
         backgroundColor: Colors.white,
         body: SizedBox(
             width: MediaQuery.of(context).size.width,

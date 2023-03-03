@@ -1,4 +1,5 @@
 import 'package:diviction_user/config/style.dart';
+import 'package:diviction_user/widget/appbar.dart';
 import 'package:diviction_user/widget/chat/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -20,10 +21,19 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [topBar(), const Expanded(child: Messages()), sendMesssage()],
-      ),
-    );
+        appBar: MyAppbar(
+          isMain: false,
+        ),
+        extendBodyBehindAppBar: false,
+        body: Container(
+          child: Column(
+            children: [
+              topBar(),
+              const Expanded(child: Messages()),
+              sendMesssage()
+            ],
+          ),
+        ));
   }
 
   Widget topBar() {
@@ -43,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget sendMesssage() {
     return Container(
-      margin: const EdgeInsets.only(top: 8),
+      margin: const EdgeInsets.only(top: 8, bottom: 10),
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [

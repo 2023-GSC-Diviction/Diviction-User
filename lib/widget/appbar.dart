@@ -3,7 +3,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 class MyAppbar extends StatelessWidget with PreferredSizeWidget {
-  const MyAppbar({super.key});
+  const MyAppbar({required this.isMain, super.key});
+
+  final bool isMain;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -13,11 +15,27 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
       backgroundColor: Colors.white,
-      title: const Text(
+      leading: IconButton(
+        icon: const Icon(
+          Icons.notifications,
+          color: Colors.white,
+        ),
+        onPressed: () {},
+      ),
+      title: const Center(
+          child: Text(
         'Diviction',
         style: TextStyle(color: Colors.black54),
-      ),
-      elevation: 10,
+      )),
+      actions: isMain
+          ? [
+              IconButton(
+                icon: const Icon(Icons.notifications, color: Colors.black54),
+                onPressed: () {},
+              ),
+            ]
+          : [],
+      elevation: 0,
     );
   }
 }
