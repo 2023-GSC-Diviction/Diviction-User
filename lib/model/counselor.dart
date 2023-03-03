@@ -19,4 +19,16 @@ class Counselor {
       required this.gender,
       this.profileUrl,
       required this.confirm});
+
+  factory Counselor.fromJson(Map<String, dynamic> json) {
+    return Counselor(
+        id: json['id'],
+        email: json['email'],
+        password: json['password'],
+        name: json['name'],
+        address: json['address'],
+        birth: json['birth'],
+        gender: json['gender'],
+        confirm: json['confirm']);
+  }
 }

@@ -1,14 +1,16 @@
+import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/screen/chat_screen.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/widget/profile_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../config/style.dart';
 
 class CounselorList extends StatelessWidget {
   const CounselorList(
       {required this.counselorList, required this.requested, super.key});
 
-  final List<String> counselorList;
+  final List<Counselor> counselorList;
   final bool requested;
 
   @override

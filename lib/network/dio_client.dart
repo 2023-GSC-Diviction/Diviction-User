@@ -9,7 +9,7 @@ class DioClient {
 
   final Dio _dio = Dio();
 
-  Future<NetWorkResult> get(String url, Map<String, dynamic> parameter) async {
+  Future<NetWorkResult> get(String url, Map<String, dynamic>? parameter) async {
     try {
       Response response = await _dio.get(url, queryParameters: parameter);
       if (response.statusCode == 200) {

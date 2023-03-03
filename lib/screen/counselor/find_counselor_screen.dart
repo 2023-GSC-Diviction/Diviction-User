@@ -5,6 +5,14 @@ import 'package:diviction_user/widget/counselor_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../model/counselor.dart';
+import '../../provider/counselor_provider.dart';
+
+final counselorListProvider =
+    StateNotifierProvider<CounselorProvider, List<Counselor>>(
+        (ref) => CounselorProvider());
 
 class FindCounselorScreen extends StatefulWidget {
   const FindCounselorScreen({super.key});
@@ -16,6 +24,8 @@ class FindCounselorScreen extends StatefulWidget {
 class _CounselorScreenState extends State<FindCounselorScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<Counselor> _counselorList = [];
+
   @override
   void initState() {
     super.initState();
@@ -24,62 +34,56 @@ class _CounselorScreenState extends State<FindCounselorScreen>
 
   @override
   Widget build(BuildContext context) {
-    List<String> counselorList = [
-      'Michael',
-      'David',
-      'William',
-      'Anthony',
-      'Donald',
-      'Brian',
-      'Edward',
-      'Christopher',
-      'Kenneth',
-    ];
     return Stack(children: [
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text('상담사 찾기', style: TextStyles.titleTextStyle),
+      Consumer(
+        builder: (context, ref, child) {
+          final counselorList = ref.watch(counselorListProvider);
+          _counselorList = counselorList;
+
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child:
+                      Text('Counselor List', style: TextStyles.titleTextStyle),
+                ),
+                searchBar(),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  optionButton(0),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  optionButton(1)
+                ]),
+                Expanded(
+                    child: CounselorList(
+                  counselorList: _counselorList,
+                  requested: false,
+                ))
+              ],
             ),
-            searchBar(),
-            SizedBox(
-              height: 10,
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              optionButton(0),
-              const SizedBox(
-                width: 10,
-              ),
-              optionButton(1)
-            ]),
-            Expanded(
-                child: CounselorList(
-              counselorList: counselorList,
-              requested: false,
-            ))
-          ],
-        ),
+          );
+        },
       ),
     ]);
   }
 
   Widget searchBar() {
+    final border = OutlineInputBorder(
+        borderSide: const BorderSide(width: 1, color: Palette.borderColor),
+        borderRadius: BorderRadius.circular(10));
     return TextField(
       decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(width: 1, color: Palette.borderColor)),
           contentPadding: const EdgeInsets.all(0),
           hintText: '#Tag search',
-          border: OutlineInputBorder(
-              borderSide: const BorderSide(
-                  width: 1, color: Color.fromARGB(67, 28, 28, 28)),
-              borderRadius: BorderRadius.circular(10)),
+          enabledBorder: border,
+          border: border,
           prefixIcon: const Padding(
               padding: EdgeInsets.only(left: 13), child: Icon(Icons.search))),
     );
@@ -96,8 +100,8 @@ class _CounselorScreenState extends State<FindCounselorScreen>
         },
         child: Row(
           children: [
-            Text(type == 1 ? 'type' : 'region',
-                style: TextStyle(color: Colors.black87)),
+            Text(type == 0 ? 'type' : 'region',
+                style: TextStyles.optionButtonTextStyle),
             const Icon(Icons.arrow_drop_down, color: Colors.black87)
           ],
         ));
@@ -119,7 +123,7 @@ class _CounselorScreenState extends State<FindCounselorScreen>
   }
 }
 
-class OptionBottomSheet extends StatelessWidget {
+class OptionBottomSheet extends ConsumerWidget {
   const OptionBottomSheet(
       {required this.tabIndex, required this.tabController, super.key});
 
@@ -127,7 +131,7 @@ class OptionBottomSheet extends StatelessWidget {
   final TabController tabController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     List<String> regions = [
       '전국',
       '서울',
@@ -170,42 +174,48 @@ class OptionBottomSheet extends StatelessWidget {
         SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: TabBarView(controller: tabController, children: [
-              optionList(drugTypes),
-              optionList(regions),
+              optionList(drugTypes, ref),
+              optionList(regions, ref),
             ])),
       ],
     );
   }
 
-  Widget optionList(List list) => ListView.builder(
+  Widget optionList(List list, WidgetRef ref) => ListView.builder(
       shrinkWrap: true,
       itemCount: list.length,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       itemBuilder: (context, index) {
-        return Container(
-            decoration: BoxDecoration(
-              border: Border.lerp(
-                  const Border(
-                    bottom: BorderSide(
-                      width: 1,
-                      color: Colors.black12,
+        return GestureDetector(
+            onTap: () {
+              ref
+                  .read(counselorListProvider.notifier)
+                  .searchCounselor(list[index]);
+            },
+            child: Container(
+                decoration: BoxDecoration(
+                  border: Border.lerp(
+                      const Border(
+                        bottom: BorderSide(
+                          width: 1,
+                          color: Colors.black12,
+                        ),
+                      ),
+                      null,
+                      0.4),
+                ), //
+                margin: const EdgeInsets.only(bottom: 13),
+                padding: const EdgeInsets.only(bottom: 13),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      list[index],
+                      style: const TextStyle(fontSize: 17),
                     ),
-                  ),
-                  null,
-                  0.4),
-            ), //
-            margin: const EdgeInsets.only(bottom: 13),
-            padding: const EdgeInsets.only(bottom: 13),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  list[index],
-                  style: const TextStyle(fontSize: 17),
-                ),
-                const Icon(Icons.arrow_drop_down_outlined)
-              ],
-            ));
+                    const Icon(Icons.arrow_drop_down_outlined)
+                  ],
+                )));
       });
 }
