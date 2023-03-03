@@ -34,7 +34,12 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
                 onPressed: () {},
               ),
             ]
-          : [],
+          : [
+              IconButton(
+                icon: const Icon(Icons.notifications, color: Colors.white),
+                onPressed: () {},
+              ),
+            ],
       elevation: 0,
     );
   }

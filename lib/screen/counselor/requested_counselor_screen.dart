@@ -33,7 +33,11 @@ class _CounselorScreenState extends State<RequestedCounselorScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('보낸 요청', style: TextStyles.titleTextStyle),
-          Expanded(child: CounselorList(counselorList: counselorList))
+          Expanded(
+              child: CounselorList(
+            counselorList: counselorList,
+            requested: true,
+          ))
         ],
       ),
     );

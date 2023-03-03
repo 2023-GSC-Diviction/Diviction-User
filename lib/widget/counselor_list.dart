@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import '../config/style.dart';
 
 class CounselorList extends StatelessWidget {
-  const CounselorList({required this.counselorList, super.key});
+  const CounselorList(
+      {required this.counselorList, required this.requested, super.key});
 
   final List<String> counselorList;
+  final bool requested;
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +74,8 @@ class CounselorList extends StatelessWidget {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Center(
-                          child: Text('문의하기',
+                        child: Center(
+                          child: Text(requested ? '문의하기' : '문의채팅',
                               style: TextStyles.blueBottonTextStyle),
                         ),
                       ))

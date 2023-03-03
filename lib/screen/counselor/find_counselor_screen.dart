@@ -57,7 +57,11 @@ class _CounselorScreenState extends State<FindCounselorScreen>
               ),
               optionButton(1)
             ]),
-            Expanded(child: CounselorList(counselorList: counselorList))
+            Expanded(
+                child: CounselorList(
+              counselorList: counselorList,
+              requested: false,
+            ))
           ],
         ),
       ),
