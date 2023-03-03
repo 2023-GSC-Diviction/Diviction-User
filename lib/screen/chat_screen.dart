@@ -28,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
         extendBodyBehindAppBar: false,
         body: Container(
             padding: const EdgeInsets.symmetric(
-              horizontal: 16,
+              horizontal: 10,
             ),
             child: Column(
               children: [const Expanded(child: Messages()), sendMesssage()],
@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
               iconSize: 25,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(

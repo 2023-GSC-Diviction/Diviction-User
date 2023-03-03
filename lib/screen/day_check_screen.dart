@@ -16,7 +16,7 @@ class DayCheckScreen extends StatelessWidget {
         color: Colors.white,
         child: Stack(
           children: [
-            Center(
+            const Center(
               child: Text('Success?', style: TextStyles.titleTextStyle),
             ),
             Positioned(

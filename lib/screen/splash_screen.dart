@@ -1,3 +1,4 @@
+import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/bottom_nav.dart';
 import 'package:flutter/material.dart';
@@ -25,14 +26,8 @@ class SplashScreen extends StatelessWidget {
     });
     return Container(
       color: Colors.white,
-      height: double.infinity,
-      width: double.infinity,
       child: const Center(
-        child: Text(
-          'Diviction',
-          style: TextStyle(color: Colors.black54, fontSize: 17),
-        ),
-      ),
+          child: Text('Diviction', style: TextStyles.splashTitleTextStyle)),
     );
   }
 }

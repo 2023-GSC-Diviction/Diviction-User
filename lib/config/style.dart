@@ -29,6 +29,13 @@ class TextStyles {
       TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600);
   static const TextStyle chatNotMeBubbleTextStyle =
       TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400);
+  static const TextStyle splashTitleTextStyle = TextStyle(
+      decoration: TextDecoration.none,
+      color: Colors.black54,
+      fontSize: 25,
+      fontWeight: FontWeight.w600);
+  static const TextStyle optionButtonTextStyle = TextStyle(
+      color: Colors.black87, fontSize: 14, fontWeight: FontWeight.normal);
 }
 
 class Palette {
