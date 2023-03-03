@@ -6,19 +6,20 @@ class TextStyles {
       color: Color.fromRGBO(51, 51, 51, 1),
       height: 1.4,
       letterSpacing: 0.02,
-      fontWeight: FontWeight.w800);
-  static const TextStyle mainTextStyle = TextStyle(
-      fontSize: 18,
-      color: Color.fromRGBO(51, 51, 51, 1),
       fontWeight: FontWeight.w700);
+  static const TextStyle mainTextStyle = TextStyle(
+      fontSize: 16,
+      height: 1.4,
+      color: Color.fromRGBO(51, 51, 51, 1),
+      fontWeight: FontWeight.w500);
 
   static const TextStyle bottomTextStyle = TextStyle(
       fontSize: 16,
       color: Color.fromRGBO(51, 51, 51, 1),
-      fontWeight: FontWeight.w600);
+      fontWeight: FontWeight.w500);
   static const TextStyle shadowTextStyle = TextStyle(
       letterSpacing: 0.04,
-      fontSize: 14,
+      fontSize: 11,
       color: Color.fromRGBO(82, 82, 82, 0.644));
   static const TextStyle blueBottonTextStyle = TextStyle(
       letterSpacing: 0.04,

@@ -52,7 +52,7 @@ class CounselorList extends StatelessWidget {
                               style: TextStyles.mainTextStyle,
                               children: <TextSpan>[
                                 const TextSpan(
-                                    text: '@@상담센터',
+                                    text: ' @@상담센터',
                                     style: TextStyles.shadowTextStyle),
                               ]),
                           textAlign: TextAlign.start,
@@ -75,7 +75,7 @@ class CounselorList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
-                          child: Text(requested ? '문의하기' : '문의채팅',
+                          child: Text(requested ? '문의채팅' : '문의하기',
                               style: TextStyles.blueBottonTextStyle),
                         ),
                       ))

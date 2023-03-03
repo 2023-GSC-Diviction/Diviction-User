@@ -27,28 +27,9 @@ class _ChatScreenState extends State<ChatScreen> {
         extendBodyBehindAppBar: false,
         body: Container(
           child: Column(
-            children: [
-              topBar(),
-              const Expanded(child: Messages()),
-              sendMesssage()
-            ],
+            children: [const Expanded(child: Messages()), sendMesssage()],
           ),
         ));
-  }
-
-  Widget topBar() {
-    return Container(
-      color: Colors.blue[100],
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          const Text(
-            '@@@ 상담사님',
-            style: TextStyles.mainTextStyle,
-          )
-        ],
-      ),
-    );
   }
 
   Widget sendMesssage() {

@@ -19,6 +19,7 @@ class CounselorScreen extends StatefulWidget {
 class _CounselorScreenState extends State<CounselorScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -35,73 +36,51 @@ class _CounselorScreenState extends State<CounselorScreen> {
     super.dispose();
   }
 
-  Future<bool> initializeController() {
-    Completer<bool> completer = Completer<bool>();
-
-    /// Callback called after widget has been fully built
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      completer.complete(true);
-    });
-
-    return completer.future;
-  } // /initializeController()
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Future.value(true),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Stack(
-              children: [
-                PageView(controller: _pageController, children: const [
-                  FindCounselorScreen(),
-                  RequestedCounselorScreen()
-                ]),
-                Positioned(
-                  bottom: 0,
-                  child: bottomBar(),
-                )
-              ],
-            );
-          } else {
-            return const Center(
-              child: Text('loading...'),
-            );
-          }
-        });
+    final page = [FindCounselorScreen(), RequestedCounselorScreen()];
+    return Stack(
+      children: [
+        PageView.builder(
+            itemCount: page.length,
+            controller: _pageController,
+            itemBuilder: (context, index) {
+              return page[index];
+            }),
+        Positioned(
+          bottom: 0,
+          child: bottomBar(),
+        )
+      ],
+    );
   }
 
   Widget bottomBar() {
-    return _pageController.positions.isNotEmpty
-        ? InkWell(
-            onTap: () {
-              _pageController.animateToPage(_selectedIndex == 1 ? 0 : 1,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut);
-            },
-            child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border.symmetric(
-                      horizontal: BorderSide(
-                          width: 1, color: Palette.bottomBoxBorderColor)),
-                ),
-                padding: const EdgeInsets.all(12),
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(_selectedIndex == 0 ? '내가 한 요청 보기' : '상담사 찾기',
-                        style: TextStyles.bottomTextStyle),
-                    Icon(_selectedIndex == 0
-                        ? Icons.arrow_right_sharp
-                        : Icons.arrow_left_sharp)
-                  ],
-                )))
-        : const Center(
-            child: Text('loading...'),
-          );
+    return InkWell(
+        onTap: () {
+          _pageController.animateToPage(_selectedIndex == 1 ? 0 : 1,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut);
+        },
+        child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border.symmetric(
+                  horizontal: BorderSide(
+                      width: 1, color: Palette.bottomBoxBorderColor)),
+            ),
+            padding: const EdgeInsets.all(12),
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(_selectedIndex == 0 ? '내가 한 요청 보기' : '상담사 찾기',
+                    style: TextStyles.bottomTextStyle),
+                Icon(_selectedIndex == 0
+                    ? Icons.arrow_right_sharp
+                    : Icons.arrow_left_sharp)
+              ],
+            )));
   }
 }

@@ -14,7 +14,7 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       leading: IconButton(
         icon: const Icon(
           Icons.notifications,
