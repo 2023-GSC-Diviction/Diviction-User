@@ -1,3 +1,4 @@
+import 'package:diviction_user/screen/drug_self-diagnosis.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -71,62 +72,69 @@ class _HomeSceenState extends State<HomeSceen> {
       '약 챙겨먹기'
     ];
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: checkBoxList
-            .map((e) => Row(
-                  children: [
-                    Checkbox(
-                        value: e,
-                        onChanged: (value) {
-                          checkBoxList[checkBoxList.indexOf(e)] = value!;
-                        }),
-                    Text(list[checkBoxList.indexOf(e)],
-                        style: const TextStyle(
-                            fontSize: 16, color: Palette.mainTextColor)),
-                  ],
-                ))
-            .toList());
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: checkBoxList
+          .map(
+            (e) => Row(
+              children: [
+                Checkbox(
+                  value: e,
+                  onChanged: (value) {
+                    checkBoxList[checkBoxList.indexOf(e)] = value!;
+                  },
+                ),
+                Text(
+                  list[checkBoxList.indexOf(e)],
+                  style: const TextStyle(
+                      fontSize: 16, color: Palette.mainTextColor),
+                ),
+              ],
+            ),
+          )
+          .toList(),
+    );
   }
 }
 
 class TestButton extends StatelessWidget {
-  TestButton({required this.type, super.key});
-
   int type;
+  TestButton({required this.type, super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => CounselorDetailScreen()));
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Palette.borderColor)),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          width: double.infinity,
-          child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(type == 0 ? 'psychological Test' : 'self-diagnosis Test',
-                    style: const TextStyle(
-                        fontSize: 16, color: Palette.mainTextColor)),
-                ClipOval(
-                    child: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(
-                                    'assets/icons/psychological_icon.png'),
-                                fit: BoxFit.cover)))),
-              ]),
-        ));
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => DrugSelfDiagnosis()));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Palette.borderColor)),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        width: double.infinity,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(type == 0 ? 'psychological Test' : 'self-diagnosis Test',
+                style: const TextStyle(
+                    fontSize: 16, color: Palette.mainTextColor)),
+            ClipOval(
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/icons/psychological_icon.png'),
+                      fit: BoxFit.cover),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
