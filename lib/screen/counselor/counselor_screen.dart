@@ -9,12 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
 
-final pageProvider = StateProvider<int>((ref) => 0);
-
 class CounselorScreen extends ConsumerWidget {
   CounselorScreen({super.key});
 
   final PageController _pageController = PageController(initialPage: 0);
+  final pageProvider = StateProvider<int>((ref) => 0);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
