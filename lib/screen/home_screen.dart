@@ -18,6 +18,7 @@ class _HomeSceenState extends State<HomeSceen> {
     return Scaffold(
         appBar: const MyAppbar(
           isMain: true,
+          hasBack: false,
         ),
         backgroundColor: Colors.white,
         body: SizedBox(

@@ -7,6 +7,18 @@ class TextStyles {
       height: 1.4,
       letterSpacing: 0.02,
       fontWeight: FontWeight.w700);
+  static const TextStyle questionTextStyle = TextStyle(
+      fontSize: 19,
+      color: Color.fromRGBO(51, 51, 51, 1),
+      height: 1.4,
+      letterSpacing: 0.02,
+      fontWeight: FontWeight.w600);
+  static const TextStyle answerTextStyle = TextStyle(
+      fontSize: 18,
+      height: 1.4,
+      color: Color.fromRGBO(51, 51, 51, 1),
+      fontWeight: FontWeight.w500);
+
   static const TextStyle mainTextStyle = TextStyle(
       fontSize: 16,
       height: 1.4,
@@ -36,6 +48,23 @@ class TextStyles {
       fontWeight: FontWeight.w600);
   static const TextStyle optionButtonTextStyle = TextStyle(
       color: Colors.black87, fontSize: 14, fontWeight: FontWeight.normal);
+
+  static const TextStyle dialogTextStyle = TextStyle(
+      fontSize: 19,
+      color: Color.fromRGBO(51, 51, 51, 1),
+      height: 1.4,
+      letterSpacing: 0.02,
+      fontWeight: FontWeight.w600);
+  static const TextStyle dialogTextStyle2 = TextStyle(
+      fontSize: 16,
+      color: Color.fromRGBO(51, 51, 51, 1),
+      height: 1.4,
+      letterSpacing: 0.02,
+      fontWeight: FontWeight.w500);
+  static const TextStyle dialogConfirmTextStyle =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16);
+  static const TextStyle dialogCancelTextStyle = TextStyle(
+      color: Colors.black54, fontWeight: FontWeight.w700, fontSize: 16);
 }
 
 class Palette {

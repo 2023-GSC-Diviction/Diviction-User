@@ -24,6 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
         appBar: const MyAppbar(
           isMain: false,
+          hasBack: false,
         ),
         extendBodyBehindAppBar: false,
         body: Container(

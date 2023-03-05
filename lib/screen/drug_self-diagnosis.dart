@@ -1,5 +1,6 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
+import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
@@ -19,27 +20,26 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const MyAppbar(
+        isMain: false,
+        title: 'Drug Self Diagnosis',
+        hasBack: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
           child: Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.005),
               FAProgressBar(
                 currentValue: (currentIndex / MaxValue) * 100,
                 displayText: '%',
-                size: 20, // 높이
+                size: 24, // 높이
                 progressColor: Colors.blue,
-                border: Border.all(width: 2, color: Colors.black12),
+                border: Border.all(width: 1.5, color: Colors.black12),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              Text(
-                question[currentIndex - 1],
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              Text(question[currentIndex - 1],
+                  style: TextStyles.questionTextStyle),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               if (currentIndex == 1)
                 DrugChoose(
@@ -87,7 +87,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
 
   void onAnswerPressed(int index) {
     setState(() {
-      choosedAnswer[currentIndex-2] = index;
+      choosedAnswer[currentIndex - 2] = index;
       print(index);
       print(choosedAnswer);
     });
@@ -132,10 +132,13 @@ class DrugChoose extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: List.generate(10, (index) => index)
               .map(
-                (index) => Column(
-                  children: [
-                    // 전체를 ElevatedButton으로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
-                    InkWell(
+                (index) => Padding(
+                    padding: index != 9
+                        ? const EdgeInsets.only(bottom: 15)
+                        : EdgeInsets.zero,
+                    child:
+                        // 전체를 ElevatedButton으로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
+                        InkWell(
                       onTap: () => drugCheckBoxPressed(index),
                       child: Row(
                         children: [
@@ -153,16 +156,12 @@ class DrugChoose extends StatelessWidget {
                             child: Text(
                               answer[1]![index],
                               maxLines: null,
-                              style: const TextStyle(
-                                  fontSize: 20, color: Palette.mainTextColor),
+                              style: TextStyles.answerTextStyle,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    if (index != 9) const SizedBox(height: 15),
-                  ],
-                ),
+                    )),
               )
               .toList(),
         ),
@@ -198,7 +197,7 @@ class ExpectedAnswer extends StatelessWidget {
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.1,
                       decoration: BoxDecoration(
-                        color: choosedAnswer[currentIndex-2] == index
+                        color: choosedAnswer[currentIndex - 2] == index
                             ? Colors.blue
                             : Colors.white,
                         borderRadius: BorderRadius.circular(16),
@@ -207,7 +206,11 @@ class ExpectedAnswer extends StatelessWidget {
                       child: Center(
                         child: Text(
                           answer[currentIndex]![index],
-                          style: const TextStyle(fontSize: 20),
+                          style: choosedAnswer[currentIndex - 2] == index
+                              ? const TextStyle(
+                                  fontSize: 20, color: Colors.white)
+                              : const TextStyle(
+                                  fontSize: 20, color: Colors.black87),
                         ),
                       ),
                     ),
@@ -240,6 +243,12 @@ class PreOrNextButton extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.3,
       height: MediaQuery.of(context).size.height * 0.07,
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
         onPressed: onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -249,13 +258,13 @@ class PreOrNextButton extends StatelessWidget {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                   Text(
                     content,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                 ]
               : [
                   Text(
                     content,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                   Icon(icondata),
