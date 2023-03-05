@@ -22,7 +22,10 @@ class CounselorScreen extends ConsumerWidget {
       ref.read(pageProvider.notifier).state = _pageController.page!.round();
     });
     int index = ref.watch(pageProvider);
-    final page = [FindCounselorScreen(), RequestedCounselorScreen()];
+    final page = [
+      const FindCounselorScreen(),
+      const RequestedCounselorScreen()
+    ];
 
     Widget bottomBar() {
       return InkWell(

@@ -11,9 +11,10 @@ class CounselorService {
   }
   CounselorService._internal();
 
-  Future<List<Counselor>> getCounselorsByOption(String option) async {
+  Future<List<Counselor>> getCounselorsByOption(
+      Map<String, String> option) async {
     var response =
-        await DioClient().get('http://localhost:3000/counselors', null);
+        await DioClient().get('http://localhost:3000/counselors', option);
     if (response.result == Result.success) {
       var counselors = response.response['counselors'];
       return counselors

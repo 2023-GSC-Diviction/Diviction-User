@@ -109,7 +109,7 @@ class _CounselorScreenState extends State<FindCounselorScreen>
 
   void optionSheet(int option) {
     _tabController.index = option;
-    showModalBottomSheet<void>(
+    Future<void> a = showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
@@ -123,6 +123,23 @@ class _CounselorScreenState extends State<FindCounselorScreen>
   }
 }
 
+List<String> regions = [
+  '전국',
+  '서울',
+  '세종',
+  '강원',
+  '인천',
+  '경기',
+  '충북',
+  '충남',
+  '경북',
+  '대전',
+  '대구',
+  '전북',
+  '경남'
+];
+List<String> drugTypes = ['코카인', '펜타닐', '헤로인'];
+
 class OptionBottomSheet extends ConsumerWidget {
   const OptionBottomSheet(
       {required this.tabIndex, required this.tabController, super.key});
@@ -132,22 +149,6 @@ class OptionBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> regions = [
-      '전국',
-      '서울',
-      '세종',
-      '강원',
-      '인천',
-      '경기',
-      '충북',
-      '충남',
-      '경북',
-      '대전',
-      '대구',
-      '전북',
-      '경남'
-    ];
-    List<String> drugTypes = ['코카인', '펜타닐', '헤로인'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -174,48 +175,52 @@ class OptionBottomSheet extends ConsumerWidget {
         SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: TabBarView(controller: tabController, children: [
-              optionList(drugTypes, ref),
-              optionList(regions, ref),
+              optionList('type', drugTypes, ref),
+              optionList('region', regions, ref),
             ])),
       ],
     );
   }
 
-  Widget optionList(List list, WidgetRef ref) => ListView.builder(
-      shrinkWrap: true,
-      itemCount: list.length,
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-            onTap: () {
-              ref
-                  .read(counselorListProvider.notifier)
-                  .searchCounselor(list[index]);
-            },
-            child: Container(
-                decoration: BoxDecoration(
-                  border: Border.lerp(
-                      const Border(
-                        bottom: BorderSide(
-                          width: 1,
-                          color: Colors.black12,
+  Widget optionList(String type, List<String> list, WidgetRef ref) =>
+      ListView.builder(
+          shrinkWrap: true,
+          itemCount: list.length,
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+                onTap: () {
+                  ref
+                      .read(counselorListProvider.notifier)
+                      .addOption('type', list[index]);
+
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.lerp(
+                          const Border(
+                            bottom: BorderSide(
+                              width: 1,
+                              color: Colors.black12,
+                            ),
+                          ),
+                          null,
+                          0.4),
+                    ), //
+                    padding: index != 0
+                        ? const EdgeInsets.symmetric(vertical: 13)
+                        : const EdgeInsets.only(bottom: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          list[index],
+                          style: const TextStyle(fontSize: 17),
                         ),
-                      ),
-                      null,
-                      0.4),
-                ), //
-                margin: const EdgeInsets.only(bottom: 13),
-                padding: const EdgeInsets.only(bottom: 13),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      list[index],
-                      style: const TextStyle(fontSize: 17),
-                    ),
-                    const Icon(Icons.arrow_drop_down_outlined)
-                  ],
-                )));
-      });
+                        const Icon(Icons.arrow_drop_down_outlined)
+                      ],
+                    )));
+          });
 }

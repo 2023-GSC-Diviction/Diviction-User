@@ -9,7 +9,7 @@ import '../../config/style.dart';
 import '../../model/counselor.dart';
 
 final counselorListProvider = FutureProvider<List<Counselor>>((ref) async {
-  return await CounselorService().getCounselorsByOption('');
+  return await CounselorService().getCounselorsByOption({'requested': 'true'});
 });
 
 class RequestedCounselorScreen extends ConsumerWidget {
@@ -17,14 +17,14 @@ class RequestedCounselorScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _counselorList = ref.watch(counselorListProvider);
+    final counselorList = ref.watch(counselorListProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('보낸 요청', style: TextStyles.titleTextStyle),
-          _counselorList.when(
+          counselorList.when(
               data: (item) => Expanded(
                       child: CounselorList(
                     counselorList: item,

@@ -7,15 +7,17 @@ class CounselorProvider extends StateNotifier<List<Counselor>> {
   CounselorProvider() : super(<Counselor>[]);
 
   final CounselorService _counselorService = CounselorService();
+  Map<String, String> _options = {};
 
   @override
   set state(List<Counselor> value) {
     super.state = value;
   }
 
-  void searchCounselor(String option) {
-    _counselorService.getCounselorsByOption(option).then((value) {
+  void addOption(String type, String option) {
+    _options[type] = option;
+    _counselorService.getCounselorsByOption(_options).then((value) {
       state = value;
-    }).catchError((onError) => state = <Counselor>[]);
+    }).catchError((onError) => null);
   }
 }
