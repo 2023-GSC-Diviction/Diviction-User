@@ -16,6 +16,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   int MaxValue = 8;
   List<bool> checkBoxList = List.generate(10, (index) => false); // false 10개
   List<List<int>> choosedAnswers = []; // 마약 선택시에 그 개수에 맞게 초기화
+  List<String> SelectedDrugsName = []; // 마약 선택시에 초기화
   ScrollController _scrollController =
       ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
 
@@ -27,11 +28,11 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
             .where((index) => checkBoxList[index] == true)
             .toList();
     // print(SelectedDrugs);
+    SelectedDrugsName =
+        List.generate(SelectedDrugs.length, (index) => answer[1]![index]);
     if (SelectedDrugs.length != choosedAnswers.length) {
       choosedAnswers = List.generate(
-          SelectedDrugs.length,
-          (index) =>
-              List.generate(answer[currentIndex]!.length, (index) => -1));
+          SelectedDrugs.length, (index) => List.generate(7, (index) => -1));
     }
     // print(choosedAnswers);
     return SafeArea(
@@ -90,8 +91,8 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                       onPressed: onBackButtonPressed,
                     ),
                     PreOrNextButton(
-                      content: 'Next',
-                      icondata: Icons.east,
+                      content: currentIndex != 8 ? 'Next' : 'Result',
+                      icondata: currentIndex != 8 ? Icons.east : Icons.done,
                       onPressed: onNextButtonPressed,
                     ),
                   ],
@@ -118,21 +119,54 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
 
   void onBackButtonPressed() {
     setState(() {
-      if (currentIndex > 1) currentIndex -= 1;
+      if (currentIndex > 1) {
+        _scrollToTop();
+        currentIndex -= 1;
+      }
     });
-    _scrollToTop();
   }
 
   void onNextButtonPressed() {
     setState(() {
-      if (currentIndex < 8) currentIndex += 1;
+      if (currentIndex == 1) {
+        currentIndex += 1;
+        return;
+      }
+      // 해당 문항에서 사용자가 선택한 답변의 배열을 가져옴
+      var CheckUserAnswer =
+          choosedAnswers.map((list) => list[currentIndex - 2]).toList();
+      // print(CheckUserAnswer.any((value) => value == -1));
+      // 하나라도 응답하지 않은 경우
+      if (CheckUserAnswer.any((value) => value == -1)) {
+        print("응답되지 않은 문항이 있습니다."); // -> 나중엔 토스트로 띄우기
+        _scrollToBottom();
+        return;
+      }
+      if (currentIndex != 8) {
+        _scrollToTop();
+        currentIndex += 1;
+      } else {
+        print("자가진단 완료");
+        choosedAnswers.forEach((innerList) {
+          print(SelectedDrugsName[choosedAnswers.indexOf(innerList)]);
+          print(innerList);
+          // 계산로직 추가하기
+        });
+
+      }
     });
-    _scrollToTop();
   }
 
   void _scrollToTop() {
     _scrollController.animateTo(
       0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -260,7 +294,7 @@ class ExpectedAnswer extends StatelessWidget {
           ),
         ),
         // 마지막이 아닐 때만 구분선 넣기
-        if (useRemoveLastLine-1 != ID) dividingLine,
+        if (useRemoveLastLine - 1 != ID) dividingLine,
         SizedBox(
             height: MediaQuery.of(context).size.height *
                 0.015), // 약물 여러개 일때 UI가 붙어있어서 추가함
