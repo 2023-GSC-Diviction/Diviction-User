@@ -14,14 +14,14 @@ final counselorListProvider =
     StateNotifierProvider<CounselorProvider, List<Counselor>>(
         (ref) => CounselorProvider());
 
-class FindCounselorScreen extends StatefulWidget {
+class FindCounselorScreen extends ConsumerStatefulWidget {
   const FindCounselorScreen({super.key});
 
   @override
-  State<FindCounselorScreen> createState() => _CounselorScreenState();
+  _CounselorScreenState createState() => _CounselorScreenState();
 }
 
-class _CounselorScreenState extends State<FindCounselorScreen>
+class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Counselor> _counselorList = [];
@@ -34,43 +34,37 @@ class _CounselorScreenState extends State<FindCounselorScreen>
 
   @override
   Widget build(BuildContext context) {
+    final counselorList = ref.watch(counselorListProvider);
+    _counselorList = counselorList;
     return Stack(children: [
-      Consumer(
-        builder: (context, ref, child) {
-          final counselorList = ref.watch(counselorListProvider);
-          _counselorList = counselorList;
-
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child:
-                      Text('Counselor List', style: TextStyles.titleTextStyle),
-                ),
-                searchBar(),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  optionButton(0),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  optionButton(1)
-                ]),
-                Expanded(
-                    child: CounselorList(
-                  counselorList: _counselorList,
-                  requested: false,
-                ))
-              ],
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Text('Counselor List', style: TextStyles.titleTextStyle),
             ),
-          );
-        },
-      ),
+            searchBar(),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              optionButton(0),
+              const SizedBox(
+                width: 10,
+              ),
+              optionButton(1)
+            ]),
+            Expanded(
+                child: CounselorList(
+              counselorList: _counselorList,
+              requested: false,
+            ))
+          ],
+        ),
+      )
     ]);
   }
 
