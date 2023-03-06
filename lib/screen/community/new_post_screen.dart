@@ -1,20 +1,25 @@
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:diviction_user/widget/profile_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../config/style.dart';
 
-class NewPostScreen extends StatelessWidget {
+class NewPostScreen extends StatefulWidget {
   const NewPostScreen({super.key});
 
   @override
+  State<NewPostScreen> createState() => _NewPostScreenState();
+}
+
+final textFieldController = TextEditingController();
+String text = '';
+
+class _NewPostScreenState extends State<NewPostScreen> {
+  @override
   Widget build(BuildContext context) {
-    final textFieldController = TextEditingController();
     return GestureDetector(
         onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+          FocusScope.of(context).unfocus(); // 키보드 닫기 이벤트
         },
         child: Scaffold(
           appBar:
@@ -40,6 +45,7 @@ class NewPostScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.grey[200]),
                         child: TextField(
+                            onChanged: (value) => text = value,
                             controller: textFieldController,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
@@ -66,27 +72,31 @@ class NewPostScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  InkWell(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      alignment: Alignment.center,
-                      height: 55,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text(
-                        '확인',
-                        style: TextStyles.dialogConfirmTextStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context, true);
-                    },
-                  )
+                  addPostButton(context),
                 ],
               )),
         ));
+  }
+
+  Widget addPostButton(BuildContext context) {
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.only(top: 10),
+        alignment: Alignment.center,
+        height: 55,
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Text(
+          '확인',
+          style: TextStyles.dialogConfirmTextStyle,
+          textAlign: TextAlign.center,
+        ),
+      ),
+      onTap: () {
+        Navigator.pop(context, true);
+      },
+    );
   }
 }
