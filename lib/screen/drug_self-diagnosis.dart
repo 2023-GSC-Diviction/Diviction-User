@@ -15,10 +15,23 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   int currentIndex = 1;
   int MaxValue = 8;
   List<bool> checkBoxList = List.generate(10, (index) => false); // false 10개
-  List<int> choosedAnswer = List.generate(7, (index) => -1); // -1로 초기화함
+  List<List<int>> choosedAnswers = [];
 
   @override
   Widget build(BuildContext context) {
+    // checkBoxList에서 true인 값의 인덱스만 골라 배열로 가져오는 코드
+    List<int> SelectedDrugs =
+        List.generate(checkBoxList.length, (index) => index)
+            .where((index) => checkBoxList[index] == true)
+            .toList();
+    print(SelectedDrugs);
+    if (SelectedDrugs.length != choosedAnswers.length) {
+      choosedAnswers = List.generate(
+          SelectedDrugs.length,
+          (index) =>
+              List.generate(answer[currentIndex]!.length, (index) => -1));
+    }
+    print(choosedAnswers);
     return Scaffold(
       appBar: const MyAppbar(
         isMain: false,
@@ -47,11 +60,17 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                   drugCheckBoxPressed: drugCheckBoxPressed,
                 ),
               if (currentIndex != 1)
-                ExpectedAnswer(
-                  currentIndex: currentIndex,
-                  choosedAnswer: choosedAnswer,
-                  onAnswerPressed: onAnswerPressed,
-                ),
+                Column(children: [
+                  ...List.generate(SelectedDrugs.length, (index) => index).map(
+                    (index) => ExpectedAnswer(
+                      DrugName: answer[1]![SelectedDrugs[index]],
+                      currentIndex: currentIndex,
+                      choosedAnswer: choosedAnswers[index],
+                      onAnswerPressed: onAnswerPressed,
+                      ID: index,
+                    ),
+                  ),
+                ]),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 56),
@@ -81,15 +100,12 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   void drugCheckBoxPressed(int index) {
     setState(() {
       checkBoxList[index] = !checkBoxList[index];
-      print(checkBoxList);
     });
   }
 
-  void onAnswerPressed(int index) {
+  void onAnswerPressed(int ID, int index) {
     setState(() {
-      choosedAnswer[currentIndex - 2] = index;
-      print(index);
-      print(choosedAnswer);
+      choosedAnswers[ID][currentIndex - 2] = index;
     });
   }
 
@@ -102,7 +118,6 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   void onNextButtonPressed() {
     setState(() {
       if (currentIndex < 8) currentIndex += 1;
-      print(choosedAnswer);
     });
   }
 }
@@ -137,7 +152,7 @@ class DrugChoose extends StatelessWidget {
                         ? const EdgeInsets.only(bottom: 15)
                         : EdgeInsets.zero,
                     child:
-                        // 전체를 ElevatedButton으로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
+                        // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
                         InkWell(
                       onTap: () => drugCheckBoxPressed(index),
                       child: Row(
@@ -175,52 +190,84 @@ class ExpectedAnswer extends StatelessWidget {
   final int currentIndex;
   final List<int> choosedAnswer;
   final onAnswerPressed;
+  final String DrugName;
+  // choosedAnswers를 2중 리스트 배열로 변경하면서 약물 다중 선택시 어느 약물에 대한 응답인지 구별할때 필요하여 만듬
+  final int ID;
 
   const ExpectedAnswer({
     Key? key,
     required this.currentIndex,
     required this.choosedAnswer,
     required this.onAnswerPressed,
+    required this.DrugName,
+    required this.ID,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(answer[currentIndex]!.length, (index) => index)
-          .map(
-            (index) => Column(
-              children: [
-                SizedBox(
-                  width: double.infinity, // 최대 너비로 설정
-                  child: InkWell(
-                    onTap: () => onAnswerPressed(index),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      decoration: BoxDecoration(
-                        color: choosedAnswer[currentIndex - 2] == index
-                            ? Colors.blue
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(width: 1, color: Colors.black12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          answer[currentIndex]![index],
-                          style: choosedAnswer[currentIndex - 2] == index
-                              ? const TextStyle(
-                                  fontSize: 20, color: Colors.white)
-                              : const TextStyle(
-                                  fontSize: 20, color: Colors.black87),
-                        ),
+      children: [
+        ...List.generate(answer[currentIndex]!.length, (index) => index).map(
+          (index) => Column(
+            children: [
+              if (index == 0) DrugNameTextWidget(),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.002),
+              SizedBox(
+                width: double.infinity, // 최대 너비로 설정
+                child: InkWell(
+                  onTap: () => onAnswerPressed(ID, index),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    decoration: BoxDecoration(
+                      color: choosedAnswer[currentIndex - 2] == index
+                          ? Colors.blue
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(width: 1, color: Colors.black12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        answer[currentIndex]![index],
+                        style: choosedAnswer[currentIndex - 2] == index
+                            ? const TextStyle(fontSize: 20, color: Colors.white)
+                            : const TextStyle(
+                                fontSize: 20, color: Colors.black87),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 15),
-              ],
+              ),
+              const SizedBox(height: 15),
+            ],
+          ),
+        ),
+        SizedBox(
+            height: MediaQuery.of(context).size.height *
+                0.03), // 약물 여러개 일때 UI가 붙어있어서 추가함
+      ],
+    );
+  }
+
+  Widget DrugNameTextWidget() {
+    return IntrinsicHeight(
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          // borderRadius: BorderRadius.circular(6),
+          color: Colors.grey[200],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Text(
+            DrugName,
+            style: const TextStyle(
+              fontSize: 20,
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
             ),
-          )
-          .toList(),
+          ),
+        ),
+      ),
     );
   }
 }
