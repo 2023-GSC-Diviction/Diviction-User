@@ -15,7 +15,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   int currentIndex = 1;
   int MaxValue = 8;
   List<bool> checkBoxList = List.generate(10, (index) => false); // false 10개
-  List<List<int>> choosedAnswers = [];
+  List<List<int>> choosedAnswers = []; // 마약 선택시에 그 개수에 맞게 초기화
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +24,22 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
         List.generate(checkBoxList.length, (index) => index)
             .where((index) => checkBoxList[index] == true)
             .toList();
-    print(SelectedDrugs);
+    // print(SelectedDrugs);
     if (SelectedDrugs.length != choosedAnswers.length) {
       choosedAnswers = List.generate(
           SelectedDrugs.length,
           (index) =>
               List.generate(answer[currentIndex]!.length, (index) => -1));
     }
-    print(choosedAnswers);
-    return Scaffold(
-      appBar: const MyAppbar(
-        isMain: false,
-        title: 'Drug Self Diagnosis',
-        hasBack: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
+    // print(choosedAnswers);
+    return SafeArea(
+      child: Scaffold(
+        appBar: const MyAppbar(
+          isMain: false,
+          title: 'Drug Self Diagnosis',
+          hasBack: true,
+        ),
+        body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
           child: Column(
             children: [
@@ -60,17 +60,20 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                   drugCheckBoxPressed: drugCheckBoxPressed,
                 ),
               if (currentIndex != 1)
-                Column(children: [
-                  ...List.generate(SelectedDrugs.length, (index) => index).map(
-                    (index) => ExpectedAnswer(
-                      DrugName: answer[1]![SelectedDrugs[index]],
-                      currentIndex: currentIndex,
-                      choosedAnswer: choosedAnswers[index],
-                      onAnswerPressed: onAnswerPressed,
-                      ID: index,
-                    ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: SelectedDrugs.length,
+                    itemBuilder: (context, index) {
+                      return ExpectedAnswer(
+                        DrugName: answer[1]![SelectedDrugs[index]],
+                        currentIndex: currentIndex,
+                        choosedAnswer: choosedAnswers[index],
+                        onAnswerPressed: onAnswerPressed,
+                        ID: index,
+                      );
+                    },
                   ),
-                ]),
+                ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 56),
@@ -135,6 +138,7 @@ class DrugChoose extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height*0.6,
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
@@ -142,43 +146,41 @@ class DrugChoose extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(10, (index) => index)
-              .map(
-                (index) => Padding(
-                    padding: index != 9
-                        ? const EdgeInsets.only(bottom: 15)
-                        : EdgeInsets.zero,
-                    child:
-                        // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
-                        InkWell(
-                      onTap: () => drugCheckBoxPressed(index),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3.0),
-                            ),
-                            value: checkBoxList[index],
-                            onChanged: (value) {
-                              drugCheckBoxPressed(index);
-                            },
-                          ),
-                          Expanded(
-                            child: Text(
-                              answer[1]![index],
-                              maxLines: null,
-                              style: TextStyles.answerTextStyle,
-                            ),
-                          ),
-                        ],
+        child: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return Padding(
+                padding: index != 9
+                    ? const EdgeInsets.only(bottom: 15)
+                    : EdgeInsets.zero,
+                child:
+                // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
+                InkWell(
+                  onTap: () => drugCheckBoxPressed(index),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.0),
+                        ),
+                        value: checkBoxList[index],
+                        onChanged: (value) {
+                          drugCheckBoxPressed(index);
+                        },
                       ),
-                    )),
-              )
-              .toList(),
+                      Expanded(
+                        child: Text(
+                          answer[1]![index],
+                          maxLines: null,
+                          style: TextStyles.answerTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            );
+          },
         ),
       ),
     );
