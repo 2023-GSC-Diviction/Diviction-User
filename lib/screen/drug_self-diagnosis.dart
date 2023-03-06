@@ -16,6 +16,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   int MaxValue = 8;
   List<bool> checkBoxList = List.generate(10, (index) => false); // false 10개
   List<List<int>> choosedAnswers = []; // 마약 선택시에 그 개수에 맞게 초기화
+  ScrollController _scrollController = ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
               if (currentIndex != 1)
                 Expanded(
                   child: ListView.builder(
+                    controller: _scrollController,
                     itemCount: SelectedDrugs.length,
                     itemBuilder: (context, index) {
                       return ExpectedAnswer(
@@ -116,12 +118,22 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
     setState(() {
       if (currentIndex > 1) currentIndex -= 1;
     });
+    _scrollToTop();
   }
 
   void onNextButtonPressed() {
     setState(() {
       if (currentIndex < 8) currentIndex += 1;
     });
+    _scrollToTop();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 }
 
