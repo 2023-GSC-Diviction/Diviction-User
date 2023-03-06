@@ -11,10 +11,16 @@ class NewPostScreen extends StatefulWidget {
   State<NewPostScreen> createState() => _NewPostScreenState();
 }
 
-final textFieldController = TextEditingController();
-String text = '';
-
 class _NewPostScreenState extends State<NewPostScreen> {
+  final textFieldController = TextEditingController();
+  String text = '';
+
+  @override
+  void dispose() {
+    textFieldController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

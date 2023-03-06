@@ -1,3 +1,4 @@
+import 'package:diviction_user/screen/community/comment_screen.dart';
 import 'package:diviction_user/screen/community/new_post_screen.dart';
 import 'package:diviction_user/service/community_service.dart';
 import 'package:diviction_user/widget/appbar.dart';
@@ -29,56 +30,6 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
     //     loading: () => null,
     //     error: (error, stackTrace) => null);
 
-    final post = <Post>[
-      Post(
-          content:
-              'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it',
-          date: '1020',
-          image: null,
-          category: 'category',
-          comment: [],
-          id: 'jeong'),
-      Post(
-          content: 'How r u? Today is a good day to study flutter and dart. ',
-          date: '1020',
-          image: 'null',
-          category: 'category',
-          comment: [],
-          id: 'jeong'),
-      Post(
-          content:
-              'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it',
-          date: '1020',
-          image: null,
-          category: 'category',
-          comment: [],
-          id: 'jeong'),
-      Post(
-          content:
-              'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it. How r u? Today is a good day to study flutter and dart. How r u? Today is a good day to study flutter and dart.',
-          date: '1020',
-          image: null,
-          category: 'category',
-          comment: [],
-          id: 'jeong'),
-      Post(
-          content:
-              'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it',
-          date: '1020',
-          image: null,
-          category: 'category',
-          comment: [],
-          id: 'jeong'),
-      Post(
-          content:
-              'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe',
-          date: '1020',
-          image: null,
-          category: 'category',
-          comment: [],
-          id: 'jack')
-    ];
-
     return Scaffold(
       appBar: const MyAppbar(
           isMain: false, hasBack: false, title: 'DIVICTION COMMUNITY'),
@@ -93,7 +44,7 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           height: MediaQuery.of(context).size.height,
           child: postListView(post)),
     );
@@ -111,7 +62,7 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
           children: [
             Container(
                 margin: const EdgeInsets.only(
-                    left: 10, right: 10, bottom: 10, top: 15),
+                    bottom: 10, top: 15, left: 10, right: 10),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -124,11 +75,43 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
             ),
             Column(
                 children:
-                    postList!.map((e) => PostItemWidget(post: e)).toList())
+                    postList!.map((post) => postItemWidget(post)).toList())
           ],
         ));
     }
   }
+
+  Widget postItemWidget(Post post) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        PostItem(post: post),
+        InkWell(
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CommentScreen(
+                        post: post,
+                      ))),
+          child: Container(
+            alignment: Alignment.centerRight,
+            width: double.infinity,
+            margin: const EdgeInsets.only(right: 10),
+            height: 25,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('comment', style: TextStyles.commentBtnTextStyle),
+                  const SizedBox(width: 5),
+                  Icon(
+                    Icons.comment,
+                    size: 25,
+                    color: Colors.grey[400],
+                  ),
+                ]),
+          ),
+        )
+      ]);
 
   Widget loadingWidget() => const Center(child: CircularProgressIndicator());
   Widget failWidget() => const Center(child: Text('fail'));
@@ -138,8 +121,8 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
       ));
 }
 
-class PostItemWidget extends StatelessWidget {
-  const PostItemWidget({super.key, required this.post});
+class PostItem extends StatelessWidget {
+  const PostItem({super.key, required this.post});
 
   final Post post;
 
@@ -153,7 +136,7 @@ class PostItemWidget extends StatelessWidget {
       ),
       Container(
           margin:
-              const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 15),
+              const EdgeInsets.only(bottom: 10, top: 15, left: 10, right: 10),
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10), color: Colors.grey[200]),
@@ -172,25 +155,6 @@ class PostItemWidget extends StatelessWidget {
                   ],
                 )
               : Text(post.content, style: TextStyles.chatNicknameTextStyle)),
-      Container(
-        alignment: Alignment.centerRight,
-        width: double.infinity,
-        margin: const EdgeInsets.only(right: 10),
-        height: 25,
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('comment', style: TextStyles.commentBtnTextStyle),
-              const SizedBox(width: 5),
-              Icon(
-                Icons.comment,
-                size: 25,
-                color: Colors.grey[400],
-              ),
-            ]),
-      ),
     ]);
   }
 
@@ -199,3 +163,73 @@ class PostItemWidget extends StatelessWidget {
         MaterialPageRoute(builder: (context) => const DayCheckScreen()));
   }
 }
+
+final post = <Post>[
+  Post(
+      content:
+          'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it',
+      date: '1020',
+      image: null,
+      category: 'category',
+      comment: [
+        Comment(id: 'jeong', content: 'hi', date: '1020'),
+        Comment(
+            id: 'jeong',
+            content: 'hi hello  Today is a good day to study flutter and dart.',
+            date: '1020'),
+        Comment(
+            id: 'jeong',
+            content:
+                'hi  Today is a good day to study flutter and dart.  Today is a good day to study flutter and dart.',
+            date: '1020'),
+        Comment(
+            id: 'jeong',
+            content: 'hi hello  Today is a good day to study flutter and dart.',
+            date: '1020'),
+        Comment(
+            id: 'jeong',
+            content:
+                'hi  Today is a good day to study flutter and dart.  Today is a good day to study flutter and dart.',
+            date: '1020')
+      ],
+      id: 'jeong'),
+  Post(
+      content: 'How r u? Today is a good day to study flutter and dart. ',
+      date: '1020',
+      image: 'null',
+      category: 'category',
+      comment: [],
+      id: 'jeong'),
+  Post(
+      content:
+          'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it',
+      date: '1020',
+      image: null,
+      category: 'category',
+      comment: [],
+      id: 'jeong'),
+  Post(
+      content:
+          'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it. How r u? Today is a good day to study flutter and dart. How r u? Today is a good day to study flutter and dart.',
+      date: '1020',
+      image: null,
+      category: 'category',
+      comment: [],
+      id: 'jeong'),
+  Post(
+      content:
+          'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe. Maybe you love it',
+      date: '1020',
+      image: null,
+      category: 'category',
+      comment: [],
+      id: 'jeong'),
+  Post(
+      content:
+          'How r u? Today is a good day to study flutter and dart. I\'m so surprised! Copilot is so good. I can\'t believe',
+      date: '1020',
+      image: null,
+      category: 'category',
+      comment: [],
+      id: 'jack')
+];
