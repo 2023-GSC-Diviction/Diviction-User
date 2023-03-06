@@ -16,7 +16,8 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
   int MaxValue = 8;
   List<bool> checkBoxList = List.generate(10, (index) => false); // false 10개
   List<List<int>> choosedAnswers = []; // 마약 선택시에 그 개수에 맞게 초기화
-  ScrollController _scrollController = ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
+  ScrollController _scrollController =
+      ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +70,10 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                       return ExpectedAnswer(
                         DrugName: answer[1]![SelectedDrugs[index]],
                         currentIndex: currentIndex,
-                        choosedAnswer: choosedAnswers[index],
+                        choosedAnswer_index: choosedAnswers[index],
                         onAnswerPressed: onAnswerPressed,
                         ID: index,
+                        useRemoveLastLine: SelectedDrugs.length,
                       );
                     },
                   ),
@@ -150,7 +152,7 @@ class DrugChoose extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height*0.6,
+      height: MediaQuery.of(context).size.height * 0.6,
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
@@ -162,35 +164,35 @@ class DrugChoose extends StatelessWidget {
           itemCount: 10,
           itemBuilder: (context, index) {
             return Padding(
-                padding: index != 9
-                    ? const EdgeInsets.only(bottom: 15)
-                    : EdgeInsets.zero,
-                child:
-                // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
-                InkWell(
-                  onTap: () => drugCheckBoxPressed(index),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3.0),
-                        ),
-                        value: checkBoxList[index],
-                        onChanged: (value) {
-                          drugCheckBoxPressed(index);
-                        },
+              padding: index != 9
+                  ? const EdgeInsets.only(bottom: 15)
+                  : EdgeInsets.zero,
+              child:
+                  // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
+                  InkWell(
+                onTap: () => drugCheckBoxPressed(index),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3.0),
                       ),
-                      Expanded(
-                        child: Text(
-                          answer[1]![index],
-                          maxLines: null,
-                          style: TextStyles.answerTextStyle,
-                        ),
+                      value: checkBoxList[index],
+                      onChanged: (value) {
+                        drugCheckBoxPressed(index);
+                      },
+                    ),
+                    Expanded(
+                      child: Text(
+                        answer[1]![index],
+                        maxLines: null,
+                        style: TextStyles.answerTextStyle,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
             );
           },
         ),
@@ -202,19 +204,21 @@ class DrugChoose extends StatelessWidget {
 // 2~8번 질문의 예상답변(중복선택x), 라디오 버튼
 class ExpectedAnswer extends StatelessWidget {
   final int currentIndex;
-  final List<int> choosedAnswer;
+  final List<int> choosedAnswer_index;
   final onAnswerPressed;
   final String DrugName;
   // choosedAnswers를 2중 리스트 배열로 변경하면서 약물 다중 선택시 어느 약물에 대한 응답인지 구별할때 필요하여 만듬
   final int ID;
+  final int useRemoveLastLine;
 
   const ExpectedAnswer({
     Key? key,
     required this.currentIndex,
-    required this.choosedAnswer,
+    required this.choosedAnswer_index,
     required this.onAnswerPressed,
     required this.DrugName,
     required this.ID,
+    required this.useRemoveLastLine,
   }) : super(key: key);
 
   @override
@@ -233,7 +237,7 @@ class ExpectedAnswer extends StatelessWidget {
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(
-                      color: choosedAnswer[currentIndex - 2] == index
+                      color: choosedAnswer_index[currentIndex - 2] == index
                           ? Colors.blue
                           : Colors.white,
                       borderRadius: BorderRadius.circular(16),
@@ -242,7 +246,7 @@ class ExpectedAnswer extends StatelessWidget {
                     child: Center(
                       child: Text(
                         answer[currentIndex]![index],
-                        style: choosedAnswer[currentIndex - 2] == index
+                        style: choosedAnswer_index[currentIndex - 2] == index
                             ? const TextStyle(fontSize: 20, color: Colors.white)
                             : const TextStyle(
                                 fontSize: 20, color: Colors.black87),
@@ -255,9 +259,11 @@ class ExpectedAnswer extends StatelessWidget {
             ],
           ),
         ),
+        // 마지막이 아닐 때만 구분선 넣기
+        if (useRemoveLastLine-1 != ID) dividingLine,
         SizedBox(
             height: MediaQuery.of(context).size.height *
-                0.03), // 약물 여러개 일때 UI가 붙어있어서 추가함
+                0.015), // 약물 여러개 일때 UI가 붙어있어서 추가함
       ],
     );
   }

@@ -73,3 +73,14 @@ class Palette {
   static const Color borderColor = Color.fromARGB(255, 203, 203, 209);
   static const Color bottomBoxBorderColor = Color.fromARGB(10, 0, 0, 0);
 }
+
+Container dividingLine = Container(
+  decoration: BoxDecoration(
+    border: Border(
+      top: BorderSide(
+        width: 1,
+        color: Colors.grey,
+      ),
+    ),
+  ),
+);
