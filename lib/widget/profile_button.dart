@@ -8,10 +8,15 @@ import '../config/style.dart';
 import '../screen/day_check_screen.dart';
 
 class ProfileButton extends StatelessWidget {
-  const ProfileButton({required this.nickname, required this.id, super.key});
+  const ProfileButton(
+      {required this.nickname,
+      required this.id,
+      required this.onProfilePressed,
+      super.key});
 
   final id;
   final nickname;
+  final onProfilePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +35,5 @@ class ProfileButton extends StatelessWidget {
             child: Text(nickname, style: TextStyles.chatNicknameTextStyle)),
       ]),
     );
-  }
-
-  onProfilePressed(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const DayCheckScreen()));
   }
 }

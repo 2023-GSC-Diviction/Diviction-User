@@ -65,6 +65,11 @@ class TextStyles {
       TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16);
   static const TextStyle dialogCancelTextStyle = TextStyle(
       color: Colors.black54, fontWeight: FontWeight.w700, fontSize: 16);
+  static const TextStyle commentBtnTextStyle = TextStyle(
+      fontSize: 15,
+      height: 1.2,
+      color: Color.fromRGBO(51, 51, 51, 1),
+      fontWeight: FontWeight.w400);
 }
 
 class Palette {
