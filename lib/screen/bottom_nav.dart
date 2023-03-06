@@ -1,6 +1,6 @@
 import 'package:diviction_user/screen/chat_screen.dart';
+import 'package:diviction_user/screen/community/community_screen.dart';
 import 'package:diviction_user/screen/counselor/counselor_screen.dart';
-import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class BottomNavigation extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: [HomeSceen(), CounselorScreen(), DayCheckScreen(), ChatScreen()]
+        child: [HomeSceen(), CounselorScreen(), CommunityScreen(), ChatScreen()]
             .elementAt(currentPage),
       ),
       bottomNavigationBar: BottomNavigationBar(
