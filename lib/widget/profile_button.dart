@@ -11,7 +11,7 @@ class ProfileButton extends StatelessWidget {
   const ProfileButton(
       {required this.nickname,
       required this.id,
-      required this.onProfilePressed,
+      this.onProfilePressed,
       super.key});
 
   final id;
@@ -24,7 +24,7 @@ class ProfileButton extends StatelessWidget {
       height: 25,
       child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         ProfileImage(
-          onProfileImagePressed: () => {onProfilePressed(context)},
+          onProfileImagePressed: () => onProfilePressed(context),
           isChoosedPicture: false,
           path: null,
           type: 1,

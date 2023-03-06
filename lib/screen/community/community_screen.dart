@@ -146,7 +146,11 @@ class PostItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      ProfileButton(nickname: post.id, id: 'id'),
+      ProfileButton(
+        nickname: post.id,
+        id: 'id',
+        onProfilePressed: onProfilePressed,
+      ),
       Container(
           margin:
               const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 15),
@@ -188,5 +192,10 @@ class PostItemWidget extends StatelessWidget {
             ]),
       ),
     ]);
+  }
+
+  onProfilePressed(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const DayCheckScreen()));
   }
 }
