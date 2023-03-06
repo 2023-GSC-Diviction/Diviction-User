@@ -70,6 +70,8 @@ class TextStyles {
       height: 1.2,
       color: Color.fromRGBO(51, 51, 51, 1),
       fontWeight: FontWeight.w400);
+  static const TextStyle descriptionTextStyle =
+      TextStyle(color: Color.fromRGBO(153, 153, 153, 1), fontSize: 14);
 }
 
 class Palette {

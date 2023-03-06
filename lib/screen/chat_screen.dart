@@ -16,75 +16,72 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
   bool isChoosedPicture = false;
+  String newMessage = '';
   String path = '';
-  final sendBoxSize = 55.0;
+  final sendBoxSize = 40.0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const MyAppbar(
-          isMain: false,
-          hasBack: false,
-        ),
-        extendBodyBehindAppBar: false,
-        body: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
+    return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus(); // 키보드 닫기 이벤트
+        },
+        child: Scaffold(
+            appBar: const MyAppbar(
+              isMain: false,
+              hasBack: false,
             ),
-            child: Column(
+            extendBodyBehindAppBar: false,
+            body: Column(
               children: [const Expanded(child: Messages()), sendMesssage()],
             )));
   }
 
-  Widget sendMesssage() {
-    return Container(
-      height: sendBoxSize,
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Container(
-            width: sendBoxSize,
-            height: sendBoxSize,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
+  Widget sendMesssage() => Container(
+      height: sendBoxSize + 20,
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(color: Color.fromARGB(18, 0, 0, 0), blurRadius: 10)
+        ],
+        color: Colors.white,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Row(children: [
+        IconButton(
+          padding: EdgeInsets.zero,
+          onPressed: onSendImagePressed,
+          icon: const Icon(Icons.attach_file),
+          color: Colors.blue,
+          iconSize: 25,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+            child: TextField(
+          maxLines: null,
+          style: TextStyle(color: Colors.black),
+          controller: _controller,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.upload_rounded),
               color: Colors.blue,
             ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: onSendImagePressed,
-              icon: const Icon(Icons.attach_file),
-              color: Colors.white,
-              iconSize: 25,
-            ),
+            border: const OutlineInputBorder(borderSide: BorderSide.none),
+            labelText: 'Send a message...',
           ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: TextField(
-              maxLines: null,
-              controller: _controller,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.send),
-                  color: Colors.blue,
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color: Color.fromARGB(67, 28, 28, 28)),
-                ),
-                labelText: 'Send a message...',
-                enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(width: 1, color: Colors.blue)),
-              ),
-              onChanged: (value) {},
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          onChanged: (value) {
+            newMessage = value;
+          },
+        ))
+      ]));
 
   onSendImagePressed() async {
     final picker = ImagePicker();
