@@ -1,4 +1,5 @@
-import 'package:diviction_user/screen/drug_self-diagnosis.dart';
+import 'package:diviction_user/screen/survey/alcohol_survey.dart';
+import 'package:diviction_user/screen/survey/drug_survey.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -34,13 +35,22 @@ class _HomeSceenState extends State<HomeSceen> {
                     const CalendarWidget(),
                     checkList(),
                     TestButton(
-                      type: 0,
+                      type: 'Drug',
+                      screen: DrugSurvey(),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     TestButton(
-                      type: 1,
+                      type: 'Alcohol',
+                      screen: AlcoholSurvey(),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TestButton(
+                      type: 'psychological',
+                      screen: DrugSurvey(),
                     )
                   ],
                 ),
@@ -98,15 +108,21 @@ class _HomeSceenState extends State<HomeSceen> {
 }
 
 class TestButton extends StatelessWidget {
-  int type;
-  TestButton({required this.type, super.key});
+  final String type;
+  final screen;
+
+  TestButton({
+    super.key,
+    required this.type,
+    required this.screen,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => DrugSelfDiagnosis())); // 테스트중으로 변경함
+            MaterialPageRoute(builder: (context) => screen)); // 테스트중으로 변경함
       },
       child: Container(
         decoration: BoxDecoration(
@@ -118,7 +134,7 @@ class TestButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(type == 0 ? 'psychological Test' : 'self-diagnosis Test',
+            Text('$type Test',
                 style: const TextStyle(
                     fontSize: 16, color: Palette.mainTextColor)),
             ClipOval(

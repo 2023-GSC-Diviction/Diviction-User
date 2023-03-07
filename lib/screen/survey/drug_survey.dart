@@ -1,37 +1,38 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
 import 'package:diviction_user/widget/appbar.dart';
-import 'package:diviction_user/widget/survey_answer_button.dart';
+import 'package:diviction_user/widget/survey/answer_button.dart';
+import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
-class DrugSelfDiagnosis extends StatefulWidget {
-  const DrugSelfDiagnosis({Key? key}) : super(key: key);
+class DrugSurvey extends StatefulWidget {
+  const DrugSurvey({Key? key}) : super(key: key);
 
   @override
-  State<DrugSelfDiagnosis> createState() => _DrugSelfDiagnosisState();
+  State<DrugSurvey> createState() => _DrugSurveyState();
 }
 
 final int MaxValue = 12;
 
-class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
+class _DrugSurveyState extends State<DrugSurvey> {
   int currentIndex = -1;
   List<bool> checkBoxList = List.generate(8, (index) => false); // false 8개
   // choosedAnswers : 0번 질문 부터 12번 질문까지에 대한 응답을 저장함 13개
   List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
   List<String> SelectedDrugsName = []; // 마약 선택시에 초기화
   ScrollController _scrollController =
-      ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
+  ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
 
   @override
   Widget build(BuildContext context) {
     // checkBoxList에서 true인 값의 인덱스만 골라 배열로 가져오는 코드
     List<int> SelectedDrugs =
-        List.generate(checkBoxList.length, (index) => index)
-            .where((index) => checkBoxList[index] == true)
-            .toList();
+    List.generate(checkBoxList.length, (index) => index)
+        .where((index) => checkBoxList[index] == true)
+        .toList();
     SelectedDrugsName =
-        List.generate(SelectedDrugs.length, (index) => answer[1]![index]);
+        List.generate(SelectedDrugs.length, (index) => drug_answer[-1]![index]);
     return SafeArea(
       child: Scaffold(
         appBar: const MyAppbar(
@@ -52,7 +53,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                   border: Border.all(width: 1.5, color: Colors.black12),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                Text(question[currentIndex+1],
+                Text(drug_question[currentIndex+1],
                     style: TextStyles.questionTextStyle),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 if (currentIndex == -1)
@@ -65,7 +66,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                     currentIndex: currentIndex,
                     choosedAnswer: choosedAnswers,
                     onAnswerPressed: onAnswerPressed,
-                    answerText: answer,
+                    answerText: drug_answer,
                   ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
@@ -81,7 +82,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                       PreOrNextButton(
                         content: currentIndex != MaxValue ? 'Next' : 'Result',
                         icondata:
-                            currentIndex != MaxValue ? Icons.east : Icons.done,
+                        currentIndex != MaxValue ? Icons.east : Icons.done,
                         onPressed: onNextButtonPressed,
                       ),
                     ],
@@ -135,18 +136,13 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
         return;
       }
       if (currentIndex == MaxValue) {
-        print("자가진단 완료");
-        choosedAnswers.forEach(
-          (innerList) {
-            print(SelectedDrugsName[choosedAnswers.indexOf(innerList)]);
-            print(innerList);
-            // 계산로직 추가하기
-            // API콜해서 데이터 저장하고
-            // 화면 전환
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => DrugSurveyResult()));
-          },
-        );
+        print("약물 선별검사 완료");
+        print(choosedAnswers);
+        // 점수 합산 - (drug) 제일 앞 값과 제일 뒤에 값은 제거
+        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length-2);
+        var sum = AnswerResult.reduce((value, element) => value + element);
+        print('1~10번 문항에 대한 응답값 : $AnswerResult');
+        print('총 점수 : $sum');
       }
     });
   }
@@ -174,15 +170,15 @@ class DrugChoose extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
         child: ListView.builder(
-          itemCount: answer[-1]!.length,
+          itemCount: drug_answer[-1]!.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: index != answer[-1]!.length - 1
+              padding: index != drug_answer[-1]!.length - 1
                   ? const EdgeInsets.only(bottom: 12)
                   : EdgeInsets.zero,
               child:
-                  // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
-                  InkWell(
+              // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
+              InkWell(
                 onTap: () => drugCheckBoxPressed(index),
                 child: Row(
                   children: [
@@ -198,7 +194,7 @@ class DrugChoose extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        answer[-1]![index],
+                        drug_answer[-1]![index],
                         maxLines: null,
                         style: TextStyles.answerTextStyle,
                       ),
@@ -208,90 +204,6 @@ class DrugChoose extends StatelessWidget {
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-
-
-class QuestionTextWidget extends StatelessWidget {
-  final String question;
-  const QuestionTextWidget({
-    Key? key,
-    required this.question,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          // borderRadius: BorderRadius.circular(6),
-          color: Colors.grey[200],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Text(
-            question,
-            style: const TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PreOrNextButton extends StatelessWidget {
-  final String content;
-  final IconData? icondata;
-  final VoidCallback onPressed;
-
-  const PreOrNextButton({
-    Key? key,
-    required this.content,
-    required this.icondata,
-    required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.3,
-      height: MediaQuery.of(context).size.height * 0.07,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: content == 'Back'
-              ? [
-                  Icon(icondata),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                  Text(
-                    content,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ]
-              : [
-                  Text(
-                    content,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                  Icon(icondata),
-                ],
         ),
       ),
     );
