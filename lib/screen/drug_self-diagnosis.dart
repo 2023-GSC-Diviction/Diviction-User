@@ -63,19 +63,21 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                   drugCheckBoxPressed: drugCheckBoxPressed,
                 ),
               if (currentIndex != 1)
-                ListView.builder(
-                  controller: _scrollController,
-                  itemCount: SelectedDrugs.length,
-                  itemBuilder: (context, index) {
-                    return ExpectedAnswer(
-                      DrugName: answer[1]![SelectedDrugs[index]],
-                      currentIndex: currentIndex,
-                      choosedAnswer_index: choosedAnswers[index],
-                      onAnswerPressed: onAnswerPressed,
-                      ID: index,
-                      useRemoveLastLine: SelectedDrugs.length,
-                    );
-                  },
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: SelectedDrugs.length,
+                    itemBuilder: (context, index) {
+                      return ExpectedAnswer(
+                        DrugName: answer[1]![SelectedDrugs[index]],
+                        currentIndex: currentIndex,
+                        choosedAnswer_index: choosedAnswers[index],
+                        onAnswerPressed: onAnswerPressed,
+                        ID: index,
+                        useRemoveLastLine: SelectedDrugs.length,
+                      );
+                    },
+                  ),
                 ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Padding(
