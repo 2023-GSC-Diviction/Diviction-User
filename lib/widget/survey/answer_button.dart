@@ -6,6 +6,7 @@ class SurveyAnswerButton extends StatelessWidget {
   final List<int> choosedAnswer;
   final onAnswerPressed;
   final answerText;
+  final type;
 
   const SurveyAnswerButton({
     Key? key,
@@ -13,14 +14,17 @@ class SurveyAnswerButton extends StatelessWidget {
     required this.choosedAnswer,
     required this.onAnswerPressed,
     required this.answerText,
+    this.type,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var answerList = List.generate(type != 'psychological' ? answerText[currentIndex]!.length : 4, (index) => index);
     return Column(
       children: [
-        ...List.generate(answerText[currentIndex]!.length, (index) => index).map(
-              (index) => Column(
+        ...answerList
+            .map(
+          (index) => Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.002),
               SizedBox(
@@ -38,11 +42,11 @@ class SurveyAnswerButton extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        answerText[currentIndex]![index],
+                        type != 'psychological' ? answerText[currentIndex]![index] : answerText['All']![index],
                         style: choosedAnswer[currentIndex] == index
                             ? const TextStyle(fontSize: 20, color: Colors.white)
                             : const TextStyle(
-                            fontSize: 20, color: Colors.black87),
+                                fontSize: 20, color: Colors.black87),
                       ),
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'package:diviction_user/screen/survey/alcohol_survey.dart';
 import 'package:diviction_user/screen/survey/drug_survey.dart';
+import 'package:diviction_user/screen/survey/psychological_survey.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -50,7 +51,7 @@ class _HomeSceenState extends State<HomeSceen> {
                     ),
                     TestButton(
                       type: 'psychological',
-                      screen: DrugSurvey(),
+                      screen: PsychologicalSurvey(),
                     )
                   ],
                 ),

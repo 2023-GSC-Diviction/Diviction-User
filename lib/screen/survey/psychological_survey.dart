@@ -6,16 +6,16 @@ import 'package:diviction_user/widget/survey/answer_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
-class AlcoholSurvey extends StatefulWidget {
-  const AlcoholSurvey({Key? key}) : super(key: key);
+class PsychologicalSurvey extends StatefulWidget {
+  const PsychologicalSurvey({Key? key}) : super(key: key);
 
   @override
-  State<AlcoholSurvey> createState() => _AlcoholSurveyState();
+  State<PsychologicalSurvey> createState() => _PsychologicalSurveyState();
 }
 
-final int MaxValue = 11;
+final int MaxValue = 21;
 
-class _AlcoholSurveyState extends State<AlcoholSurvey> {
+class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
   List<int> choosedAnswers = List.generate(MaxValue+1, (index) => -1);
@@ -26,7 +26,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
       child: Scaffold(
         appBar: const MyAppbar(
           isMain: false,
-          title: 'Alcohol Self Diagnosis',
+          title: 'Psychological Self Diagnosis',
           hasBack: true,
         ),
         body: Padding(
@@ -42,18 +42,16 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
                   border: Border.all(width: 1.5, color: Colors.black12),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                Text(alcohol_question[currentIndex],
+                Text(psychological_question[currentIndex],
                     style: TextStyles.questionTextStyle),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 SurveyAnswerButton(
                   currentIndex: currentIndex,
                   choosedAnswer: choosedAnswers,
                   onAnswerPressed: onAnswerPressed,
-                  answerText: alcohol_answer,
+                  answerText: psychological_answer,
+                  type: "psychological",
                 ),
-                // 몇 잔에 대한 기준을 추가로 설명해야 하는 문항이 있음 -> 2, 3번 문항
-                if([2, 3].contains(currentIndex))
-                  Text('1잔의 기준 : 맥주 12온스(355mL) / 와인 5온스(148mL) / 독주 1.5온스(44mL)'),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 56),
@@ -114,11 +112,11 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
         return;
       }
       if (currentIndex == MaxValue) {
-        print("알콜 선별검사 완료");
-        // 점수 합산 - (alcohol) 제일 앞 값과 제일 뒤에 값은 제거
-        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length-1);
+        print("심리검사 완료");
+        // 점수 합산 - (psychological) 제일 앞 값 제거
+        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length);
         var sum = AnswerResult.reduce((value, element) => value + element);
-        print('1~10번 문항에 대한 응답값 : $AnswerResult');
+        print('1~21번 문항에 대한 응답값 : $AnswerResult');
         print('총 점수 : $sum');
       }
     });
