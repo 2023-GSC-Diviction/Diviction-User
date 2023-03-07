@@ -63,21 +63,19 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                   drugCheckBoxPressed: drugCheckBoxPressed,
                 ),
               if (currentIndex != 1)
-                Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: SelectedDrugs.length,
-                    itemBuilder: (context, index) {
-                      return ExpectedAnswer(
-                        DrugName: answer[1]![SelectedDrugs[index]],
-                        currentIndex: currentIndex,
-                        choosedAnswer_index: choosedAnswers[index],
-                        onAnswerPressed: onAnswerPressed,
-                        ID: index,
-                        useRemoveLastLine: SelectedDrugs.length,
-                      );
-                    },
-                  ),
+                ListView.builder(
+                  controller: _scrollController,
+                  itemCount: SelectedDrugs.length,
+                  itemBuilder: (context, index) {
+                    return ExpectedAnswer(
+                      DrugName: answer[1]![SelectedDrugs[index]],
+                      currentIndex: currentIndex,
+                      choosedAnswer_index: choosedAnswers[index],
+                      onAnswerPressed: onAnswerPressed,
+                      ID: index,
+                      useRemoveLastLine: SelectedDrugs.length,
+                    );
+                  },
                 ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Padding(
@@ -135,7 +133,6 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
       // 해당 문항에서 사용자가 선택한 답변의 배열을 가져옴
       var CheckUserAnswer =
           choosedAnswers.map((list) => list[currentIndex - 2]).toList();
-      // print(CheckUserAnswer.any((value) => value == -1));
       // 하나라도 응답하지 않은 경우
       if (CheckUserAnswer.any((value) => value == -1)) {
         print("응답되지 않은 문항이 있습니다."); // -> 나중엔 토스트로 띄우기
@@ -147,12 +144,13 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
         currentIndex += 1;
       } else {
         print("자가진단 완료");
-        choosedAnswers.forEach((innerList) {
-          print(SelectedDrugsName[choosedAnswers.indexOf(innerList)]);
-          print(innerList);
-          // 계산로직 추가하기
-        });
-
+        choosedAnswers.forEach(
+          (innerList) {
+            print(SelectedDrugsName[choosedAnswers.indexOf(innerList)]);
+            print(innerList);
+            // 계산로직 추가하기
+          },
+        );
       }
     });
   }
@@ -164,6 +162,7 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
       curve: Curves.easeInOut,
     );
   }
+
   void _scrollToBottom() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
@@ -186,7 +185,7 @@ class DrugChoose extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.5,
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
