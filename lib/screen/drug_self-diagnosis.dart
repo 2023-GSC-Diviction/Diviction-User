@@ -1,7 +1,7 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
-import 'package:diviction_user/screen/drug_survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
+import 'package:diviction_user/widget/survey_answer_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
@@ -61,10 +61,11 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
                     drugCheckBoxPressed: drugCheckBoxPressed,
                   ),
                 if (currentIndex != -1)
-                  ExpectedAnswer(
+                  SurveyAnswerButton(
                     currentIndex: currentIndex,
                     choosedAnswer: choosedAnswers,
                     onAnswerPressed: onAnswerPressed,
+                    answerText: answer,
                   ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
@@ -213,60 +214,7 @@ class DrugChoose extends StatelessWidget {
   }
 }
 
-// 1~10번 질문의 예상답변(중복선택x), 라디오 버튼
-class ExpectedAnswer extends StatelessWidget {
-  final int currentIndex;
-  final List<int> choosedAnswer;
-  final onAnswerPressed;
 
-  const ExpectedAnswer({
-    Key? key,
-    required this.currentIndex,
-    required this.choosedAnswer,
-    required this.onAnswerPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...List.generate(answer[currentIndex]!.length, (index) => index).map(
-          (index) => Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.002),
-              SizedBox(
-                width: double.infinity, // 최대 너비로 설정
-                child: InkWell(
-                  onTap: () => onAnswerPressed(index),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(
-                      color: choosedAnswer[currentIndex] == index
-                          ? Colors.blue
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(width: 1, color: Colors.black12),
-                    ),
-                    child: Center(
-                      child: Text(
-                        answer[currentIndex]![index],
-                        style: choosedAnswer[currentIndex] == index
-                            ? const TextStyle(fontSize: 20, color: Colors.white)
-                            : const TextStyle(
-                                fontSize: 20, color: Colors.black87),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class QuestionTextWidget extends StatelessWidget {
   final String question;

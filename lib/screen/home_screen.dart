@@ -1,5 +1,4 @@
 import 'package:diviction_user/screen/drug_self-diagnosis.dart';
-import 'drug_survey_result.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
