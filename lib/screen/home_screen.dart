@@ -1,4 +1,5 @@
 import 'package:diviction_user/screen/drug_self-diagnosis.dart';
+import 'drug_survey_result.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -106,7 +107,7 @@ class TestButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => DrugSelfDiagnosis()));
+            MaterialPageRoute(builder: (context) => DrugSelfDiagnosis())); // 테스트중으로 변경함
       },
       child: Container(
         decoration: BoxDecoration(

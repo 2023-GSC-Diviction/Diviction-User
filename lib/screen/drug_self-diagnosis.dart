@@ -1,5 +1,6 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
+import 'package:diviction_user/screen/drug_survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
@@ -11,11 +12,13 @@ class DrugSelfDiagnosis extends StatefulWidget {
   State<DrugSelfDiagnosis> createState() => _DrugSelfDiagnosisState();
 }
 
+final int MaxValue = 12;
+
 class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
-  int currentIndex = 1;
-  int MaxValue = 8;
-  List<bool> checkBoxList = List.generate(10, (index) => false); // false 10개
-  List<List<int>> choosedAnswers = []; // 마약 선택시에 그 개수에 맞게 초기화
+  int currentIndex = -1;
+  List<bool> checkBoxList = List.generate(8, (index) => false); // false 8개
+  // choosedAnswers : 0번 질문 부터 12번 질문까지에 대한 응답을 저장함 13개
+  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
   List<String> SelectedDrugsName = []; // 마약 선택시에 초기화
   ScrollController _scrollController =
       ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
@@ -27,14 +30,8 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
         List.generate(checkBoxList.length, (index) => index)
             .where((index) => checkBoxList[index] == true)
             .toList();
-    // print(SelectedDrugs);
     SelectedDrugsName =
         List.generate(SelectedDrugs.length, (index) => answer[1]![index]);
-    if (SelectedDrugs.length != choosedAnswers.length) {
-      choosedAnswers = List.generate(
-          SelectedDrugs.length, (index) => List.generate(7, (index) => -1));
-    }
-    // print(choosedAnswers);
     return SafeArea(
       child: Scaffold(
         appBar: const MyAppbar(
@@ -44,61 +41,53 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
-          child: Column(
-            children: [
-              FAProgressBar(
-                currentValue: (currentIndex / MaxValue) * 100,
-                displayText: '%',
-                size: 24, // 높이
-                progressColor: Colors.blue,
-                border: Border.all(width: 1.5, color: Colors.black12),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              Text(question[currentIndex - 1],
-                  style: TextStyles.questionTextStyle),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              if (currentIndex == 1)
-                DrugChoose(
-                  checkBoxList: checkBoxList,
-                  drugCheckBoxPressed: drugCheckBoxPressed,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                FAProgressBar(
+                  currentValue: ((currentIndex + 2) / (MaxValue + 2)) * 100,
+                  displayText: '%',
+                  size: 24, // 높이
+                  progressColor: Colors.blue,
+                  border: Border.all(width: 1.5, color: Colors.black12),
                 ),
-              if (currentIndex != 1)
-                Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: SelectedDrugs.length,
-                    itemBuilder: (context, index) {
-                      return ExpectedAnswer(
-                        DrugName: answer[1]![SelectedDrugs[index]],
-                        currentIndex: currentIndex,
-                        choosedAnswer_index: choosedAnswers[index],
-                        onAnswerPressed: onAnswerPressed,
-                        ID: index,
-                        useRemoveLastLine: SelectedDrugs.length,
-                      );
-                    },
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                Text(question[currentIndex+1],
+                    style: TextStyles.questionTextStyle),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                if (currentIndex == -1)
+                  DrugChoose(
+                    checkBoxList: checkBoxList,
+                    drugCheckBoxPressed: drugCheckBoxPressed,
+                  ),
+                if (currentIndex != -1)
+                  ExpectedAnswer(
+                    currentIndex: currentIndex,
+                    choosedAnswer: choosedAnswers,
+                    onAnswerPressed: onAnswerPressed,
+                  ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 56),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PreOrNextButton(
+                        content: 'Back',
+                        icondata: Icons.west,
+                        onPressed: onBackButtonPressed,
+                      ),
+                      PreOrNextButton(
+                        content: currentIndex != MaxValue ? 'Next' : 'Result',
+                        icondata:
+                            currentIndex != MaxValue ? Icons.east : Icons.done,
+                        onPressed: onNextButtonPressed,
+                      ),
+                    ],
                   ),
                 ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 56),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    PreOrNextButton(
-                      content: 'Back',
-                      icondata: Icons.west,
-                      onPressed: onBackButtonPressed,
-                    ),
-                    PreOrNextButton(
-                      content: currentIndex != 8 ? 'Next' : 'Result',
-                      icondata: currentIndex != 8 ? Icons.east : Icons.done,
-                      onPressed: onNextButtonPressed,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -111,70 +100,58 @@ class _DrugSelfDiagnosisState extends State<DrugSelfDiagnosis> {
     });
   }
 
-  void onAnswerPressed(int ID, int index) {
+  void onAnswerPressed(int index) {
     setState(() {
-      choosedAnswers[ID][currentIndex - 2] = index;
+      choosedAnswers[currentIndex] = index;
+      print(choosedAnswers);
     });
   }
 
   void onBackButtonPressed() {
     setState(() {
-      if (currentIndex > 1) {
-        _scrollToTop();
+      if (currentIndex >= 0) {
         currentIndex -= 1;
+        print('currentIndex $currentIndex');
       }
     });
   }
 
   void onNextButtonPressed() {
     setState(() {
-      if (currentIndex == 1) {
+      if (currentIndex == -1) {
         currentIndex += 1;
         return;
       }
-      // 해당 문항에서 사용자가 선택한 답변의 배열을 가져옴
-      var CheckUserAnswer =
-          choosedAnswers.map((list) => list[currentIndex - 2]).toList();
       // 하나라도 응답하지 않은 경우
-      if (CheckUserAnswer.any((value) => value == -1)) {
-        print("응답되지 않은 문항이 있습니다."); // -> 나중엔 토스트로 띄우기
-        _scrollToBottom();
+      // if (choosedAnswers.any((value) => value == -1)) {
+      //   print("응답되지 않은 문항이 있습니다."); // -> 나중엔 토스트로 띄우기
+      //   _scrollToBottom();
+      //   return;
+      // }
+      if (currentIndex != MaxValue) {
+        currentIndex += 1;
+        print('currentIndex $currentIndex');
         return;
       }
-      if (currentIndex != 8) {
-        _scrollToTop();
-        currentIndex += 1;
-      } else {
+      if (currentIndex == MaxValue) {
         print("자가진단 완료");
         choosedAnswers.forEach(
           (innerList) {
             print(SelectedDrugsName[choosedAnswers.indexOf(innerList)]);
             print(innerList);
             // 계산로직 추가하기
+            // API콜해서 데이터 저장하고
+            // 화면 전환
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => DrugSurveyResult()));
           },
         );
       }
     });
   }
-
-  void _scrollToTop() {
-    _scrollController.animateTo(
-      0,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
 }
 
-// 1번 질문의 예상답변(중복선택o), 체크박스
+// 마약 선택, 0번 질문의 예상답변(중복선택o), 체크박스
 class DrugChoose extends StatelessWidget {
   final checkBoxList;
   final drugCheckBoxPressed;
@@ -196,11 +173,11 @@ class DrugChoose extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
         child: ListView.builder(
-          itemCount: 10,
+          itemCount: answer[-1]!.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: index != 9
-                  ? const EdgeInsets.only(bottom: 15)
+              padding: index != answer[-1]!.length - 1
+                  ? const EdgeInsets.only(bottom: 12)
                   : EdgeInsets.zero,
               child:
                   // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
@@ -220,7 +197,7 @@ class DrugChoose extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        answer[1]![index],
+                        answer[-1]![index],
                         maxLines: null,
                         style: TextStyles.answerTextStyle,
                       ),
@@ -236,24 +213,17 @@ class DrugChoose extends StatelessWidget {
   }
 }
 
-// 2~8번 질문의 예상답변(중복선택x), 라디오 버튼
+// 1~10번 질문의 예상답변(중복선택x), 라디오 버튼
 class ExpectedAnswer extends StatelessWidget {
   final int currentIndex;
-  final List<int> choosedAnswer_index;
+  final List<int> choosedAnswer;
   final onAnswerPressed;
-  final String DrugName;
-  // choosedAnswers를 2중 리스트 배열로 변경하면서 약물 다중 선택시 어느 약물에 대한 응답인지 구별할때 필요하여 만듬
-  final int ID;
-  final int useRemoveLastLine;
 
   const ExpectedAnswer({
     Key? key,
     required this.currentIndex,
-    required this.choosedAnswer_index,
+    required this.choosedAnswer,
     required this.onAnswerPressed,
-    required this.DrugName,
-    required this.ID,
-    required this.useRemoveLastLine,
   }) : super(key: key);
 
   @override
@@ -263,16 +233,15 @@ class ExpectedAnswer extends StatelessWidget {
         ...List.generate(answer[currentIndex]!.length, (index) => index).map(
           (index) => Column(
             children: [
-              if (index == 0) DrugNameTextWidget(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.002),
               SizedBox(
                 width: double.infinity, // 최대 너비로 설정
                 child: InkWell(
-                  onTap: () => onAnswerPressed(ID, index),
+                  onTap: () => onAnswerPressed(index),
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(
-                      color: choosedAnswer_index[currentIndex - 2] == index
+                      color: choosedAnswer[currentIndex] == index
                           ? Colors.blue
                           : Colors.white,
                       borderRadius: BorderRadius.circular(16),
@@ -281,7 +250,7 @@ class ExpectedAnswer extends StatelessWidget {
                     child: Center(
                       child: Text(
                         answer[currentIndex]![index],
-                        style: choosedAnswer_index[currentIndex - 2] == index
+                        style: choosedAnswer[currentIndex] == index
                             ? const TextStyle(fontSize: 20, color: Colors.white)
                             : const TextStyle(
                                 fontSize: 20, color: Colors.black87),
@@ -290,20 +259,24 @@ class ExpectedAnswer extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 12),
             ],
           ),
         ),
-        // 마지막이 아닐 때만 구분선 넣기
-        if (useRemoveLastLine - 1 != ID) dividingLine,
-        SizedBox(
-            height: MediaQuery.of(context).size.height *
-                0.015), // 약물 여러개 일때 UI가 붙어있어서 추가함
       ],
     );
   }
+}
 
-  Widget DrugNameTextWidget() {
+class QuestionTextWidget extends StatelessWidget {
+  final String question;
+  const QuestionTextWidget({
+    Key? key,
+    required this.question,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Container(
         width: double.infinity,
@@ -314,7 +287,7 @@ class ExpectedAnswer extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 8),
           child: Text(
-            DrugName,
+            question,
             style: const TextStyle(
               fontSize: 20,
               color: Colors.black,
