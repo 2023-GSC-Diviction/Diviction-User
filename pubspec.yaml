@@ -36,7 +36,8 @@ dependencies:
   shared_preferences: ^2.0.17
   intl: ^0.18.0
   flutter_chat_bubble: ^2.0.2
-  image_picker: ^0.8.6+3
+  image_picker: ^0.8.6+4
+  fluttertoast: ^8.2.1
 
   # 설문조사 UI의 상단에 진행상황을 알리기 위함
   flutter_animation_progress_bar: ^2.3.1
