@@ -102,7 +102,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
         return;
       }
 
-      // 하나라도 응답하지 않은 경우
+      // currentIndex 문항에 대해 응답하지 않은 경우
       if (choosedAnswers[currentIndex] == -1) {
         print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
         return;
