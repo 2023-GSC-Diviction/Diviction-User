@@ -19,11 +19,14 @@ class SurveyAnswerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var answerList = List.generate(type != 'psychological' ? answerText[currentIndex]!.length : 4, (index) => index);
+    var answerList = List.generate(4, (index) => index); // 심리검사
+    if (type != 'psychological') // 약물, 알코올
+      answerList =
+          List.generate(answerText[currentIndex]!.length, (index) => index);
+
     return Column(
       children: [
-        ...answerList
-            .map(
+        ...answerList.map(
           (index) => Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.002),
@@ -42,7 +45,9 @@ class SurveyAnswerButton extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        type != 'psychological' ? answerText[currentIndex]![index] : answerText['All']![index],
+                        type != 'psychological'
+                            ? answerText[currentIndex]![index]
+                            : answerText['All']![index],
                         style: choosedAnswer[currentIndex] == index
                             ? const TextStyle(fontSize: 20, color: Colors.white)
                             : const TextStyle(

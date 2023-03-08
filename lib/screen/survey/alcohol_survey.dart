@@ -56,7 +56,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
                   Text('1잔의 기준 : 맥주 12온스(355mL) / 와인 5온스(148mL) / 독주 1.5온스(44mL)'),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 56),
+                  padding: const EdgeInsets.symmetric(horizontal: 45),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -103,11 +103,11 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
         currentIndex += 1;
         return;
       }
-      // 하나라도 응답하지 않은 경우
-      // if (choosedAnswers.any((value) => value == -1)) {
-      //   print("응답되지 않은 문항이 있습니다."); // -> 나중엔 토스트로 띄우기
-      //   return;
-      // }
+      // currentIndex 문항에 대해 응답하지 않은 경우
+      if (choosedAnswers[currentIndex] == -1) {
+        print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
+        return;
+      }
       if (currentIndex != MaxValue) {
         currentIndex += 1;
         print('currentIndex $currentIndex');

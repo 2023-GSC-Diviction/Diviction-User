@@ -70,7 +70,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
                   ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 56),
+                  padding: const EdgeInsets.symmetric(horizontal: 45),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -121,15 +121,19 @@ class _DrugSurveyState extends State<DrugSurvey> {
   void onNextButtonPressed() {
     setState(() {
       if (currentIndex == -1) {
+        if (SelectedDrugsName.length == 0) {
+          print('어떤 약물을 사용했는지 입력하지 않았습니다.'); // -> 나중엔 토스트로 띄우기
+          return;
+        }
         currentIndex += 1;
         return;
       }
-      // 하나라도 응답하지 않은 경우
-      // if (choosedAnswers.any((value) => value == -1)) {
-      //   print("응답되지 않은 문항이 있습니다."); // -> 나중엔 토스트로 띄우기
-      //   _scrollToBottom();
-      //   return;
-      // }
+
+      // currentIndex 문항에 대해 응답하지 않은 경우
+      if (choosedAnswers[currentIndex] == -1) {
+        print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
+        return;
+      }
       if (currentIndex != MaxValue) {
         currentIndex += 1;
         print('currentIndex $currentIndex');
