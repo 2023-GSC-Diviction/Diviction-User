@@ -1,5 +1,6 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
+import 'package:diviction_user/screen/survey/survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:diviction_user/widget/survey/answer_button.dart';
@@ -18,7 +19,7 @@ final int MaxValue = 11;
 class _AlcoholSurveyState extends State<AlcoholSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
-  List<int> choosedAnswers = List.generate(MaxValue+1, (index) => -1);
+  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +53,9 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
                   answerText: alcohol_answer,
                 ),
                 // 몇 잔에 대한 기준을 추가로 설명해야 하는 문항이 있음 -> 2, 3번 문항
-                if([2, 3].contains(currentIndex))
-                  Text('1잔의 기준 : 맥주 12온스(355mL) / 와인 5온스(148mL) / 독주 1.5온스(44mL)'),
+                if ([2, 3].contains(currentIndex))
+                  Text(
+                      '1잔의 기준 : 맥주 12온스(355mL) / 와인 5온스(148mL) / 독주 1.5온스(44mL)'),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 45),
@@ -68,7 +70,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
                       PreOrNextButton(
                         content: currentIndex != MaxValue ? 'Next' : 'Result',
                         icondata:
-                        currentIndex != MaxValue ? Icons.east : Icons.done,
+                            currentIndex != MaxValue ? Icons.east : Icons.done,
                         onPressed: onNextButtonPressed,
                       ),
                     ],
@@ -81,6 +83,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
       ),
     );
   }
+
   void onAnswerPressed(int index) {
     setState(() {
       choosedAnswers[currentIndex] = index;
@@ -103,11 +106,11 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
         currentIndex += 1;
         return;
       }
-      // currentIndex 문항에 대해 응답하지 않은 경우
-      if (choosedAnswers[currentIndex] == -1) {
-        print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
-        return;
-      }
+      // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
+      // if (choosedAnswers[currentIndex] == -1) {
+      //   print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
+      //   return;
+      // }
       if (currentIndex != MaxValue) {
         currentIndex += 1;
         print('currentIndex $currentIndex');
@@ -116,10 +119,13 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
       if (currentIndex == MaxValue) {
         print("알콜 선별검사 완료");
         // 점수 합산 - (alcohol) 제일 앞 값과 제일 뒤에 값은 제거
-        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length-1);
+        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length - 1);
         var sum = AnswerResult.reduce((value, element) => value + element);
         print('1~10번 문항에 대한 응답값 : $AnswerResult');
         print('총 점수 : $sum');
+        // 화면 전환 - 결과화면으로 이동
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SurveyResult())); // 테스트중으로 변경함
       }
     });
   }

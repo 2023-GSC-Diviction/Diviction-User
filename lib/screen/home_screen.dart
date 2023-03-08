@@ -1,6 +1,7 @@
 import 'package:diviction_user/screen/survey/alcohol_survey.dart';
 import 'package:diviction_user/screen/survey/drug_survey.dart';
 import 'package:diviction_user/screen/survey/psychological_survey.dart';
+import 'package:diviction_user/screen/survey/survey_result.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -37,7 +38,7 @@ class _HomeSceenState extends State<HomeSceen> {
                     checkList(),
                     TestButton(
                       type: 'Drug',
-                      screen: DrugSurvey(),
+                      screen: SurveyResult(), // 빠른 디버깅을 위해 잠시 변경 - 기존 : DrugSurvey
                     ),
                     const SizedBox(
                       height: 10,

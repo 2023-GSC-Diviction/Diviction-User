@@ -22,15 +22,15 @@ class _DrugSurveyState extends State<DrugSurvey> {
   List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
   List<String> SelectedDrugsName = []; // 마약 선택시에 초기화
   ScrollController _scrollController =
-  ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
+      ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용
 
   @override
   Widget build(BuildContext context) {
     // checkBoxList에서 true인 값의 인덱스만 골라 배열로 가져오는 코드
     List<int> SelectedDrugs =
-    List.generate(checkBoxList.length, (index) => index)
-        .where((index) => checkBoxList[index] == true)
-        .toList();
+        List.generate(checkBoxList.length, (index) => index)
+            .where((index) => checkBoxList[index] == true)
+            .toList();
     SelectedDrugsName =
         List.generate(SelectedDrugs.length, (index) => drug_answer[-1]![index]);
     return SafeArea(
@@ -53,7 +53,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
                   border: Border.all(width: 1.5, color: Colors.black12),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                Text(drug_question[currentIndex+1],
+                Text(drug_question[currentIndex + 1],
                     style: TextStyles.questionTextStyle),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 if (currentIndex == -1)
@@ -82,7 +82,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
                       PreOrNextButton(
                         content: currentIndex != MaxValue ? 'Next' : 'Result',
                         icondata:
-                        currentIndex != MaxValue ? Icons.east : Icons.done,
+                            currentIndex != MaxValue ? Icons.east : Icons.done,
                         onPressed: onNextButtonPressed,
                       ),
                     ],
@@ -128,12 +128,11 @@ class _DrugSurveyState extends State<DrugSurvey> {
         currentIndex += 1;
         return;
       }
-
-      // currentIndex 문항에 대해 응답하지 않은 경우
-      if (choosedAnswers[currentIndex] == -1) {
-        print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
-        return;
-      }
+      // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
+      // if (choosedAnswers[currentIndex] == -1) {
+      //   print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
+      //   return;
+      // }
       if (currentIndex != MaxValue) {
         currentIndex += 1;
         print('currentIndex $currentIndex');
@@ -143,10 +142,11 @@ class _DrugSurveyState extends State<DrugSurvey> {
         print("약물 선별검사 완료");
         print(choosedAnswers);
         // 점수 합산 - (drug) 제일 앞 값과 제일 뒤에 값은 제거
-        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length-2);
+        var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length - 2);
         var sum = AnswerResult.reduce((value, element) => value + element);
         print('1~10번 문항에 대한 응답값 : $AnswerResult');
         print('총 점수 : $sum');
+        // 화면 전환 - 결과화면으로 이동
       }
     });
   }
@@ -181,8 +181,8 @@ class DrugChoose extends StatelessWidget {
                   ? const EdgeInsets.only(bottom: 12)
                   : EdgeInsets.zero,
               child:
-              // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
-              InkWell(
+                  // 전체를 InkWell로 감싸서 체크박스는 UI로 사용하고 한 라인 어디든 클릭시 체크되게 구현함
+                  InkWell(
                 onTap: () => drugCheckBoxPressed(index),
                 child: Row(
                   children: [

@@ -18,7 +18,7 @@ final int MaxValue = 21;
 class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
-  List<int> choosedAnswers = List.generate(MaxValue+1, (index) => -1);
+  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
                       PreOrNextButton(
                         content: currentIndex != MaxValue ? 'Next' : 'Result',
                         icondata:
-                        currentIndex != MaxValue ? Icons.east : Icons.done,
+                            currentIndex != MaxValue ? Icons.east : Icons.done,
                         onPressed: onNextButtonPressed,
                       ),
                     ],
@@ -79,6 +79,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
       ),
     );
   }
+
   void onAnswerPressed(int index) {
     setState(() {
       choosedAnswers[currentIndex] = index;
@@ -101,12 +102,11 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
         currentIndex += 1;
         return;
       }
-
-      // currentIndex 문항에 대해 응답하지 않은 경우
-      if (choosedAnswers[currentIndex] == -1) {
-        print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
-        return;
-      }
+      // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
+      // if (choosedAnswers[currentIndex] == -1) {
+      //   print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
+      //   return;
+      // }
       if (currentIndex != MaxValue) {
         currentIndex += 1;
         print('currentIndex $currentIndex');
@@ -119,6 +119,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
         var sum = AnswerResult.reduce((value, element) => value + element);
         print('1~21번 문항에 대한 응답값 : $AnswerResult');
         print('총 점수 : $sum');
+        // 화면 전환 - 결과화면으로 이동
       }
     });
   }
