@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
 import '../../model/post.dart';
-import '../../widget/profile_image.dart';
 import '../day_check_screen.dart';
 
 final communityProvider = FutureProvider<List<Post>>((ref) async {
@@ -58,26 +57,29 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
         return emptyWidget();
       default:
         return SingleChildScrollView(
-            child: Column(
-          children: [
-            Container(
-                margin: const EdgeInsets.only(
-                    bottom: 10, top: 15, left: 10, right: 10),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[200]),
-                child: const Text(
-                    'Welcome to DIVICTION community😁 You can share your experience and get help from other people🫶',
-                    style: TextStyles.chatNicknameTextStyle)),
-            const SizedBox(
-              height: 10,
-            ),
-            Column(
-                children:
-                    postList!.map((post) => postItemWidget(post)).toList())
-          ],
-        ));
+            child: RefreshIndicator(
+                child: Column(
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.only(
+                            bottom: 10, top: 15, left: 10, right: 10),
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey[200]),
+                        child: const Text(
+                            'Welcome to DIVICTION community😁 You can share your experience and get help from other people🫶',
+                            style: TextStyles.chatNicknameTextStyle)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Column(
+                        children: postList!
+                            .map((post) => postItemWidget(post))
+                            .toList()),
+                  ],
+                ),
+                onRefresh: () => ref.refresh(communityProvider.future)));
     }
   }
 
