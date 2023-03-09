@@ -2,6 +2,7 @@ import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
 import 'package:diviction_user/screen/survey/survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
+import 'package:diviction_user/widget/googleMap/google_map_screen.dart';
 import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:diviction_user/widget/survey/answer_button.dart';
 import 'package:flutter/material.dart';
@@ -102,9 +103,12 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
 
   void onNextButtonPressed() {
     setState(() {
-      if (currentIndex == 0) {
-        currentIndex += 1;
-        return;
+      if (currentIndex == 1) {
+        // 테스트용
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SurveyResult())); // GoogleMapScreen
+        // currentIndex += 1;
+        // return;
       }
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
       // if (choosedAnswers[currentIndex] == -1) {
@@ -125,7 +129,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
         print('총 점수 : $sum');
         // 화면 전환 - 결과화면으로 이동
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => SurveyResult())); // 테스트중으로 변경함
+            MaterialPageRoute(builder: (context) => SurveyResult()));
       }
     });
   }
