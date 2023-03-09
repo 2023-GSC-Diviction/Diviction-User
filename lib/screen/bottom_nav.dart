@@ -38,7 +38,7 @@ class BottomNavigation extends ConsumerWidget {
                   Icons.home,
                   color: selected,
                 ),
-                label: ''),
+                label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.chat,
@@ -48,7 +48,7 @@ class BottomNavigation extends ConsumerWidget {
                   Icons.chat,
                   color: selected,
                 ),
-                label: ''),
+                label: 'Counselor'),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.article_rounded,
@@ -58,7 +58,7 @@ class BottomNavigation extends ConsumerWidget {
                   Icons.article_rounded,
                   color: selected,
                 ),
-                label: ''),
+                label: 'Community'),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.account_circle_rounded,
@@ -68,7 +68,7 @@ class BottomNavigation extends ConsumerWidget {
                   Icons.account_circle_rounded,
                   color: selected,
                 ),
-                label: ''),
+                label: 'MyPage'),
           ],
           currentIndex: currentPage,
           selectedItemColor: selected,

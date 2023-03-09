@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
 import '../../model/post.dart';
+import '../../model/state.dart';
 import '../day_check_screen.dart';
 
 final communityProvider = FutureProvider<List<Post>>((ref) async {
@@ -24,10 +25,13 @@ class CommunityScreen extends ConsumerStatefulWidget {
 class CommunityScreenState extends ConsumerState<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
-    // final post = ref.watch(communityProvider).when(
-    //     data: (value) => value,
-    //     loading: () => null,
-    //     error: (error, stackTrace) => null);
+    final post = ref.watch(communityProvider).when(
+          data: (value) => value.isEmpty
+              ? {'state': DataState.empty}
+              : {'state': DataState.success, 'value': value},
+          loading: () => {'state': DataState.loading},
+          error: (error, stackTrace) => {'state': DataState.fail},
+        );
 
     return Scaffold(
       appBar: const MyAppbar(
@@ -49,13 +53,17 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
     );
   }
 
-  Widget postListView(List<Post>? postList) {
-    switch (postList) {
-      case null:
+  Widget postListView(Map<String, dynamic> post) {
+    switch (post['state']) {
+      case DataState.loading:
         return loadingWidget();
-      case []: // empty list
+      case DataState.empty: // empty list
+
         return emptyWidget();
+      case DataState.fail: // empty list
+        return failWidget();
       default:
+        var data = post['value'] as List<Post>;
         return SingleChildScrollView(
             child: RefreshIndicator(
                 child: Column(
@@ -74,9 +82,8 @@ class CommunityScreenState extends ConsumerState<CommunityScreen> {
                       height: 10,
                     ),
                     Column(
-                        children: postList!
-                            .map((post) => postItemWidget(post))
-                            .toList()),
+                        children:
+                            data.map((post) => postItemWidget(post)).toList()),
                   ],
                 ),
                 onRefresh: () => ref.refresh(communityProvider.future)));
