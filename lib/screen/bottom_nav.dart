@@ -2,6 +2,7 @@ import 'package:diviction_user/screen/chat_screen.dart';
 import 'package:diviction_user/screen/community/community_screen.dart';
 import 'package:diviction_user/screen/counselor/counselor_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
+import 'package:diviction_user/screen/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,8 +23,12 @@ class BottomNavigation extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: [HomeSceen(), CounselorScreen(), CommunityScreen(), ChatScreen()]
-            .elementAt(currentPage),
+        child: [
+          HomeSceen(),
+          CounselorScreen(),
+          CommunityScreen(),
+          ProfileScreen()
+        ].elementAt(currentPage),
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
