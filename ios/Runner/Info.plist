@@ -53,5 +53,9 @@
     <string>사진라이브러리 사용에 필요합니다.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>위치 정보가 필요합니다. This app needs access to location when open.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>위치 정보가 필요합니다. This app needs access to location when in the background.</string>
 </dict>
 </plist>
