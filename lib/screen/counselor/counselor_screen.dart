@@ -46,7 +46,7 @@ class CounselorScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text(index == 0 ? '내가 한 요청 보기' : 'counselor list',
+                  Text(index == 0 ? 'my chat' : 'counselor list',
                       style: TextStyles.bottomTextStyle),
                   Icon(index == 0
                       ? Icons.arrow_right_sharp

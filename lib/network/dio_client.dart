@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import '../model/network_result.dart';
@@ -11,7 +13,10 @@ class DioClient {
 
   Future<NetWorkResult> get(String url, Map<String, dynamic>? parameter) async {
     try {
-      Response response = await _dio.get(url, queryParameters: parameter);
+      Response response = await _dio.get(
+        url,
+        queryParameters: parameter,
+      );
       if (response.statusCode == 200) {
         return NetWorkResult(result: Result.success, response: response.data);
       } else {
@@ -26,9 +31,21 @@ class DioClient {
     }
   }
 
-  Future<NetWorkResult> post(String url, Map<String, dynamic> data) async {
+  Future<NetWorkResult> post(String url, dynamic data) async {
     try {
-      Response response = await _dio.post(url, data: data);
+      Response response = await _dio.post(
+        url,
+        data: json.encode(data),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':
+                'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkcmFzZ29uQG5hdmVyLmNvbSIsInJvbGUiOiJST0xFX0FETUlOX1VTRVIiLCJleHAiOjE2Nzg0NTEyOTZ9.FphSRw-2E_RNAgg6bfrxAbz1fELF9hM0xDxjsusJiJww8ZrkZLGfWqRAyIfdBO365zF1kuNnFAlPpx7NuTcXlQ',
+            'RT':
+                'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkcmFzZ29uQG5hdmVyLmNvbSIsInJvbGUiOiJST0xFX0FETUlOX1VTRVIiLCJleHAiOjE2NzkwNTQyOTZ9.CEBEhZ3WRUFvBATICGrGIuhtvnS8ncEk0OAD6APITdmitwfwOZeVmt4g1iI_nKNyc5ORvjzy5s7lTt3eTmPV2Q'
+          },
+        ),
+      );
       if (response.statusCode == 200) {
         return NetWorkResult(result: Result.success, response: response.data);
       } else {
