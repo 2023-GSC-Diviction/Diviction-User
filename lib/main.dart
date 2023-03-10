@@ -1,13 +1,14 @@
+import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/screen/splash_screen.dart';
-import 'package:diviction_user/screen/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stack_trace/stack_trace.dart' as stack_trace;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "lib/config/.env");
+  DioClient();
   runApp(ProviderScope(child: MyApp()));
 }
 
