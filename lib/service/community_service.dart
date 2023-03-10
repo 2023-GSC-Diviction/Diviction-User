@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import '../model/network_result.dart';
 import '../model/post.dart';
 import '../network/dio_client.dart';
@@ -9,6 +11,8 @@ class CommunityService {
     return _communityService;
   }
   CommunityService._internal();
+
+  String? base_url = dotenv.env['BASE_URL'];
 
   Future<List<Post>> getPost() async {
     var response =
