@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:diviction_user/screen/counselor/find_counselor_screen.dart';
 import 'package:diviction_user/screen/counselor/requested_counselor_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
@@ -18,7 +16,8 @@ class CounselorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _pageController.addListener(() {
-      ref.read(pageProvider.notifier).state = _pageController.page!.round();
+      ref.read(pageProvider.notifier).state =
+          _pageController.page?.round() ?? 0;
     });
     int index = ref.watch(pageProvider);
     final page = [
@@ -59,6 +58,14 @@ class CounselorScreen extends ConsumerWidget {
       children: [
         PageView.builder(
             itemCount: page.length,
+            findChildIndexCallback: (key) {
+              //important here:
+              if (index > 0) {
+                return index;
+              } else {
+                return null;
+              }
+            },
             controller: _pageController,
             itemBuilder: (context, index) {
               return page[index];

@@ -17,19 +17,29 @@ class AuthState extends StateNotifier<SignState> {
   }
 
   Future signIn(String email, String password) async {
-    var result = await AuthService().signIn(email, password);
-    if (result) {
-      state = SignState.success;
-    } else {
+    try {
+      var result = await AuthService().signIn(email, password);
+      if (result) {
+        state = SignState.success;
+      } else {
+        state = SignState.fail;
+      }
+    } catch (e) {
+      print(e);
       state = SignState.fail;
     }
   }
 
   Future signUp(User user) async {
-    var result = await AuthService().signUp(user);
-    if (result) {
-      state = SignState.success;
-    } else {
+    try {
+      var result = await AuthService().signUp(user);
+      if (result) {
+        state = SignState.success;
+      } else {
+        state = SignState.fail;
+      }
+    } catch (e) {
+      print(e);
       state = SignState.fail;
     }
   }

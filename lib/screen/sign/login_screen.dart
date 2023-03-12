@@ -32,20 +32,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final isLogin = ref.watch(authProvider);
-    // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
 
-    if (isLogin == SignState.success) {
-      Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) =>
-                  const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
-          );
-    } else if (isLogin == SignState.fail) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('로그인에 실패했습니다.'),
-        ),
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      switch (isLogin) {
+        case SignState.success:
+          toMain();
+          break;
+        case SignState.fail:
+          showSnackbar();
+          break;
+        default:
+      }
+    });
 
     return GestureDetector(
       onTap: () {
@@ -96,14 +94,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+  void showSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('login fail'),
+      ),
+    );
+  }
+
+  toMain() {
+    Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
+        );
+  }
+
   onPressedLoginButton() async {
     print('로그인 버튼 눌림');
     print('아이디 : ${textEditingController_id.text}');
     print('비밀번호 : ${textEditingController_pw.text}');
 
-    ref
-        .read(authProvider.notifier)
-        .signIn(textEditingController_id.text, textEditingController_pw.text);
+    if (textEditingController_id.text == '' ||
+        textEditingController_pw.text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('fill in the blank'),
+        duration: Duration(seconds: 1),
+      ));
+    } else {
+      ref
+          .read(authProvider.notifier)
+          .signIn(textEditingController_id.text, textEditingController_pw.text);
+    }
   }
 }
 
