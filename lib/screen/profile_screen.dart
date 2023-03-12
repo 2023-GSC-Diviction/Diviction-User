@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../model/survey_result.dart';
 import '../widget/custom_textfiled.dart';
 import '../widget/profile_image.dart';
-import '../widget/survey_chart.dart';
+import '../widget/survey/survey_chart.dart';
 
 final surdata = [
   SurveyData(

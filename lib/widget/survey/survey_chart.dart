@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../config/style.dart';
-import '../model/survey_result.dart';
-import '../util/date_formatter.dart';
+import '../../config/style.dart';
+import '../../model/survey_result.dart';
+import '../../util/date_formatter.dart';
 
 class SurveyChart extends StatefulWidget {
   final List<SurveyData> list;

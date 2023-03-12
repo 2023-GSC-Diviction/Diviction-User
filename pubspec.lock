@@ -480,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  scroll_date_picker:
+    dependency: "direct main"
+    description:
+      name: scroll_date_picker
+      sha256: c05d71f27eca6520131583d626fbac4ad77e7e45d1d2b859274e1a1a908463e7
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.1"
   shared_preferences:
     dependency: "direct main"
     description:
