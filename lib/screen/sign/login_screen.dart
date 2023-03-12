@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
-import '../../model/network_result.dart';
-import '../../network/dio_client.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import '../bottom_nav.dart';
 
-final authProvider =
-    StateNotifierProvider.autoDispose<AuthState, bool>((ref) => AuthState());
+final authProvider = StateNotifierProvider.autoDispose<AuthState, SignState>(
+    (ref) => AuthState());
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,15 +23,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController textEditingController_pw = TextEditingController();
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    ref.invalidate(authProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isLogin = ref.watch(authProvider);
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
 
-    if (isLogin) {
+    if (isLogin == SignState.success) {
       Navigator.of(context).push(MaterialPageRoute(
               builder: (_) =>
                   const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
           );
+    } else if (isLogin == SignState.fail) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('로그인에 실패했습니다.'),
+        ),
+      );
     }
 
     return GestureDetector(
@@ -92,7 +103,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref
         .read(authProvider.notifier)
-        .login(textEditingController_id.text, textEditingController_pw.text);
+        .signIn(textEditingController_id.text, textEditingController_pw.text);
   }
 }
 

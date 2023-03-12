@@ -1,16 +1,12 @@
 import 'package:diviction_user/screen/sign/signup_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../config/style.dart';
+import '../../provider/auth_provider.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import '../profile_screen.dart';
-
-final underlineTextStyle = TextStyle(
-  color: Color(0xFFC3C3C3),
-  decoration: TextDecoration.underline, // 밑줄 넣기
-  decorationThickness: 1.5, // 밑줄 두께
-  // fontStyle: FontStyle
-);
 
 class CustomTextEditingController {
   final TextEditingController idController = TextEditingController();
@@ -45,7 +41,7 @@ class _SignupScreenState extends State<SignupScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.27),
-              TitleHeader(
+              const TitleHeader(
                 titleContext: 'Sign Up',
                 subContext:
                     'Experience a service that helps prevent and treat various addictions with Diviction.',
@@ -65,7 +61,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 HintText: 'Check your Password',
                 textEditingController: textEditingController_checkpw,
               ),
-              _PopLoginPage(),
+              const _PopLoginPage(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.115),
               CustomRoundButton(
                 title: 'Create Account',
@@ -86,18 +82,24 @@ class _SignupScreenState extends State<SignupScreen> {
     print('비밀번호2 : ${textEditingController_checkpw.text}');
 
     // 비밀번호 일치 체크
-    if (textEditingController_pw.text != textEditingController_checkpw.text)
-      return;
-
-    // API Call
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => SignUpProfileScreen(
-          id: textEditingController_id.text,
-          password: textEditingController_pw.text,
+    if (textEditingController_pw.text != textEditingController_checkpw.text) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('check your password')));
+    } else if (textEditingController_id.text == '' ||
+        textEditingController_pw.text == '' ||
+        textEditingController_checkpw.text == '') {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('fill in the blanks')));
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => SignUpProfileScreen(
+            id: textEditingController_id.text,
+            password: textEditingController_pw.text,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
 
@@ -116,7 +118,7 @@ class _CustomInputField extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.055,
       decoration: BoxDecoration(
-        color: Color(0xFFEEEEEE),
+        color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(56),
         border: Border.all(width: 1, color: Colors.black12),
       ),
@@ -162,7 +164,7 @@ class _PopLoginPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        SizedBox(),
+        const SizedBox(),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -170,12 +172,12 @@ class _PopLoginPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
+              const Text(
                 "Already have an account?",
-                style: underlineTextStyle,
+                style: TextStyles.underlineTextStyle,
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-              Text(
+              const Text(
                 'Log in',
                 style: TextStyle(color: Color(0xFF3E3E3E)),
               ),

@@ -3,6 +3,8 @@ import 'package:diviction_user/network/dio_client.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
 
+import '../model/user.dart';
+
 const storage = fss.FlutterSecureStorage();
 
 class AuthService {
@@ -33,7 +35,7 @@ class AuthService {
     }
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<bool> signIn(String email, String password) async {
     try {
       NetWorkResult result = await DioClient().post(
           '$_baseUrl/auth/signIn/member',
@@ -54,6 +56,24 @@ class AuthService {
       }
     } catch (e) {
       throw Exception('Failed to login');
+    }
+  }
+
+  Future<bool> signUp(User user) async {
+    try {
+      NetWorkResult result = await DioClient()
+          .post('$_baseUrl/auth/signUp/member', user.toJson(), false);
+      if (result.result == Result.success) {
+        //   storage.write(
+        //     key: 'accessToken', value: result.response['accessToken']);
+        // storage.write(
+        //     key: 'refreshToken', value: result.response['refreshToken']);
+        return result.response;
+      } else {
+        throw Exception('Failed to signUp');
+      }
+    } catch (e) {
+      throw Exception('Failed to signUp');
     }
   }
 }

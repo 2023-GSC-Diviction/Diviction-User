@@ -11,4 +11,14 @@ class ImagePickerService {
       return [];
     }
   }
+
+  Future<XFile?> pickSingleImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      return pickedFile;
+    } catch (e) {
+      print('ImagePickerService: $e');
+      return null;
+    }
+  }
 }

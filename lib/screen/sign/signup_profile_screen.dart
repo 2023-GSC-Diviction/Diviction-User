@@ -1,17 +1,19 @@
-import 'dart:io';
-
+import 'package:diviction_user/service/image_picker_service.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
 
-import '../../model/network_result.dart';
-import '../../network/dio_client.dart';
+import '../../model/user.dart';
+import '../../provider/auth_provider.dart';
 import '../../widget/profile_image.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import 'login_screen.dart';
 
-class SignUpProfileScreen extends StatefulWidget {
+final authProvider = StateNotifierProvider.autoDispose<AuthState, SignState>(
+    (ref) => AuthState());
+
+class SignUpProfileScreen extends ConsumerStatefulWidget {
   final String id;
   final String password;
   const SignUpProfileScreen({
@@ -21,10 +23,10 @@ class SignUpProfileScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SignUpProfileScreen> createState() => _SignUpProfileScreenState();
+  SignUpProfileScreenState createState() => SignUpProfileScreenState();
 }
 
-class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
+class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   DateTime selectedDate = DateTime.now();
   DateTime defaultDate = DateTime(
       DateTime.now().year - 19, DateTime.now().month, DateTime.now().day);
@@ -36,12 +38,31 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
   bool isGenderchoosed = false;
   String userGender = 'MALE';
 
-  TextEditingController textEditingController_name = TextEditingController();
-  TextEditingController textEditingController_birth = TextEditingController();
-  TextEditingController textEditingController_address = TextEditingController();
+  TextEditingController textEditingControllerForName = TextEditingController();
+  TextEditingController textEditingControllerForBirth = TextEditingController();
+  TextEditingController textEditingControllerForAddress =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final isComplete = ref.watch(authProvider);
+
+    switch (isComplete) {
+      case SignState.success:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const LoginScreen()));
+        break;
+
+      case SignState.fail:
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('회원가입에 실패했습니다.'),
+          backgroundColor: Colors.red,
+        ));
+        break;
+      default:
+        break;
+    }
+
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
     return GestureDetector(
       onTap: () {
@@ -55,7 +76,7 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.11),
-              TitleHeader(
+              const TitleHeader(
                 titleContext: 'Profile',
                 subContext: '',
               ),
@@ -71,13 +92,13 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
               _CustomInputField(
                 HintText: 'Name',
                 inputIcons: Icons.person_outline,
-                textEditingController: textEditingController_name,
+                textEditingController: textEditingControllerForName,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _CustomInputField(
                 HintText: 'Date of Birth',
                 inputIcons: Icons.cake_outlined,
-                textEditingController: textEditingController_birth,
+                textEditingController: textEditingControllerForBirth,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _DatePicker(
@@ -89,7 +110,7 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
               _CustomInputField(
                 HintText: 'Street Address',
                 inputIcons: Icons.home_outlined,
-                textEditingController: textEditingController_address,
+                textEditingController: textEditingControllerForAddress,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _GenderChoosed(
@@ -112,14 +133,15 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
   onDateTimeChanged(DateTime value) {
     setState(() {
       selectedDate = value;
-      textEditingController_birth.text =
+      textEditingControllerForBirth.text =
           '${value.year}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}';
     });
   }
 
   onProfileImagePressed() async {
     print("onProfileImagePressed 실행완료");
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final ImagePickerService pickerService = ImagePickerService();
+    final image = await pickerService.pickSingleImage();
 
     if (image != null) {
       setState(() {
@@ -150,46 +172,22 @@ class _SignUpProfileScreenState extends State<SignUpProfileScreen> {
     print('프로필 완성 버튼 눌림');
     print('email : $widget.id');
     print('password : $widget.password');
-    print('이름 : ${textEditingController_name.text}');
-    print('생년월일 : ${textEditingController_birth.text}');
-    print('주소 : ${textEditingController_address.text}');
+    print('이름 : ${textEditingControllerForName.text}');
+    print('생년월일 : ${textEditingControllerForBirth.text}');
+    print('주소 : ${textEditingControllerForAddress.text}');
     print('성별 : ${userGender}');
     print('프로필 이미지 경로 : ${path}');
 
-    // API Call
-    String result = await AccountSignup();
-    if (result == "200") {
-      print("회원가입 성공, 로그인 페이지로 이동하기");
-      // 회원가입 성공! 이것도 넣어야 할까요.... 흠
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => LoginScreen()));
-    } else {
-      print('회원가입 - 오류 발생 $result');
-    }
-  }
+    User user = User(
+        email: widget.id,
+        password: widget.password,
+        name: textEditingControllerForName.text,
+        address: textEditingControllerForAddress.text,
+        birth: textEditingControllerForBirth.text,
+        gender: userGender,
+        profile_img_url: path);
 
-  Future<String> AccountSignup() async {
-    var response = await DioClient().post(
-      'http://15.164.100.67:8080/auth/signUp/counselor',
-      {
-        'email': widget.id,
-        'password': widget.password,
-        'name': textEditingController_name.text,
-        'address': textEditingController_address.text,
-        'birth': textEditingController_birth.text,
-        'gender':
-            'MAIL', // Male / Female로 구현했는데 백엔드에서 MAIL이 아니면 error 떠서 수정 요청할 계획임
-        'profile_img_url': path,
-        'confirm': false,
-      },
-      false,
-    );
-
-    if (response.result == Result.success) {
-      return '200';
-    } else {
-      return response.toString();
-    }
+    ref.read(authProvider.notifier).signUp(user);
   }
 }
 
@@ -210,7 +208,7 @@ class _CustomInputField extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.055,
       decoration: BoxDecoration(
-        color: Color(0xFFEEEEEE),
+        color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(56),
         border: Border.all(width: 1, color: Colors.black12),
       ),
@@ -265,7 +263,7 @@ class _DatePicker extends StatelessWidget {
       child: ScrollDatePicker(
         selectedDate:
             selectedDate == DateTime.now() ? defaultDate : selectedDate,
-        locale: Locale('ko'),
+        locale: const Locale('ko'),
         onDateTimeChanged: onDateTimeChanged,
       ),
     );
@@ -328,12 +326,12 @@ class GenderButton extends StatelessWidget {
             // 메인 컬러 - 배경색
             primary: (userGender[0] == gender[0])
                 ? Colors.blue[300]
-                : Color(0xFFEEEEEE),
+                : const Color(0xFFEEEEEE),
             // 서브 컬러 - 글자 및 글자 및 애니메이션 색상
             onPrimary: Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(56),
-              side: BorderSide(width: 1, color: Colors.black12),
+              side: const BorderSide(width: 1, color: Colors.black12),
             ),
             textStyle: TextStyle(
               fontWeight: FontWeight.w500,

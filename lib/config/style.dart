@@ -72,6 +72,13 @@ class TextStyles {
       fontWeight: FontWeight.w400);
   static const TextStyle descriptionTextStyle =
       TextStyle(color: Color.fromRGBO(153, 153, 153, 1), fontSize: 14);
+
+  static const underlineTextStyle = TextStyle(
+    color: Color(0xFFC3C3C3),
+    decoration: TextDecoration.underline, // 밑줄 넣기
+    decorationThickness: 1.5, // 밑줄 두께
+    // fontStyle: FontStyle
+  );
 }
 
 class Palette {
