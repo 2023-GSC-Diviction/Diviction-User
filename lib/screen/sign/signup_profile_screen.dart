@@ -1,4 +1,5 @@
 import 'package:diviction_user/service/image_picker_service.dart';
+import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
@@ -67,6 +68,8 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
+        appBar: const MyAppbar(isMain: false, hasBack: true, title: 'Profile'),
+        backgroundColor: Colors.white,
         body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: SingleChildScrollView(
@@ -74,11 +77,6 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.11),
-                  const TitleHeader(
-                    titleContext: 'Profile',
-                    subContext: '',
-                  ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                   ProfileImage(
                     onProfileImagePressed: onProfileImagePressed,
