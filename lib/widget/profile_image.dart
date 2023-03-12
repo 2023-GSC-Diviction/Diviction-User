@@ -96,11 +96,11 @@ class _ProfileImageState extends State<ProfileImage> {
       widget.type == 0
           ? Positioned(
               // Positioned : 위치 정렬에 쓰임. 아래는 오른쪽 아래로 부터 0.01만큼 떨어지게 배치하라는 코드
-              right: MediaQuery.of(context).size.height * 0.01,
-              bottom: MediaQuery.of(context).size.height * 0.01,
+              right: 0,
+              bottom: 0,
               child: SizedBox(
-                width: MediaQuery.of(context).size.height * 0.025,
-                height: MediaQuery.of(context).size.height * 0.025,
+                width: MediaQuery.of(context).size.height * 0.05,
+                height: MediaQuery.of(context).size.height * 0.05,
                 child: Image.asset('assets/icons/psychological_icon.png',
                     fit: BoxFit.fill),
               ),

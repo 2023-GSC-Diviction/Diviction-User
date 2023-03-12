@@ -47,21 +47,19 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   Widget build(BuildContext context) {
     final isComplete = ref.watch(authProvider);
 
-    switch (isComplete) {
-      case SignState.success:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const LoginScreen()));
-        break;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      switch (isComplete) {
+        case SignState.success:
+          toLogin();
+          break;
 
-      case SignState.fail:
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('회원가입에 실패했습니다.'),
-          backgroundColor: Colors.red,
-        ));
-        break;
-      default:
-        break;
-    }
+        case SignState.fail:
+          showSnackbar();
+          break;
+        default:
+          break;
+      }
+    });
 
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
     return GestureDetector(
@@ -74,7 +72,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.11),
                   const TitleHeader(
@@ -129,6 +127,20 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
             )),
       ),
     );
+  }
+
+  void showSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('signUp fail'),
+      ),
+    );
+  }
+
+  toLogin() {
+    Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const LoginScreen()) // 리버팟 적용된 HomeScreen 만들기
+        );
   }
 
   onDateTimeChanged(DateTime value) {
