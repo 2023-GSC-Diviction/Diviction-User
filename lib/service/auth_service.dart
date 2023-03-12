@@ -18,14 +18,17 @@ class AuthService {
 
   Future<bool> isLogin() async {
     String? acToken = await storage.read(key: 'accessToken');
+    String? rfToken = await storage.read(key: 'refreshToken');
     try {
       if (acToken == null) {
         return false;
       } else {
-        NetWorkResult result = await DioClient()
-            .post('$_baseUrl/auth/validate/token', {'token': acToken}, true);
+        NetWorkResult result = await DioClient().post(
+            '$_baseUrl/auth/validate/token',
+            {'token': acToken, 'rfToken': rfToken},
+            true);
         if (result.result == Result.success) {
-          return result.response;
+          return true;
         } else {
           return false;
         }

@@ -147,9 +147,11 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   }
 
   toLogin() {
-    Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const LoginScreen()) // 리버팟 적용된 HomeScreen 만들기
-        );
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+        (route) => false);
   }
 
   onDateTimeChanged(DateTime value) {
