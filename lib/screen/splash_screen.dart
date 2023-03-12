@@ -1,29 +1,69 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/bottom_nav.dart';
+import 'package:diviction_user/screen/sign/login_screen.dart';
+import 'package:diviction_user/service/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatelessWidget {
+final loginStateProvider =
+    FutureProvider.autoDispose((ref) => AuthService().isLogin());
+
+class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLogin = ref.watch(loginStateProvider);
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    Future.delayed(const Duration(milliseconds: 1000), () async {
-      final SharedPreferences pref = await SharedPreferences.getInstance();
-      bool? result = pref.getBool(today);
-      if (context.mounted) {
+    toMainScreen(bool result) {
+      if (result) {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-                builder: (context) => result == null
-                    ? const DayCheckScreen()
-                    : const BottomNavigation()),
+            MaterialPageRoute(builder: (context) => const DayCheckScreen()),
+            (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const BottomNavigation()),
             (route) => false);
       }
+    }
+
+    void checkDay() async {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      bool? result = pref.getBool(today);
+
+      toMainScreen(result == null);
+    }
+
+    void toLoginScreen() {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false);
+    }
+
+    void checkLogin() async {
+      isLogin.when(
+        data: (value) {
+          if (value == true) {
+            checkDay();
+          } else {
+            toLoginScreen();
+          }
+        },
+        loading: () {},
+        error: (error, stackTrace) {},
+      );
+    }
+
+    Future.delayed(const Duration(milliseconds: 1000), () async {
+      checkLogin();
     });
+
     return Container(
       color: Colors.white,
       child: const Center(

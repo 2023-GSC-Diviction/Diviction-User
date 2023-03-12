@@ -12,11 +12,11 @@ class CounselorService {
     return _counselorService;
   }
   CounselorService._internal();
-  String? base_url = dotenv.env['BASE_URL'];
+  final String? _baseUrl = dotenv.env['BASE_URL'];
 
   Future<List<Counselor>> getCounselorsByOption(
       Map<String, String> option) async {
-    var response = await DioClient().get('$base_url/drug/list', {});
+    var response = await DioClient().get('$_baseUrl/drug/list', {});
 
     if (response.result == Result.success) {
       var counselors = response.response['counselors'];
