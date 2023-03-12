@@ -47,7 +47,7 @@ class DioClient {
           queryParameters: parameter,
           options: useToken
               ? Options(headers: {
-                  HttpHeaders.authorizationHeader: 'Bearer $_acToken',
+                  HttpHeaders.authorizationHeader: _acToken,
                   HttpHeaders.contentTypeHeader: 'application/json',
                   'Content-Type': 'application/json',
                   'RT': _refToken
@@ -59,6 +59,12 @@ class DioClient {
       if (response.statusCode == 200) {
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
+      } else if (response.statusCode == 401) {
+        if (response.headers.value('CODE') == 'RTE') {
+          return NetWorkResult(result: Result.tokenExpired);
+        } else {
+          return NetWorkResult(result: Result.fail);
+        }
       } else {
         _checkToken(response.headers);
         return NetWorkResult(result: Result.fail);
@@ -79,7 +85,7 @@ class DioClient {
           options: useToken
               ? Options(
                   headers: {
-                    HttpHeaders.authorizationHeader: 'Bearer $_acToken',
+                    HttpHeaders.authorizationHeader: _acToken,
                     HttpHeaders.contentTypeHeader: 'application/json',
                     'Content-Type': 'application/json',
                     'RT':
@@ -96,6 +102,12 @@ class DioClient {
       if (response.statusCode == 200) {
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
+      } else if (response.statusCode == 401) {
+        if (response.headers.value('CODE') == 'RTE') {
+          return NetWorkResult(result: Result.tokenExpired);
+        } else {
+          return NetWorkResult(result: Result.fail);
+        }
       } else {
         _checkToken(response.headers);
         return NetWorkResult(result: Result.fail);

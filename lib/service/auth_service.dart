@@ -20,15 +20,19 @@ class AuthService {
     String? acToken = await storage.read(key: 'accessToken');
     String? rfToken = await storage.read(key: 'refreshToken');
     try {
-      if (acToken == null) {
+      if (acToken == null && rfToken == null) {
         return false;
       } else {
         NetWorkResult result = await DioClient().post(
             '$_baseUrl/auth/validate/token',
-            {'token': acToken, 'rfToken': rfToken},
-            true);
+            {
+              'accessToken': acToken,
+              'refreshToken': rfToken,
+              'authority': 'ROLE_USER'
+            },
+            false);
         if (result.result == Result.success) {
-          return result.response;
+          return true;
         } else {
           return false;
         }
@@ -42,17 +46,13 @@ class AuthService {
     try {
       NetWorkResult result = await DioClient().post(
           '$_baseUrl/auth/signIn/member',
-          {
-            'email': email,
-            'password': password,
-            'authority': 'ROLE_ADMIN_USER'
-          },
+          {'email': email, 'password': password, 'authority': 'ROLE_USER'},
           false);
       if (result.result == Result.success) {
-        //   storage.write(
-        //     key: 'accessToken', value: result.response['accessToken']);
-        // storage.write(
-        //     key: 'refreshToken', value: result.response['refreshToken']);
+        storage.write(
+            key: 'accessToken', value: result.response['accessToken']);
+        storage.write(
+            key: 'refreshToken', value: result.response['refreshToken']);
         return result.response;
       } else {
         throw Exception('Failed to login');
@@ -69,10 +69,6 @@ class AuthService {
       NetWorkResult result = await DioClient()
           .post('$_baseUrl/auth/signUp/member', user.toJson(), false);
       if (result.result == Result.success) {
-        //   storage.write(
-        //     key: 'accessToken', value: result.response['accessToken']);
-        // storage.write(
-        //     key: 'refreshToken', value: result.response['refreshToken']);
         return true;
       } else {
         throw Exception('Failed to signUp');

@@ -8,7 +8,4 @@ class NetWorkResult {
   });
 }
 
-enum Result {
-  fail,
-  success,
-}
+enum Result { fail, success, tokenExpired }
