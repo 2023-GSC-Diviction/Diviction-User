@@ -68,7 +68,7 @@ class AuthService {
         //     key: 'accessToken', value: result.response['accessToken']);
         // storage.write(
         //     key: 'refreshToken', value: result.response['refreshToken']);
-        return result.response;
+        return true;
       } else {
         throw Exception('Failed to signUp');
       }

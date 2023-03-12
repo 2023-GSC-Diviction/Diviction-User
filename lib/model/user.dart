@@ -23,7 +23,7 @@ class User {
         'name': name,
         'address': address,
         'birth': birth,
-        'gender': gender,
-        'profile_img_url': profile_img_url
+        'gender': 'MAIL',
+        'profile_img_url': profile_img_url,
       };
 }
