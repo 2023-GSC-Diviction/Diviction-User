@@ -46,22 +46,18 @@ class SplashScreen extends ConsumerWidget {
           (route) => false);
     }
 
-    void checkLogin() async {
+    Future.delayed(const Duration(milliseconds: 1000), () async {
       isLogin.when(
         data: (value) {
           if (value == true) {
             checkDay();
-          } else {
+          } else if (value == false) {
             toLoginScreen();
           }
         },
         loading: () {},
         error: (error, stackTrace) {},
       );
-    }
-
-    Future.delayed(const Duration(milliseconds: 1000), () async {
-      checkLogin();
     });
 
     return Container(

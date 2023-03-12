@@ -1,12 +1,10 @@
 import 'package:diviction_user/screen/sign/signup_profile_screen.dart';
+import 'package:diviction_user/util/input_validate.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
-import '../../provider/auth_provider.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
-import '../profile_screen.dart';
 
 class CustomTextEditingController {
   final TextEditingController idController = TextEditingController();
@@ -22,9 +20,10 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  TextEditingController textEditingController_id = TextEditingController();
-  TextEditingController textEditingController_pw = TextEditingController();
-  TextEditingController textEditingController_checkpw = TextEditingController();
+  TextEditingController textEditingControllerForId = TextEditingController();
+  TextEditingController textEditingControllerForPw = TextEditingController();
+  TextEditingController textEditingControllerForCheckPw =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +48,17 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               _CustomInputField(
                 HintText: 'E-Mail',
-                textEditingController: textEditingController_id,
+                textEditingController: textEditingControllerForId,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _CustomInputField(
                 HintText: 'Password',
-                textEditingController: textEditingController_pw,
+                textEditingController: textEditingControllerForPw,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _CustomInputField(
                 HintText: 'Check your Password',
-                textEditingController: textEditingController_checkpw,
+                textEditingController: textEditingControllerForCheckPw,
               ),
               const _PopLoginPage(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.115),
@@ -77,25 +76,30 @@ class _SignupScreenState extends State<SignupScreen> {
 
   onPressedSignupButton() {
     print('회원가입 버튼 눌림');
-    print('아이디 : ${textEditingController_id.text}');
-    print('비밀번호1 : ${textEditingController_pw.text}');
-    print('비밀번호2 : ${textEditingController_checkpw.text}');
+    print('아이디 : ${textEditingControllerForId.text}');
+    print('비밀번호1 : ${textEditingControllerForPw.text}');
+    print('비밀번호2 : ${textEditingControllerForCheckPw.text}');
 
     // 비밀번호 일치 체크
-    if (textEditingController_pw.text != textEditingController_checkpw.text) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('check your password')));
-    } else if (textEditingController_id.text == '' ||
-        textEditingController_pw.text == '' ||
-        textEditingController_checkpw.text == '') {
+    if (textEditingControllerForId.text == '' ||
+        textEditingControllerForPw.text == '' ||
+        textEditingControllerForCheckPw.text == '') {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('fill in the blanks')));
+    } else if (textEditingControllerForPw.text !=
+        textEditingControllerForCheckPw.text) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('check your password')));
+    } else if (!InputValidate(textEditingControllerForId.text)
+        .isValidEmailFormat()) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('check your email')));
     } else {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => SignUpProfileScreen(
-            id: textEditingController_id.text,
-            password: textEditingController_pw.text,
+            id: textEditingControllerForId.text,
+            password: textEditingControllerForPw.text,
           ),
         ),
       );
