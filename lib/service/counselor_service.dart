@@ -1,5 +1,6 @@
 import 'package:diviction_user/model/user.dart';
 import 'package:diviction_user/network/dio_client.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../model/counselor.dart';
 import '../model/network_result.dart';
@@ -11,12 +12,11 @@ class CounselorService {
     return _counselorService;
   }
   CounselorService._internal();
+  final String? _baseUrl = dotenv.env['BASE_URL'];
 
   Future<List<Counselor>> getCounselorsByOption(
       Map<String, String> option) async {
-    var response = await DioClient().post(
-        'http://15.164.100.67:8080/checklist/get',
-        {"patientId": 1, "startDate": "2023-03-10", "endDate": "2023-03-10"});
+    var response = await DioClient().get('$_baseUrl/drug/list', {});
 
     if (response.result == Result.success) {
       var counselors = response.response['counselors'];

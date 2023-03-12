@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../model/survey_result.dart';
 import '../widget/custom_textfiled.dart';
 import '../widget/profile_image.dart';
-import '../widget/survey_chart.dart';
+import '../widget/survey/survey_chart.dart';
 
 final surdata = [
   SurveyData(
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     imageSize: MediaQuery.of(context).size.height * 0.13,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.005),
-                  Text(
+                  const Text(
                     'Exodus Trivellan', // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
                     style: TextStyle(
                       fontSize: 31,
@@ -120,21 +120,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ReviewCountTexts(
+                        const ReviewCountTexts(
                           SubContent: '200',
                           TitleContent: 'Contacted',
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.1),
                         // SizedBox(child: right_line()),
-                        ReviewCountTexts(
+                        const ReviewCountTexts(
                           SubContent: '125',
                           TitleContent: 'Consulting',
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.1),
                         // SizedBox(child: right_line()),
-                        ReviewCountTexts(
+                        const ReviewCountTexts(
                           SubContent: '29Y',
                           TitleContent: 'Career',
                         ),
@@ -214,7 +214,7 @@ class _Header extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Profile',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -229,7 +229,8 @@ class _Header extends StatelessWidget {
                   isEditMode ? 'Done' : 'Edit',
                   style: TextStyle(
                     fontSize: 18,
-                    color: isEditMode ? Colors.redAccent : Color(0xFF3AAFA1),
+                    color:
+                        isEditMode ? Colors.redAccent : const Color(0xFF3AAFA1),
                     // color: Colors.white,
                   ),
                 ),
@@ -260,7 +261,7 @@ class ReviewCountTexts extends StatelessWidget {
         children: [
           Text(
             SubContent,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w900,
             ),
