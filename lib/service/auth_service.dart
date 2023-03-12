@@ -44,6 +44,10 @@ class AuthService {
           },
           false);
       if (result.result == Result.success) {
+        //   storage.write(
+        //     key: 'accessToken', value: result.response['accessToken']);
+        // storage.write(
+        //     key: 'refreshToken', value: result.response['refreshToken']);
         return result.response;
       } else {
         throw Exception('Failed to login');

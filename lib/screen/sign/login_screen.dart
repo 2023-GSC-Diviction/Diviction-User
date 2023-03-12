@@ -1,33 +1,41 @@
+import 'package:diviction_user/provider/auth_provider.dart';
 import 'package:diviction_user/screen/sign/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../config/style.dart';
 import '../../model/network_result.dart';
 import '../../network/dio_client.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import '../bottom_nav.dart';
 
-final underlineTextStyle = TextStyle(
-  color: Color(0xFFC3C3C3),
-  decoration: TextDecoration.underline, // 밑줄 넣기
-  decorationThickness: 1.5, // 밑줄 두께
-  // fontStyle: FontStyle
-);
+final authProvider =
+    StateNotifierProvider.autoDispose<AuthState, bool>((ref) => AuthState());
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController textEditingController_id = TextEditingController();
   TextEditingController textEditingController_pw = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final isLogin = ref.watch(authProvider);
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
+
+    if (isLogin) {
+      Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) =>
+                  const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
+          );
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -40,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.21),
-              TitleHeader(
+              const TitleHeader(
                 titleContext: 'Log In',
                 subContext:
                     'Experience a service that helps prevent and treat various addictions with Diviction.',
@@ -55,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 HintText: 'Password',
                 textEditingController: textEditingController_pw,
               ),
-              _PushSignupPage(),
+              const _PushSignupPage(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.20),
               CustomRoundButton(
                 title: 'Log In',
@@ -64,9 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: TextButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     "Forget Password?",
-                    style: underlineTextStyle,
+                    style: TextStyles.underlineTextStyle,
                   ),
                 ),
               )
@@ -82,48 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
     print('아이디 : ${textEditingController_id.text}');
     print('비밀번호 : ${textEditingController_pw.text}');
 
-    // id, pw 검증하는 API Call
-
-    // 로그인 성공
-    // API Call
-    String result = await AccountLogin();
-    if (result == "200") {
-      print("로그인 성공, 바텀 네비게이션 가진 스크린으로 이동");
-      Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
-          );
-    }
-    // 로그인 실패
-    else {
-      print('로그인 - 오류 발생 $result');
-    }
-  }
-
-  Future<String> AccountLogin() async {
-    var response = await DioClient().post(
-      'http://15.164.100.67:8080/auth/signIn/counsleor', // path counselor가 맞음 오타있음
-      {
-        'email': textEditingController_id.text,
-        'password': textEditingController_pw.text,
-        'authority': 'ROLE_COUNSELOR', // 혜진님 : ROLE_USER
-      },
-      false,
-    );
-
-    if (response.result == Result.success) {
-      // 여기서 회원 정보 가져오고 UI 구성에 필요한 값들 미리 저장?
-      storage.write(
-          key: 'accessToken', value: response.response['accessToken']);
-      storage.write(
-          key: 'refreshToken', value: response.response['refreshToken']);
-      final AT = await storage.read(key: 'accessToken');
-      final RT = await storage.read(key: 'refreshToken');
-      print('accessToken : $AT');
-      print('refreshToken : $RT');
-      return '200';
-    } else {
-      return response.toString();
-    }
+    ref
+        .read(authProvider.notifier)
+        .login(textEditingController_id.text, textEditingController_pw.text);
   }
 }
 
@@ -142,7 +111,7 @@ class _CustomInputField extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.055,
       decoration: BoxDecoration(
-        color: Color(0xFFEEEEEE),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(56),
         border: Border.all(width: 1, color: Colors.black12),
       ),
@@ -188,24 +157,24 @@ class _PushSignupPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        SizedBox(),
+        const SizedBox(),
         TextButton(
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => SignupScreen(),
+                builder: (BuildContext context) => const SignupScreen(),
               ),
             );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
+              const Text(
                 "Don't have an account?",
-                style: underlineTextStyle,
+                style: TextStyles.underlineTextStyle,
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-              Text(
+              const Text(
                 'Sign up',
                 style: TextStyle(color: Color(0xFF3E3E3E)),
               ),
