@@ -11,7 +11,7 @@ import '../../model/counselor.dart';
 import '../../provider/counselor_provider.dart';
 
 final counselorListProvider =
-    StateNotifierProvider<CounselorProvider, List<Counselor>>(
+    StateNotifierProvider.autoDispose<CounselorProvider, List<Counselor>>(
         (ref) => CounselorProvider());
 
 class FindCounselorScreen extends ConsumerStatefulWidget {
@@ -30,6 +30,13 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _tabController.dispose();
   }
 
   @override

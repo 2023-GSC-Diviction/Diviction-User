@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/style.dart';
 import '../../model/counselor.dart';
 
-final counselorListProvider = FutureProvider<List<Counselor>>((ref) async {
+final counselorListProvider =
+    FutureProvider.autoDispose<List<Counselor>>((ref) async {
   return await CounselorService().getCounselorsByOption({'drug': 'alcohol'});
 });
 
@@ -25,11 +26,13 @@ class RequestedCounselorScreen extends ConsumerWidget {
         children: [
           const Text('My Chat', style: TextStyles.titleTextStyle),
           counselorList.when(
-              data: (item) => Expanded(
+              data: (item) => item.isEmpty
+                  ? Center(child: Text('empty'))
+                  : Expanded(
                       child: CounselorList(
-                    counselorList: item,
-                    requested: true,
-                  )),
+                      counselorList: item,
+                      requested: true,
+                    )),
               error: (e, st) =>
                   Expanded(child: Center(child: Text('Error: $e'))),
               loading: () => const Expanded(

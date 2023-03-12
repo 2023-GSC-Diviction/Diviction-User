@@ -10,7 +10,7 @@ import '../../model/post.dart';
 import '../../service/community_service.dart';
 import '../../widget/appbar.dart';
 
-final communityProvider = FutureProvider<List<Post>>((ref) async {
+final communityProvider = FutureProvider.autoDispose<List<Post>>((ref) async {
   return await CommunityService().getPost();
 });
 
