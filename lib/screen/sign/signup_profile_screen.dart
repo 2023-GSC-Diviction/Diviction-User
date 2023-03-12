@@ -193,13 +193,14 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     print('프로필 이미지 경로 : ${path}');
 
     User user = User(
-        email: widget.id,
-        password: widget.password,
-        name: textEditingControllerForName.text,
-        address: textEditingControllerForAddress.text,
-        birth: textEditingControllerForBirth.text,
-        gender: userGender,
-        profile_img_url: path);
+      email: widget.id,
+      password: widget.password,
+      name: textEditingControllerForName.text,
+      address: textEditingControllerForAddress.text,
+      birth: textEditingControllerForBirth.text,
+      gender: userGender,
+      profile_img_url: path,
+    );
 
     ref.read(authProvider.notifier).signUp(user);
   }

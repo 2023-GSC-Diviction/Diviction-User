@@ -60,6 +60,8 @@ class AuthService {
   }
 
   Future<bool> signUp(User user) async {
+    print(user.toJson());
+    print('${user.runtimeType}');
     try {
       NetWorkResult result = await DioClient()
           .post('$_baseUrl/auth/signUp/member', user.toJson(), false);
