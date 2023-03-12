@@ -28,7 +28,7 @@ class AuthService {
             {'token': acToken, 'rfToken': rfToken},
             true);
         if (result.result == Result.success) {
-          return true;
+          return result.response;
         } else {
           return false;
         }

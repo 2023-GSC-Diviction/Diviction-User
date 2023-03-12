@@ -25,6 +25,13 @@ class DioClient {
     _refToken = await storage.read(key: 'refreshToken');
   }
 
+  _checkToken(Headers headers) {
+    if (headers.value('accessToken') != null) {
+      _tokenRefresh(
+          headers.value('accessToken')!, headers.value('refreshToken')!);
+    }
+  }
+
   _tokenRefresh(String acToken, String refToken) async {
     storage.write(key: 'accessToken', value: acToken);
     storage.write(key: 'refreshToken', value: refToken);
@@ -50,8 +57,10 @@ class DioClient {
                   'Content-Type': 'application/json',
                 }));
       if (response.statusCode == 200) {
+        _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
       } else {
+        _checkToken(response.headers);
         return NetWorkResult(result: Result.fail);
       }
     } on DioError catch (e) {
@@ -85,8 +94,10 @@ class DioClient {
                 ));
 
       if (response.statusCode == 200) {
+        _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
       } else {
+        _checkToken(response.headers);
         return NetWorkResult(result: Result.fail);
       }
     } on DioError catch (e) {
