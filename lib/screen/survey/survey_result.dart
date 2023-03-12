@@ -140,6 +140,13 @@ class _SurveyResultState extends State<SurveyResult> {
                       ),
                     ),
                     _SizedBox(0.03),
+                    Text(
+                      "[내 위치 근처의 치료센터]",
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    _SizedBox(0.01),
                     SizedBox(
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.3,
