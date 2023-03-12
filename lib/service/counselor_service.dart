@@ -26,5 +26,6 @@ class CounselorService {
     } else {
       throw Exception('Failed to load counselors');
     }
+
   }
 }
