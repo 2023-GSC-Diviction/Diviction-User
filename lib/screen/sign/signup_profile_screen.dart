@@ -70,62 +70,63 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
       },
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.11),
-              const TitleHeader(
-                titleContext: 'Profile',
-                subContext: '',
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.11),
+                  const TitleHeader(
+                    titleContext: 'Profile',
+                    subContext: '',
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  ProfileImage(
+                    onProfileImagePressed: onProfileImagePressed,
+                    isChoosedPicture: isChoosedPicture,
+                    path: path,
+                    type: 0,
+                    imageSize: MediaQuery.of(context).size.height * 0.12,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  _CustomInputField(
+                    HintText: 'Name',
+                    inputIcons: Icons.person_outline,
+                    textEditingController: textEditingControllerForName,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                  _CustomInputField(
+                    HintText: 'Date of Birth',
+                    inputIcons: Icons.cake_outlined,
+                    textEditingController: textEditingControllerForBirth,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                  _DatePicker(
+                    onDateTimeChanged: onDateTimeChanged,
+                    selectedDate: selectedDate,
+                    defaultDate: defaultDate,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                  _CustomInputField(
+                    HintText: 'Street Address',
+                    inputIcons: Icons.home_outlined,
+                    textEditingController: textEditingControllerForAddress,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                  _GenderChoosed(
+                    onGenderChoosedMale: onGenderChoosedMale,
+                    onGenderChoosedFemale: onGenderChoosedFemale,
+                    userGender: userGender,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.17),
+                  CustomRoundButton(
+                      title: 'Profile completed!',
+                      onPressed: onPressedSignupButton),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-              ProfileImage(
-                onProfileImagePressed: onProfileImagePressed,
-                isChoosedPicture: isChoosedPicture,
-                path: path,
-                type: 0,
-                imageSize: MediaQuery.of(context).size.height * 0.12,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              _CustomInputField(
-                HintText: 'Name',
-                inputIcons: Icons.person_outline,
-                textEditingController: textEditingControllerForName,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _CustomInputField(
-                HintText: 'Date of Birth',
-                inputIcons: Icons.cake_outlined,
-                textEditingController: textEditingControllerForBirth,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _DatePicker(
-                onDateTimeChanged: onDateTimeChanged,
-                selectedDate: selectedDate,
-                defaultDate: defaultDate,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _CustomInputField(
-                HintText: 'Street Address',
-                inputIcons: Icons.home_outlined,
-                textEditingController: textEditingControllerForAddress,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _GenderChoosed(
-                onGenderChoosedMale: onGenderChoosedMale,
-                onGenderChoosedFemale: onGenderChoosedFemale,
-                userGender: userGender,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.17),
-              CustomRoundButton(
-                  title: 'Profile completed!',
-                  onPressed: onPressedSignupButton),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-            ],
-          ),
-        ),
+            )),
       ),
     );
   }
