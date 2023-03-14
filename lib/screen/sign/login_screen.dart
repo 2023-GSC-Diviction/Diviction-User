@@ -37,6 +37,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       switch (isLogin) {
         case SignState.success:
           toMain();
+          ref.invalidate(authProvider);
           break;
         case SignState.fail:
           showSnackbar();

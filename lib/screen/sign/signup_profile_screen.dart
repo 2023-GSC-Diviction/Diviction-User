@@ -51,6 +51,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (isComplete) {
         case SignState.success:
+          ref.invalidate(authProvider);
           toLogin();
           break;
 
@@ -64,70 +65,77 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
 
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-          body: Stack(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.11),
-              const TitleHeader(
-                titleContext: 'Profile',
-                subContext: '',
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-              ProfileImage(
-                onProfileImagePressed: onProfileImagePressed,
-                isChoosedPicture: isChoosedPicture,
-                path: path,
-                type: 0,
-                imageSize: MediaQuery.of(context).size.height * 0.12,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              _CustomInputField(
-                HintText: 'Name',
-                inputIcons: Icons.person_outline,
-                textEditingController: textEditingControllerForName,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _CustomInputField(
-                HintText: 'Date of Birth',
-                inputIcons: Icons.cake_outlined,
-                textEditingController: textEditingControllerForBirth,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _DatePicker(
-                onDateTimeChanged: onDateTimeChanged,
-                selectedDate: selectedDate,
-                defaultDate: defaultDate,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _CustomInputField(
-                HintText: 'Street Address',
-                inputIcons: Icons.home_outlined,
-                textEditingController: textEditingControllerForAddress,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _GenderChoosed(
-                onGenderChoosedMale: onGenderChoosedMale,
-                onGenderChoosedFemale: onGenderChoosedFemale,
-                userGender: userGender,
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-            bottom: 20,
-            left: 32,
-            right: 32,
-            child: CustomRoundButton(
-                title: 'Profile completed!', onPressed: onPressedSignupButton))
-      ])),
-    );
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+          body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.1),
+                        const TitleHeader(
+                          titleContext: 'Profile',
+                          subContext: '',
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.025),
+                        ProfileImage(
+                          onProfileImagePressed: onProfileImagePressed,
+                          isChoosedPicture: isChoosedPicture,
+                          path: path,
+                          type: 0,
+                          imageSize: MediaQuery.of(context).size.height * 0.12,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05),
+                        _CustomInputField(
+                          HintText: 'Name',
+                          inputIcons: Icons.person_outline,
+                          textEditingController: textEditingControllerForName,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01),
+                        _CustomInputField(
+                          HintText: 'Date of Birth',
+                          inputIcons: Icons.cake_outlined,
+                          textEditingController: textEditingControllerForBirth,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01),
+                        _DatePicker(
+                          onDateTimeChanged: onDateTimeChanged,
+                          selectedDate: selectedDate,
+                          defaultDate: defaultDate,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01),
+                        _CustomInputField(
+                          HintText: 'Street Address',
+                          inputIcons: Icons.home_outlined,
+                          textEditingController:
+                              textEditingControllerForAddress,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01),
+                        _GenderChoosed(
+                          onGenderChoosedMale: onGenderChoosedMale,
+                          onGenderChoosedFemale: onGenderChoosedFemale,
+                          userGender: userGender,
+                        ),
+                      ],
+                    ),
+                    CustomRoundButton(
+                        title: 'Profile completed!',
+                        onPressed: onPressedSignupButton),
+                  ])),
+        ));
   }
 
   void showSnackbar() {
@@ -139,9 +147,11 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   }
 
   toLogin() {
-    Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const LoginScreen()) // 리버팟 적용된 HomeScreen 만들기
-        );
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+        (route) => false);
   }
 
   onDateTimeChanged(DateTime value) {
@@ -193,14 +203,13 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     print('프로필 이미지 경로 : ${path}');
 
     User user = User(
-      email: widget.id,
-      password: widget.password,
-      name: textEditingControllerForName.text,
-      address: textEditingControllerForAddress.text,
-      birth: textEditingControllerForBirth.text,
-      gender: userGender,
-      profile_img_url: path,
-    );
+        email: widget.id,
+        password: widget.password,
+        name: textEditingControllerForName.text,
+        address: textEditingControllerForAddress.text,
+        birth: textEditingControllerForBirth.text,
+        gender: 'MAIL',
+        profile_img_url: path);
 
     ref.read(authProvider.notifier).signUp(user);
   }

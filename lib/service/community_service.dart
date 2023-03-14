@@ -15,7 +15,7 @@ class CommunityService {
   final String? _baseUrl = dotenv.env['BASE_URL'];
 
   Future<List<Post>> getPost() async {
-    var response = await DioClient().get('$_baseUrl/drug/list', {});
+    var response = await DioClient().get('$_baseUrl/drug/list', {}, true);
     if (response.result == Result.success) {
       var posts = response.response['posts'];
       return posts.map((post) => Post.fromJson(post)).toList();

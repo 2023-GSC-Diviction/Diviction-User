@@ -16,7 +16,7 @@ class CounselorService {
 
   Future<List<Counselor>> getCounselorsByOption(
       Map<String, String> option) async {
-    var response = await DioClient().get('$_baseUrl/drug/list', {});
+    var response = await DioClient().get('$_baseUrl/drug/list', {}, true);
 
     if (response.result == Result.success) {
       var counselors = response.response['counselors'];

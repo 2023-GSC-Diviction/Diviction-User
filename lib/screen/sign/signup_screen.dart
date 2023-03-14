@@ -29,49 +29,54 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.27),
-              const TitleHeader(
-                titleContext: 'Sign Up',
-                subContext:
-                    'Experience a service that helps prevent and treat various addictions with Diviction.',
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              _CustomInputField(
-                HintText: 'E-Mail',
-                textEditingController: textEditingControllerForId,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _CustomInputField(
-                HintText: 'Password',
-                textEditingController: textEditingControllerForPw,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-              _CustomInputField(
-                HintText: 'Check your Password',
-                textEditingController: textEditingControllerForCheckPw,
-              ),
-              const _PopLoginPage(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.115),
-              CustomRoundButton(
-                title: 'Create Account',
-                onPressed: onPressedSignupButton,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-            ],
-          ),
-        ),
-      ),
-    );
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+          body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2),
+                      const TitleHeader(
+                        titleContext: 'Sign Up',
+                        subContext:
+                            'Experience a service that helps prevent and treat various addictions with Diviction.',
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05),
+                      _CustomInputField(
+                        HintText: 'E-Mail',
+                        textEditingController: textEditingControllerForId,
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015),
+                      _CustomInputField(
+                        HintText: 'Password',
+                        textEditingController: textEditingControllerForPw,
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015),
+                      _CustomInputField(
+                        HintText: 'Check your Password',
+                        textEditingController: textEditingControllerForCheckPw,
+                      ),
+                      const _PopLoginPage(),
+                    ],
+                  ),
+                  CustomRoundButton(
+                      title: 'Create Account',
+                      onPressed: onPressedSignupButton),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                ],
+              )),
+        ));
   }
 
   onPressedSignupButton() {
