@@ -60,22 +60,27 @@ class AuthService {
   }
 
   Future<bool> signUp(User user) async {
-    print(user.toJson());
-    print('${user.runtimeType}');
     try {
-      NetWorkResult result = await DioClient()
-          .post('$_baseUrl/auth/signUp/member', user.toJson(), false);
+      NetWorkResult result = await DioClient().post(
+          '$_baseUrl/auth/signUp/member',
+          {
+            "email": "test13334@gmail.com",
+            "password": "String",
+            "name": "String",
+            "address": "String",
+            "birth": "1991-03-12",
+            "gender": "MAIL",
+            "profile_img_url": "String"
+          },
+          false);
+      print(result);
       if (result.result == Result.success) {
-        //   storage.write(
-        //     key: 'accessToken', value: result.response['accessToken']);
-        // storage.write(
-        //     key: 'refreshToken', value: result.response['refreshToken']);
-        return result.response;
+        return true;
       } else {
-        throw Exception('Failed to signUp');
+        throw false;
       }
     } catch (e) {
-      throw Exception('Failed to signUp');
+      throw false;
     }
   }
 }

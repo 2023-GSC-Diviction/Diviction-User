@@ -58,22 +58,16 @@ class DioClient {
   }
 
   Future<NetWorkResult> post(String url, dynamic data, bool useToken) async {
+    print(_dio.options);
     try {
-      Response response = await _dio.post(
-        url,
-        data: json.encode(data),
-        options: useToken
-            ? Options(
-                headers: {
-                  HttpHeaders.authorizationHeader: 'Bearer $_acToken',
-                  HttpHeaders.contentTypeHeader: 'application/json',
-                  'Content-Type': 'application/json',
-                  'RT':
-                      _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
-                },
-              )
-            : null,
-      );
+      Response response = await _dio.post(url,
+          data: json.encode(data),
+          options: Options(
+            headers: {
+              HttpHeaders.contentTypeHeader: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          ));
       if (response.statusCode == 200) {
         return NetWorkResult(result: Result.success, response: response.data);
       } else {
