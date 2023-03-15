@@ -38,7 +38,7 @@ class _HomeSceenState extends State<HomeSceen> {
                     checkList(),
                     TestButton(
                       type: 'Drug',
-                      screen: SurveyResult(), // 빠른 디버깅을 위해 잠시 변경 - 기존 : DrugSurvey
+                      screen: DrugSurvey(), // 테스트 : SurveyResult
                     ),
                     const SizedBox(
                       height: 10,

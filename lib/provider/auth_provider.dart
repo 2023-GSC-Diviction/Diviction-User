@@ -19,7 +19,7 @@ class AuthState extends StateNotifier<SignState> {
   Future signIn(String email, String password) async {
     try {
       var result = await AuthService().signIn(email, password);
-      if (result) {
+      if (result.hashCode == 200) {
         state = SignState.success;
       } else {
         state = SignState.fail;
@@ -32,7 +32,7 @@ class AuthState extends StateNotifier<SignState> {
 
   Future signUp(User user) async {
     try {
-      bool result = await AuthService().signUp(user);
+      var result = await AuthService().signUp(user);
       if (result) {
         state = SignState.success;
       } else {

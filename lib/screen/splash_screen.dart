@@ -52,7 +52,7 @@ class SplashScreen extends ConsumerWidget {
           if (value == true) {
             checkDay();
           } else if (value == false) {
-            toLoginScreen();
+            checkDay(); // 설문api 연동을 위해 변경함 원래는 toLoginScreen 였음
           }
         },
         loading: () {},

@@ -1,39 +1,23 @@
 import 'package:circular_seek_bar/circular_seek_bar.dart';
+import 'package:diviction_user/provider/survey_provider.dart';
 import 'package:diviction_user/widget/googleMap/google_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:diviction_user/widget/appbar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class SurveyResult extends StatefulWidget {
-  const SurveyResult({Key? key}) : super(key: key);
+final surveyProvider = StateNotifierProvider.autoDispose<SurveyState, TestState>(
+        (ref) => SurveyState());
+
+class SurveyResult extends ConsumerWidget {
+  SurveyResult({super.key});
 
   @override
-  State<SurveyResult> createState() => _SurveyResultState();
-}
-
-class _SurveyResultState extends State<SurveyResult> {
-  // latitude - 위도, longitude - 경도
-
-  @override
-  Widget build(BuildContext context) {
-    // 마커 추가
-    _addMarker(
-      LatLng(37.317070, 126.794583),
-      "국민기초생활보장 센터 평택지사",
-    );
-    _addMarker(
-      LatLng(37.312377, 126.763769),
-      "평택시 신북보건소 약물의존 치료센터",
-    );
-    _addMarker(
-      LatLng(37.316212, 126.783465),
-      "한국사회복지회 평택지회 도약센터",
-    );
-    _addMarker(
-      LatLng(37.304582, 126.750912),
-      "평택순복음교회 새소망센터",
-    );
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ModalRoute.of(context)?.settings.arguments as dynamic;
+    ref.read(surveyProvider.notifier).DSATdataSave(data);
+    // ref.read(SurveyProvider.notifier).DSATdataSave(surveyDAST);
+    // latitude - 위도, longitude - 경도
     final LatLng HomeLatLng = LatLng(
       37.3457,
       126.7419,
@@ -116,7 +100,7 @@ class _SurveyResultState extends State<SurveyResult> {
                         ],
                       ),
                     ),
-                    _SizedBox(0.03),
+                    _SizedBox(context, 0.03),
                     Text(
                       "3단계. 유해",
                       style: TextStyle(
@@ -124,14 +108,14 @@ class _SurveyResultState extends State<SurveyResult> {
                         fontSize: 20,
                       ),
                     ),
-                    _SizedBox(0.03),
+                    _SizedBox(context, 0.03),
                     Text(
                       "알코올 사용과 관련된 건강 문제의 위험이 증가하고 경미하거나 중간 정도의 알코올 사용 장애가 발생할 수 있습니다.",
                       style: TextStyle(
                         fontSize: 20,
                       ),
                     ),
-                    _SizedBox(0.03),
+                    _SizedBox(context, 0.03),
                     Text(
                       "검사 결과 : 약물 및 치료 의뢰가 필요합니다.",
                       style: TextStyle(
@@ -139,14 +123,14 @@ class _SurveyResultState extends State<SurveyResult> {
                         fontSize: 20,
                       ),
                     ),
-                    _SizedBox(0.03),
+                    _SizedBox(context, 0.03),
                     Text(
                       "[내 위치 근처의 치료센터]",
                       style: TextStyle(
                         fontSize: 16,
                       ),
                     ),
-                    _SizedBox(0.01),
+                    _SizedBox(context, 0.01),
                     SizedBox(
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.3,
@@ -165,7 +149,7 @@ class _SurveyResultState extends State<SurveyResult> {
     );
   }
 
-  Widget _SizedBox(double value) {
+  Widget _SizedBox(BuildContext context, double value) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * value,
     );
@@ -193,13 +177,35 @@ class _SurveyResultState extends State<SurveyResult> {
   Set<Marker> _markers = {}; // 마커들의 집합
 
   // 마커 추가 함수
-  void _addMarker(LatLng position, String name) {
-    setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId(name),
-        position: position,
-        infoWindow: InfoWindow(title: name),
-      ));
-    });
-  }
+  // void _addMarker(LatLng position, String name) {
+  //   setState(() {
+  //     _markers.add(Marker(
+  //       markerId: MarkerId(name),
+  //       position: position,
+  //       infoWindow: InfoWindow(title: name),
+  //     ));
+  //   });
+  // }
 }
+
+/*
+
+// 마커 추가, 0316 : Stateful -> ConsumerWidget 변경하면서 주석처리함
+    _addMarker(
+      LatLng(37.317070, 126.794583),
+      "국민기초생활보장 센터 평택지사",
+    );
+    _addMarker(
+      LatLng(37.312377, 126.763769),
+      "평택시 신북보건소 약물의존 치료센터",
+    );
+    _addMarker(
+      LatLng(37.316212, 126.783465),
+      "한국사회복지회 평택지회 도약센터",
+    );
+    _addMarker(
+      LatLng(37.304582, 126.750912),
+      "평택순복음교회 새소망센터",
+    );
+
+ */

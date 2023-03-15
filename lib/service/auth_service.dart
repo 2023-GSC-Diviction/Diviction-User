@@ -53,7 +53,7 @@ class AuthService {
             key: 'accessToken', value: result.response['accessToken']);
         storage.write(
             key: 'refreshToken', value: result.response['refreshToken']);
-        return result.response;
+        return true;
       } else {
         throw Exception('Failed to login');
       }
@@ -66,15 +66,7 @@ class AuthService {
     try {
       NetWorkResult result = await DioClient().post(
           '$_baseUrl/auth/signUp/member',
-          {
-            "email": "test13334@gmail.com",
-            "password": "String",
-            "name": "String",
-            "address": "String",
-            "birth": "1991-03-12",
-            "gender": "MAIL",
-            "profile_img_url": "String"
-          },
+          user.toJson(),
           false);
       print(result);
       if (result.result == Result.success) {
