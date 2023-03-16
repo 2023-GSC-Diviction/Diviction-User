@@ -5,13 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/user.dart';
 
-enum SignState { proceeding, success, fail }
+enum LoadState {
+  proceeding,
+  success,
+  fail,
+}
 
-class AuthState extends StateNotifier<SignState> {
-  AuthState() : super(SignState.proceeding);
+class AuthState extends StateNotifier<LoadState> {
+  AuthState() : super(LoadState.proceeding);
 
   @override
-  set state(SignState value) {
+  set state(LoadState value) {
     // TODO: implement state
     super.state = value;
   }
@@ -20,13 +24,13 @@ class AuthState extends StateNotifier<SignState> {
     try {
       var result = await AuthService().signIn(email, password);
       if (result) {
-        state = SignState.success;
+        state = LoadState.success;
       } else {
-        state = SignState.fail;
+        state = LoadState.fail;
       }
     } catch (e) {
       print(e);
-      state = SignState.fail;
+      state = LoadState.fail;
     }
   }
 
@@ -34,13 +38,13 @@ class AuthState extends StateNotifier<SignState> {
     try {
       bool result = await AuthService().signUp(user);
       if (result) {
-        state = SignState.success;
+        state = LoadState.success;
       } else {
-        state = SignState.fail;
+        state = LoadState.fail;
       }
     } catch (e) {
       print(e);
-      state = SignState.fail;
+      state = LoadState.fail;
     }
   }
 }

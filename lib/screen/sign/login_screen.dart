@@ -8,7 +8,7 @@ import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import '../bottom_nav.dart';
 
-final authProvider = StateNotifierProvider.autoDispose<AuthState, SignState>(
+final authProvider = StateNotifierProvider.autoDispose<AuthState, LoadState>(
     (ref) => AuthState());
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -35,11 +35,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (isLogin) {
-        case SignState.success:
+        case LoadState.success:
           toMain();
           ref.invalidate(authProvider);
           break;
-        case SignState.fail:
+        case LoadState.fail:
           showSnackbar();
           break;
         default:

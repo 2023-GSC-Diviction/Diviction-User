@@ -75,4 +75,20 @@ class AuthService {
       throw Exception('Failed to signUp');
     }
   }
+
+  Future<bool> emailCheck(String email, String role) async {
+    try {
+      NetWorkResult result = await DioClient().post(
+          '$_baseUrl/auth/check/email/$email/role/$role',
+          {'email': email, 'role': role},
+          false);
+      if (result.result == Result.success) {
+        return result.response;
+      } else {
+        throw Exception('Failed to emailCheck');
+      }
+    } catch (e) {
+      throw Exception('Failed to emailCheck');
+    }
+  }
 }
