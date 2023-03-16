@@ -14,10 +14,8 @@ class CounselorService {
   CounselorService._internal();
   final String? _baseUrl = dotenv.env['BASE_URL'];
 
-  Future<List<Counselor>> getCounselorsByOption(
-      Map<String, String> option) async {
-    var response =
-        await DioClient().get('$_baseUrl/counselor/all', option, true);
+  Future<List<Counselor>> getCounselors(Map<String, String> option) async {
+    var response = await DioClient().get('$_baseUrl/counselor/all', {}, true);
 
     if (response.result == Result.success) {
       var counselors = response.response['counselors'];

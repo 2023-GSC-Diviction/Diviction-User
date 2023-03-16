@@ -1,18 +1,21 @@
 import 'package:diviction_user/config/style.dart';
-import 'package:diviction_user/screen/counselor/requested_counselor_screen.dart';
 import 'package:diviction_user/widget/counselor_list.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/counselor.dart';
+import '../../model/drug.dart';
 import '../../provider/counselor_provider.dart';
+import '../../service/drug_service.dart';
 
 final counselorListProvider =
     StateNotifierProvider.autoDispose<CounselorProvider, List<Counselor>>(
         (ref) => CounselorProvider());
+
+final drugListProvider = FutureProvider.autoDispose<List<Drug>>((ref) async {
+  return await DrugService().getDrugs();
+});
 
 class FindCounselorScreen extends ConsumerStatefulWidget {
   const FindCounselorScreen({super.key});
@@ -140,7 +143,6 @@ List<String> regions = [
   '전북',
   '경남'
 ];
-List<String> drugTypes = ['코카인', '펜타닐', '헤로인'];
 
 class OptionBottomSheet extends ConsumerWidget {
   const OptionBottomSheet(
@@ -151,6 +153,7 @@ class OptionBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var drugList = ref.watch(drugListProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -177,7 +180,18 @@ class OptionBottomSheet extends ConsumerWidget {
         SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: TabBarView(controller: tabController, children: [
-              optionList('type', drugTypes, ref),
+              ...drugList.when(
+                  data: (data) => [
+                        optionList(
+                            'type', data.map((e) => e.drugName).toList(), ref)
+                      ],
+                  error: (e, st) => [
+                        Center(
+                          child: Text(e.toString()),
+                        )
+                      ],
+                  loading: () =>
+                      [const Center(child: CircularProgressIndicator())]),
               optionList('region', regions, ref),
             ])),
       ],
