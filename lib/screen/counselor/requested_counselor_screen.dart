@@ -10,7 +10,7 @@ import '../../model/counselor.dart';
 
 final counselorListProvider =
     FutureProvider.autoDispose<List<Counselor>>((ref) async {
-  return await CounselorService().getCounselorsByOption({'drug': 'alcohol'});
+  return await CounselorService().getCounselors({});
 });
 
 class RequestedCounselorScreen extends ConsumerWidget {
