@@ -34,7 +34,7 @@ class AuthState extends StateNotifier<LoadState> {
     }
   }
 
-  Future signUp(User user) async {
+  Future signUp(Map<String, String> user) async {
     try {
       bool result = await AuthService().signUp(user);
       if (result) {
