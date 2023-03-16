@@ -141,18 +141,11 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('check your email')));
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => SignUpProfileScreen(
-            id: textEditingControllerForId.text,
-            password: textEditingControllerForPw.text,
-          ),
-        ),
-      );
+      checkEmail(textEditingControllerForId.text);
     }
   }
 
-  Future checkEmail(String email) async {
+  void checkEmail(String email) async {
     try {
       bool result = await AuthService().emailCheck(email, 'ROLE_USER');
       if (result) {

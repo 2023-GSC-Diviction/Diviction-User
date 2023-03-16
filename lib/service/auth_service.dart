@@ -2,6 +2,7 @@ import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
 
@@ -62,11 +63,14 @@ class AuthService {
     }
   }
 
-  Future<bool> signUp(User user) async {
+  Future<bool> signUp(Map<String, String> user) async {
     try {
-      NetWorkResult result = await DioClient()
-          .post('$_baseUrl/auth/signUp/member', user.toJson(), false);
+      NetWorkResult result =
+          await DioClient().post('$_baseUrl/auth/signUp/member', user, false);
       if (result.result == Result.success) {
+        User user = User.fromJson(result.response);
+        user.savePreference(user);
+
         return true;
       } else {
         throw Exception('Failed to signUp');
@@ -78,7 +82,7 @@ class AuthService {
 
   Future<bool> emailCheck(String email, String role) async {
     try {
-      NetWorkResult result = await DioClient().post(
+      NetWorkResult result = await DioClient().get(
           '$_baseUrl/auth/check/email/$email/role/$role',
           {'email': email, 'role': role},
           false);

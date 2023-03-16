@@ -11,7 +11,7 @@ import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import 'login_screen.dart';
 
-final authProvider = StateNotifierProvider.autoDispose<AuthState, SignState>(
+final authProvider = StateNotifierProvider.autoDispose<AuthState, LoadState>(
     (ref) => AuthState());
 
 class SignUpProfileScreen extends ConsumerStatefulWidget {
@@ -50,12 +50,12 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (isComplete) {
-        case SignState.success:
+        case LoadState.success:
           ref.invalidate(authProvider);
           toLogin();
           break;
 
-        case SignState.fail:
+        case LoadState.fail:
           showSnackbar();
           break;
         default:
@@ -202,14 +202,15 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     print('성별 : ${userGender}');
     print('프로필 이미지 경로 : ${path}');
 
-    User user = User(
-        email: widget.id,
-        password: widget.password,
-        name: textEditingControllerForName.text,
-        address: textEditingControllerForAddress.text,
-        birth: textEditingControllerForBirth.text,
-        gender: userGender,
-        profile_img_url: path);
+    Map<String, String> user = {
+      'email': widget.id,
+      'password': widget.password,
+      'name': textEditingControllerForName.text,
+      'address': textEditingControllerForAddress.text,
+      'birth': textEditingControllerForBirth.text,
+      'gender': userGender,
+      'profile_img_url': path
+    };
 
     ref.read(authProvider.notifier).signUp(user);
   }
