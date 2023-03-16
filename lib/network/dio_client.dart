@@ -47,16 +47,15 @@ class DioClient {
       Response response = await _dio.get(url,
           queryParameters: parameter,
           options: useToken
-              ? Options(headers: {
-            HttpHeaders.authorizationHeader: _acToken,
-            HttpHeaders.contentTypeHeader: 'application/json',
-            'Content-Type': 'application/json',
-            'RT': _refToken
-          })
-              : Options(headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            'Content-Type': 'application/json',
-          }));
+              ? Options(
+                  contentType: Headers.jsonContentType,
+                  headers: {
+                    HttpHeaders.authorizationHeader: _acToken,
+                    'RT':
+                        _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
+                  },
+                )
+              : Options(contentType: Headers.jsonContentType));
       if (response.statusCode == 200) {
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
@@ -89,20 +88,14 @@ class DioClient {
           data: json.encode(data),
           options: useToken
               ? Options(
-            headers: {
-              HttpHeaders.authorizationHeader: _acToken,
-              HttpHeaders.contentTypeHeader: 'application/json',
-              'Content-Type': 'application/json',
-              'RT':
-              _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
-            },
-          )
-              : Options(
-            headers: {
-              HttpHeaders.contentTypeHeader: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          ));
+                  contentType: Headers.jsonContentType,
+                  headers: {
+                    HttpHeaders.authorizationHeader: _acToken,
+                    'RT':
+                        _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
+                  },
+                )
+              : Options(contentType: Headers.jsonContentType));
 
       if (response.statusCode == 200) {
         _checkToken(response.headers);

@@ -19,8 +19,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  TextEditingController textEditingController_id = TextEditingController();
-  TextEditingController textEditingController_pw = TextEditingController();
+  TextEditingController textEditingControllerForId = TextEditingController();
+  TextEditingController textEditingControllerForPw = TextEditingController();
 
   @override
   void dispose() {
@@ -37,6 +37,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       switch (isLogin) {
         case LoadState.success:
           toMain();
+          ref
+              .read(authProvider.notifier)
+              .saveData(textEditingControllerForId.text);
           ref.invalidate(authProvider);
           break;
         case LoadState.fail:
@@ -66,12 +69,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               _CustomInputField(
                 HintText: 'E-Mail',
-                textEditingController: textEditingController_id,
+                textEditingController: textEditingControllerForId,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _CustomInputField(
                 HintText: 'Password',
-                textEditingController: textEditingController_pw,
+                textEditingController: textEditingControllerForPw,
               ),
               const _PushSignupPage(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.20),
@@ -112,19 +115,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   onPressedLoginButton() async {
     print('로그인 버튼 눌림');
-    print('아이디 : ${textEditingController_id.text}');
-    print('비밀번호 : ${textEditingController_pw.text}');
+    print('아이디 : ${textEditingControllerForId.text}');
+    print('비밀번호 : ${textEditingControllerForPw.text}');
 
-    if (textEditingController_id.text == '' ||
-        textEditingController_pw.text == '') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    if (textEditingControllerForId.text == '' ||
+        textEditingControllerForPw.text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('fill in the blank'),
         duration: Duration(seconds: 1),
       ));
     } else {
-      ref
-          .read(authProvider.notifier)
-          .signIn(textEditingController_id.text, textEditingController_pw.text);
+      ref.read(authProvider.notifier).signIn(
+          textEditingControllerForId.text, textEditingControllerForPw.text);
     }
   }
 }
