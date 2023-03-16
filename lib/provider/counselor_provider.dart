@@ -18,10 +18,11 @@ class CounselorProvider extends StateNotifier<List<Counselor>> {
     super.state = value;
   }
 
-  void getCounselor() {
-    _counselorService.getCounselors(_options).then((value) {
-      state = value;
-    }).catchError((onError) => null);
+  void getCounselor() async {
+    var counselor = await _counselorService.getCounselors(_options);
+    if (counselor.isNotEmpty) {
+      state = counselor;
+    }
   }
 
   void addOption(String type, String option) {

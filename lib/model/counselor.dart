@@ -1,5 +1,5 @@
 class Counselor {
-  String id;
+  int id;
   String email;
   String password;
   String name;

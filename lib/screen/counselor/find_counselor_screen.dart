@@ -27,7 +27,6 @@ class FindCounselorScreen extends ConsumerStatefulWidget {
 class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<Counselor> _counselorList = [];
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
   @override
   Widget build(BuildContext context) {
     final counselorList = ref.watch(counselorListProvider);
-    _counselorList = counselorList;
+
     return Stack(children: [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -70,7 +69,7 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
             ]),
             Expanded(
                 child: CounselorList(
-              counselorList: _counselorList,
+              counselorList: counselorList,
               requested: false,
             ))
           ],

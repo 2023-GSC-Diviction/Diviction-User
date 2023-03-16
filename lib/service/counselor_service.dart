@@ -18,10 +18,15 @@ class CounselorService {
     var response = await DioClient().get('$_baseUrl/counselor/all', {}, true);
 
     if (response.result == Result.success) {
-      var counselors = response.response['counselors'];
-      return counselors
-          .map((counselor) => Counselor.fromJson(counselor))
+      var res = response.response;
+      List<Counselor> counselors = res
+          .map((counselor) {
+            return Counselor.fromJson(counselor);
+          })
+          .cast<Counselor>()
           .toList();
+
+      return counselors;
     } else {
       throw Exception('Failed to load counselors');
     }

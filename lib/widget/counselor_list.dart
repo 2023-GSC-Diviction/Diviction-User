@@ -47,11 +47,12 @@ class CounselorList extends StatelessWidget {
                         ),
                         Text.rich(
                           TextSpan(
-                              text: '${counselorList[index]}님\n',
+                              text: '${counselorList[index].name}\n',
                               style: TextStyles.mainTextStyle,
                               children: <TextSpan>[
-                                const TextSpan(
-                                    text: 'Counseling Center',
+                                TextSpan(
+                                    text:
+                                        counselorList.elementAt(index).address,
                                     style: TextStyles.shadowTextStyle),
                               ]),
                           textAlign: TextAlign.start,
