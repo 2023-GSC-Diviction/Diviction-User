@@ -32,7 +32,7 @@ class AuthState extends StateNotifier<SignState> {
 
   Future signUp(User user) async {
     try {
-      var result = await AuthService().signUp(user);
+      bool result = await AuthService().signUp(user);
       if (result) {
         state = SignState.success;
       } else {
