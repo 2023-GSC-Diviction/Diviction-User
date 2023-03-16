@@ -43,6 +43,7 @@ class DioClient {
   Future<NetWorkResult> get(
       String url, Map<String, dynamic>? parameter, bool useToken) async {
     try {
+      _getToken();
       Response response = await _dio.get(url,
           queryParameters: parameter,
           options: useToken
@@ -71,6 +72,9 @@ class DioClient {
       }
     } on DioError catch (e) {
       if (e.response != null) {
+        if (e.response!.statusCode == 401) {
+          return NetWorkResult(result: Result.tokenExpired);
+        }
         return NetWorkResult(result: Result.fail, response: e.response);
       } else {
         return NetWorkResult(result: Result.fail, response: e);
@@ -80,6 +84,7 @@ class DioClient {
 
   Future<NetWorkResult> post(String url, dynamic data, bool useToken) async {
     try {
+      _getToken();
       Response response = await _dio.post(url,
           data: json.encode(data),
           options: useToken

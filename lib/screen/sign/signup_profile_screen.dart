@@ -208,7 +208,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
         name: textEditingControllerForName.text,
         address: textEditingControllerForAddress.text,
         birth: textEditingControllerForBirth.text,
-        gender: 'MAIL',
+        gender: userGender,
         profile_img_url: path);
 
     ref.read(authProvider.notifier).signUp(user);

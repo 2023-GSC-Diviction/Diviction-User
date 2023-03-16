@@ -14,6 +14,12 @@ class CounselorProvider extends StateNotifier<List<Counselor>> {
     super.state = value;
   }
 
+  void getCounselor() {
+    _counselorService.getCounselorsByOption(_options).then((value) {
+      state = value;
+    }).catchError((onError) => null);
+  }
+
   void addOption(String type, String option) {
     _options[type] = option;
     _counselorService.getCounselorsByOption(_options).then((value) {

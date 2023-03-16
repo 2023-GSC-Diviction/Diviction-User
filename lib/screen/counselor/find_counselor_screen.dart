@@ -30,6 +30,7 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
+    ref.read(counselorListProvider.notifier).getCounselor();
   }
 
   @override
