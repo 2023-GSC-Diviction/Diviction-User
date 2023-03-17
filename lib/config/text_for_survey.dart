@@ -19,15 +19,15 @@ const List<String> drug_question = [
 
 const Map<int, List<String>> drug_answer = {
   -1: [
-    'a. 필로폰(액체형태, 결정형태)',
-    'b. 코카인',
-    'c. 대마초(마리화나, 대마초)',
-    'd. 마약제(헤로인, 옥시코돈, 메타돈 등)',
-    'e. 흡입제(페인트 시너, 분무약제, 접착제)',
-    'f. 환각제(LSD, 버섯)',
-    'g. 신경안정제(발륨)',
-    'h. 펜타닐',
-    'i. 기타 (신종 마약류)'
+    'PEN',
+    'PHIL',
+    'COCAINE',
+    'WEED',
+    'HERO',
+    'INHALE',
+    'LSD',
+    'VAL',
+    'ELSE'
 
   ],
   0: ['월 1회 또는 미만', '매주', '매일 또는 거의 매일'],

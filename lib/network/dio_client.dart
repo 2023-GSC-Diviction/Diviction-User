@@ -47,15 +47,15 @@ class DioClient {
           queryParameters: parameter,
           options: useToken
               ? Options(headers: {
-            HttpHeaders.authorizationHeader: _acToken,
-            HttpHeaders.contentTypeHeader: 'application/json',
-            'Content-Type': 'application/json',
-            'RT': _refToken
-          })
+                  HttpHeaders.authorizationHeader: _acToken,
+                  HttpHeaders.contentTypeHeader: 'application/json',
+                  'Content-Type': 'application/json',
+                  'RT': _refToken
+                })
               : Options(headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            'Content-Type': 'application/json',
-          }));
+                  HttpHeaders.contentTypeHeader: 'application/json',
+                  'Content-Type': 'application/json',
+                }));
       if (response.statusCode == 200) {
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
@@ -80,42 +80,47 @@ class DioClient {
 
   Future<NetWorkResult> post(String url, dynamic data, bool useToken) async {
     try {
-      Response response = await _dio.post(url,
-          data: json.encode(data),
-          options: useToken
-              ? Options(
-            headers: {
-              HttpHeaders.authorizationHeader: _acToken,
-              HttpHeaders.contentTypeHeader: 'application/json',
-              'Content-Type': 'application/json',
-              'RT':
-              _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
-            },
-          )
-              : Options(
-            headers: {
-              HttpHeaders.contentTypeHeader: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          ));
-
+      Response response = await _dio.post(
+        url,
+        data: json.encode(data),
+        options: useToken
+            ? Options(
+                headers: {
+                  HttpHeaders.contentTypeHeader: 'application/json',
+                  // HttpHeaders.authorizationHeader: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc4OTc4NTU4fQ.-V7EAermuJTgi7oiCOa_tD8XhSvNo42km8dxs8aVniNvm0UiGEA_1wPY_YBSvym-kObOAXe4KuO4fdeTBQeOxw', // AT
+                  // 'RT': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc5NTgxNTU4fQ.NB3w7QZfdvZ4kG7N8Pw2F_sh2rVJ-fKyiDN8ad24P2a9bhQE-4Dc4sTM-aRIPzNwetEL5bdCIDcteahNFY2c8g', // RT
+                },
+              )
+            : Options(
+                headers: {
+                  HttpHeaders.contentTypeHeader: 'application/json',
+                },
+              ),
+      );
       if (response.statusCode == 200) {
+        print("[200] 요청성공");
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
       } else if (response.statusCode == 401) {
+
         if (response.headers.value('CODE') == 'RTE') {
+          print("[401] 요청실패 RTE");
           return NetWorkResult(result: Result.tokenExpired);
         } else {
+          print("[401] 요청실패 ETC");
           return NetWorkResult(result: Result.fail);
         }
       } else {
+        print("[500] 서버에서 처리가 안됌");
         _checkToken(response.headers);
         return NetWorkResult(result: Result.fail);
       }
     } on DioError catch (e) {
       if (e.response != null) {
+        print('[DioError]');
         return NetWorkResult(result: Result.fail, response: e.response);
       } else {
+        print('[DioError]');
         return NetWorkResult(result: Result.fail, response: e);
       }
     }

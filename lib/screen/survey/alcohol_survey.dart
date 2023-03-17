@@ -1,5 +1,6 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
+import 'package:diviction_user/model/survey_audit.dart';
 import 'package:diviction_user/screen/survey/survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:diviction_user/widget/googleMap/google_map_screen.dart';
@@ -20,7 +21,8 @@ final int MaxValue = 11;
 class _AlcoholSurveyState extends State<AlcoholSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
-  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
+  List<int> choosedAnswers =
+      List.generate(MaxValue + 1, (index) => 1); // test를 위해 -1 -> 1로 변경
 
   @override
   Widget build(BuildContext context) {
@@ -103,13 +105,6 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
 
   void onNextButtonPressed() {
     setState(() {
-      if (currentIndex == 1) {
-        // 테스트용
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => SurveyResult())); // GoogleMapScreen
-        // currentIndex += 1;
-        // return;
-      }
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
       // if (choosedAnswers[currentIndex] == -1) {
       //   print('$currentIndex번 문항이 응답되지 않았습니다.'); // -> 나중엔 토스트로 띄우기
@@ -127,9 +122,17 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
         var sum = AnswerResult.reduce((value, element) => value + element);
         print('1~10번 문항에 대한 응답값 : $AnswerResult');
         print('총 점수 : $sum');
+
         // 화면 전환 - 결과화면으로 이동
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => SurveyResult()));
+        SurveyAUDIT surveyAUDIT = SurveyAUDIT(
+          memberId: 2,
+          q1: AnswerResult[AnswerResult.length-1],
+          score: sum,
+        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SurveyResult(),
+          settings: RouteSettings(arguments: [surveyAUDIT, 'AUDIT']),
+        ));
       }
     });
   }

@@ -154,16 +154,16 @@ class _DrugSurveyState extends State<DrugSurvey> {
         // 화면 전환 - 결과화면으로 이동
         SurveyDAST surveyDAST = SurveyDAST(
             drug: SelectedDrugsName,
-            date: DateTime.now().toString(),
-            userId: '2',
+            date: DateTime.now().toString().split(' ')[0],
+            userId: 'user1@gmail.com',
             frequency: choosedAnswers[0],
             injection: choosedAnswers[11],
             cure: choosedAnswers[12],
             question: sum,
         );
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
+        Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SurveyResult(),
-          settings: RouteSettings(arguments: surveyDAST),
+          settings: RouteSettings(arguments: [surveyDAST, 'DAST']),
         ));
       }
     });

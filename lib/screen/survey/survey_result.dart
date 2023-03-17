@@ -6,7 +6,7 @@ import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-final surveyProvider = StateNotifierProvider.autoDispose<SurveyState, TestState>(
+final surveyProvider = StateNotifierProvider.autoDispose<SurveyState, SaveState>(
         (ref) => SurveyState());
 
 class SurveyResult extends ConsumerWidget {
@@ -14,8 +14,20 @@ class SurveyResult extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ModalRoute.of(context)?.settings.arguments as dynamic;
-    ref.read(surveyProvider.notifier).DSATdataSave(data);
+    // data[0] == data, data[1]은 type으로 'DASS', 'DAST', 'AUDIT'등이 옴
+    final data = ModalRoute.of(context)?.settings.arguments as List;
+    switch(data[1]) {
+      case 'DAST':
+        ref.read(surveyProvider.notifier).DASTdataSave(data[0]);
+        break;
+      case 'DASS':
+        ref.read(surveyProvider.notifier).DASSdataSave(data[0]);
+        break;
+      case 'AUDIT':
+        ref.read(surveyProvider.notifier).AUDITdataSave(data[0]);
+        break;
+    }
+
     // ref.read(SurveyProvider.notifier).DSATdataSave(surveyDAST);
     // latitude - 위도, longitude - 경도
     final LatLng HomeLatLng = LatLng(
@@ -124,6 +136,7 @@ class SurveyResult extends ConsumerWidget {
                       ),
                     ),
                     _SizedBox(context, 0.03),
+                    /* test를 위해 주석처리함
                     Text(
                       "[내 위치 근처의 치료센터]",
                       style: TextStyle(
@@ -139,6 +152,7 @@ class SurveyResult extends ConsumerWidget {
                         markers: _markers,
                       ),
                     ),
+                    */
                   ],
                 ),
               ),
