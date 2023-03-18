@@ -21,10 +21,8 @@ class SurveyService {
 
   Future<bool> DASTdataSave(SurveyDAST surveyDAST) async {
     try {
-      NetWorkResult result = await DioClient().post(
-          '$_baseUrl/dast/save',
-          surveyDAST.toJson(),
-          false);
+      NetWorkResult result = await DioClient()
+          .post('$_baseUrl/dast/save', surveyDAST.toJson(), false);
       print(result.result);
       if (result.result == Result.success) {
         return true;
@@ -38,10 +36,8 @@ class SurveyService {
 
   Future<bool> DASSdataSave(SurveyDASS surveyDASS) async {
     try {
-      NetWorkResult result = await DioClient().post(
-          '$_baseUrl/dass/save',
-          surveyDASS.toJson(),
-          false);
+      NetWorkResult result = await DioClient()
+          .post('$_baseUrl/dass/save', surveyDASS.toJson(), false);
       print(result.result);
       if (result.result == Result.success) {
         return true;
@@ -53,12 +49,10 @@ class SurveyService {
     }
   }
 
-  Future<bool> AUDITdataSave(SurveyAUDIT surveyAUDIT) async {
+  Future<dynamic> AUDITdataSave(SurveyAUDIT surveyAUDIT) async {
     try {
-      NetWorkResult result = await DioClient().post(
-          '$_baseUrl/audit/save',
-          surveyAUDIT.toJson(),
-          false);
+      NetWorkResult result = await DioClient()
+          .post('$_baseUrl/audit/save', surveyAUDIT.toJson(), false);
       print(result.result);
       if (result.result == Result.success) {
         return true;
@@ -70,61 +64,53 @@ class SurveyService {
     }
   }
 
-  Future<bool> DASTdataGet(String member_email, String date) async {
+  Future<NetWorkResult> DASTdataGet(String member_email, String date) async {
     try {
-      NetWorkResult result = await DioClient().get(
+      NetWorkResult result = await DioClient().post(
           '$_baseUrl/dast/get',
           {
-            'memberId' : member_email,
-            'date' : date,
+            'member_email': member_email,
+            'date': date,
           },
           false);
-      print(result.result);
+      print(result.response);
       if (result.result == Result.success) {
-        return true;
+        return NetWorkResult(result: Result.success, response: result.response);
       } else {
-        throw false;
+        return NetWorkResult(result: Result.fail);
       }
     } catch (e) {
-      throw false;
+      return NetWorkResult(result: Result.fail, response: e);
     }
   }
 
-  Future<bool> DASSdataGet(int memberId) async {
+  Future<NetWorkResult> DASSdataGet(int memberId) async {
     try {
-      NetWorkResult result = await DioClient().get(
-          '$_baseUrl/dass/list/member',
-          {
-            'memberId' : memberId,
-          },
-          false);
-      print(result.result);
+      NetWorkResult result = await DioClient()
+          .get('$_baseUrl/dass/list/member/$memberId', {}, false);
+      print(result.response);
       if (result.result == Result.success) {
-        return true;
+        return NetWorkResult(result: Result.success, response: result.response);
       } else {
-        throw false;
+        return NetWorkResult(result: Result.fail);
       }
     } catch (e) {
-      throw false;
+      return NetWorkResult(result: Result.fail, response: e);
     }
   }
 
-  Future<bool> AUDITdataGet(int memberId) async {
+  Future<NetWorkResult> AUDITdataGet(int memberId) async {
     try {
-      NetWorkResult result = await DioClient().get(
-          '$_baseUrl/audit/list/member',
-          {
-            'memberId' : memberId,
-          },
-          false);
-      print(result.result);
+      NetWorkResult result = await DioClient()
+          .get('$_baseUrl/audit/list/member/$memberId', {}, false);
+      print(result.response);
       if (result.result == Result.success) {
-        return true;
+        return NetWorkResult(result: Result.success, response: result.response);
       } else {
-        throw false;
+        return NetWorkResult(result: Result.fail);
       }
     } catch (e) {
-      throw false;
+      return NetWorkResult(result: Result.fail, response: e);
     }
   }
 }

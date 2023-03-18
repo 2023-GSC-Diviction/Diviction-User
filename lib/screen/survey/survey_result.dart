@@ -1,4 +1,5 @@
 import 'package:circular_seek_bar/circular_seek_bar.dart';
+import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/provider/survey_provider.dart';
 import 'package:diviction_user/widget/googleMap/google_map_screen.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-final surveyProvider = StateNotifierProvider.autoDispose<SurveyState, SaveState>(
+final surveyProvider =
+    StateNotifierProvider.autoDispose<SurveyState, SaveState>(
         (ref) => SurveyState());
 
 class SurveyResult extends ConsumerWidget {
@@ -16,15 +18,25 @@ class SurveyResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // data[0] == data, data[1]은 type으로 'DASS', 'DAST', 'AUDIT'등이 옴
     final data = ModalRoute.of(context)?.settings.arguments as List;
-    switch(data[1]) {
+    switch (data[1]) {
       case 'DAST':
         ref.read(surveyProvider.notifier).DASTdataSave(data[0]);
+        ref
+            .read(surveyProvider.notifier)
+            .DASTdataGet('user1@gmail.com', '2023-03-17');
+        print('ref : $ref');
+
         break;
       case 'DASS':
         ref.read(surveyProvider.notifier).DASSdataSave(data[0]);
+        ref.read(surveyProvider.notifier).DASSdataGet(2);
+        print('ref : $ref');
         break;
       case 'AUDIT':
         ref.read(surveyProvider.notifier).AUDITdataSave(data[0]);
+        ref.read(surveyProvider.notifier).AUDITdataGet(2);
+        print('ref : $ref');
+
         break;
     }
 
