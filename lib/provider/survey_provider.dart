@@ -70,4 +70,55 @@ class SurveyState extends StateNotifier<SaveState> {
       print("AUDIT 데이터 저장오류");
     }
   }
+
+  Future DASTdataGet(String member_email, String date) async {
+    try {
+      var result = await SurveyService().DASTdataGet(member_email, date);
+      if (result) {
+        state = SaveState.success;
+        print("DAST 데이터 불러오기 완료");
+      } else {
+        state = SaveState.fail;
+        print("DAST 데이터 불러오기 실패");
+      }
+    } catch (e) {
+      print(e);
+      state = SaveState.fail;
+      print("DAST 데이터 불러오기 오류");
+    }
+  }
+
+  Future DASSdataGet(int memberId) async {
+    try {
+      var result = await SurveyService().DASSdataGet(memberId);
+      if (result) {
+        state = SaveState.success;
+        print("DASS 데이터 불러오기 완료");
+      } else {
+        state = SaveState.fail;
+        print("DASS 데이터 불러오기 실패");
+      }
+    } catch (e) {
+      print(e);
+      state = SaveState.fail;
+      print("DASS 데이터 불러오기 오류");
+    }
+  }
+
+  Future AUDITdataGet(int memberId) async {
+    try {
+      var result = await SurveyService().AUDITdataGet(memberId);
+      if (result) {
+        state = SaveState.success;
+        print("AUDIT 데이터 불러오기 완료");
+      } else {
+        state = SaveState.fail;
+        print("AUDIT 데이터 불러오기 실패");
+      }
+    } catch (e) {
+      print(e);
+      state = SaveState.fail;
+      print("AUDIT 데이터 불러오기 오류");
+    }
+  }
 }

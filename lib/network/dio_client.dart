@@ -57,22 +57,28 @@ class DioClient {
                   'Content-Type': 'application/json',
                 }));
       if (response.statusCode == 200) {
+        print("[200] 요청성공");
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
       } else if (response.statusCode == 401) {
         if (response.headers.value('CODE') == 'RTE') {
+          print("[401] 요청실패 RTE");
           return NetWorkResult(result: Result.tokenExpired);
         } else {
+          print("[401] 요청실패 ETC");
           return NetWorkResult(result: Result.fail);
         }
       } else {
+        print("[500] 서버에서 처리가 안됌");
         _checkToken(response.headers);
         return NetWorkResult(result: Result.fail);
       }
     } on DioError catch (e) {
       if (e.response != null) {
+        print('[DioError]');
         return NetWorkResult(result: Result.fail, response: e.response);
       } else {
+        print('[DioError]');
         return NetWorkResult(result: Result.fail, response: e);
       }
     }

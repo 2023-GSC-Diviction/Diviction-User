@@ -69,4 +69,62 @@ class SurveyService {
       throw false;
     }
   }
+
+  Future<bool> DASTdataGet(String member_email, String date) async {
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/dast/get',
+          {
+            'memberId' : member_email,
+            'date' : date,
+          },
+          false);
+      print(result.result);
+      if (result.result == Result.success) {
+        return true;
+      } else {
+        throw false;
+      }
+    } catch (e) {
+      throw false;
+    }
+  }
+
+  Future<bool> DASSdataGet(int memberId) async {
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/dass/list/member',
+          {
+            'memberId' : memberId,
+          },
+          false);
+      print(result.result);
+      if (result.result == Result.success) {
+        return true;
+      } else {
+        throw false;
+      }
+    } catch (e) {
+      throw false;
+    }
+  }
+
+  Future<bool> AUDITdataGet(int memberId) async {
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/audit/list/member',
+          {
+            'memberId' : memberId,
+          },
+          false);
+      print(result.result);
+      if (result.result == Result.success) {
+        return true;
+      } else {
+        throw false;
+      }
+    } catch (e) {
+      throw false;
+    }
+  }
 }

@@ -133,9 +133,9 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
         // 화면 전환 - 결과화면으로 이동
         SurveyDASS surveyDASS = SurveyDASS(
           memberId: 2,
-          melancholyScore: 0,
-          unrestScore: 0,
-          stressScore: 0,
+          melancholyScore: sumScore['D']!,
+          unrestScore: sumScore['A']!,
+          stressScore: sumScore['S']!,
         );
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SurveyResult(),
