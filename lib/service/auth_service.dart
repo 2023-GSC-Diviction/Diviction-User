@@ -54,6 +54,7 @@ class AuthService {
             key: 'accessToken', value: result.response['accessToken']);
         storage.write(
             key: 'refreshToken', value: result.response['refreshToken']);
+        getUser(email);
         return true;
       } else {
         throw Exception('Failed to login');

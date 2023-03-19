@@ -68,10 +68,11 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
               optionButton(1)
             ]),
             Expanded(
-                child: CounselorList(
-              counselorList: counselorList,
-              requested: false,
-            ))
+                child: counselorList.isEmpty
+                    ? const Center(child: Text('Loading...'))
+                    : CounselorList(
+                        counselor: counselorList,
+                      ))
           ],
         ),
       )

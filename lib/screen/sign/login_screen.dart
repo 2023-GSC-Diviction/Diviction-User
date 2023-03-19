@@ -23,7 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController textEditingControllerForPw = TextEditingController();
 
   @override
-  void dispose() {
+  void disposelin() {
     // TODO: implement dispose
     super.dispose();
     ref.invalidate(authProvider);

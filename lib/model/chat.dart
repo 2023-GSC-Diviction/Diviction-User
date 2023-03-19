@@ -1,7 +1,7 @@
 class ChatRoom {
   String chatRoomId;
-  String counselor;
-  String user;
+  ChatMember counselor;
+  ChatMember user;
   List<Message> messages;
 
   ChatRoom(
@@ -13,9 +13,21 @@ class ChatRoom {
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
     return ChatRoom(
         chatRoomId: json['chatRoomId'],
-        counselor: json['counselor'],
-        user: json['user'],
-        messages: json['messages']);
+        counselor: json['counselor']
+            .map((counselor) => ChatMember.fromJson(counselor)),
+        user: json['user'].map((user) => ChatMember.fromJson(user)),
+        messages: json['messages']
+            .map((message) => Message.fromJson(message))
+            .toList());
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'chatRoomId': chatRoomId,
+      'counselor': counselor.toJson(),
+      'user': user.toJson(),
+      'messages': messages.map((message) => message.toJson()).toList()
+    };
   }
 }
 
@@ -38,20 +50,68 @@ class ChatMember {
         photoUrl: json['photoUrl'],
         role: json['role']);
   }
+  toJson() {
+    return {
+      'name': name,
+      'email': email,
+      'photoUrl': photoUrl,
+      'role': role,
+    };
+  }
 }
 
 class Message {
-  String message;
+  String content;
   String sender;
   String createdAt;
 
   Message(
-      {required this.message, required this.sender, required this.createdAt});
+      {required this.content, required this.sender, required this.createdAt});
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-        message: json['message'],
+        content: json['content'],
         sender: json['sender'],
         createdAt: json['createdAt']);
+  }
+  toJson() {
+    return {
+      'content': content,
+      'sender': sender,
+      'createdAt': createdAt,
+    };
+  }
+}
+
+class MyChat {
+  String chatRoomId;
+  String email;
+  String name;
+  String photoUrl;
+  String lastMessage;
+
+  MyChat(
+      {required this.chatRoomId,
+      required this.email,
+      required this.name,
+      required this.photoUrl,
+      required this.lastMessage});
+
+  factory MyChat.fromJson(Map<String, dynamic> json) {
+    return MyChat(
+        chatRoomId: json['chatRoomId'],
+        email: json['email'],
+        name: json['name'],
+        photoUrl: json['photoUrl'],
+        lastMessage: json['lastMessage']);
+  }
+  toJson() {
+    return {
+      'chatRoomId': chatRoomId,
+      'email': email,
+      'name': name,
+      'photoUrl': photoUrl,
+      'lastMessage': lastMessage,
+    };
   }
 }
