@@ -4,7 +4,10 @@ import 'package:diviction_user/widget/chat/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+
+// final chatProvider = StreamProvider((ref) => null)
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});

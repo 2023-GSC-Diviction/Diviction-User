@@ -50,7 +50,7 @@ class DioClient {
               ? Options(
                   contentType: Headers.jsonContentType,
                   headers: {
-                    HttpHeaders.authorizationHeader: _acToken,
+                    HttpHeaders.authorizationHeader: 'Bearer $_acToken',
                     'RT':
                         _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
                   },
@@ -90,7 +90,7 @@ class DioClient {
               ? Options(
                   contentType: Headers.jsonContentType,
                   headers: {
-                    HttpHeaders.authorizationHeader: _acToken,
+                    HttpHeaders.authorizationHeader: 'Bearer $_acToken',
                     'RT':
                         _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
                   },
