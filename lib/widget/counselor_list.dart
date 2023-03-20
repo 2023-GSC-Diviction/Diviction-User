@@ -41,7 +41,7 @@ class CounselorList extends StatelessWidget {
     onButtonPressed(String counselorEmail, Counselor? counselor) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       String userEmail = prefs.getString('email')!;
-      String chatroomId = (counselorEmail + userEmail).replaceAll('.', '');
+      String chatroomId = ('$counselorEmail&$userEmail').replaceAll('.', '');
       if (counselor == null) {
         toChatroom(chatroomId);
       } else {

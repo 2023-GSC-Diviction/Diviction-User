@@ -34,11 +34,11 @@ class ChatService {
       final snapshot = await _firestore.collection('users').doc(user).get();
       if (snapshot.exists) {
         final List<MyChat> chats = [];
-        final data = snapshot.data()?.values.first as List;
+        (snapshot.data() as Map)
+            .entries
+            .map((e) => chats.add(MyChat.fromJson(e.value)))
+            .toList();
 
-        for (var e in data) {
-          chats.add(MyChat.fromJson(e));
-        }
         return chats;
       } else {
         return [];
@@ -53,10 +53,11 @@ class ChatService {
       final data =
           _firestore.collection('users').doc(user).snapshots().map((event) {
         final List<MyChat> chats = [];
-        final list = event.data()?.values.first as List;
-        for (var e in list) {
-          chats.add(MyChat.fromJson(e));
-        }
+        (event.data() as Map)
+            .entries
+            .map((e) => chats.add(MyChat.fromJson(e.value)))
+            .toList();
+
         return chats;
       });
       yield* data;
@@ -92,8 +93,23 @@ class ChatService {
             .doc(chatRoomId)
             .update({'messages': messages.map((e) => e.toJson()).toList()});
       }
+
+      savaLastMessage(user, chatRoomId, message);
+      savaLastMessage(chatRoomId.split('&')[0], chatRoomId, message);
     } catch (e) {
       print(e);
+    }
+  }
+
+  savaLastMessage(String id, String chatRoomId, Message message) async {
+    final snapshot = await _firestore.collection('users').doc(id).get();
+    if (snapshot.exists) {
+      final chat = MyChat.fromJson(snapshot.data()![chatRoomId]);
+      chat.lastMessage = message.content;
+      _firestore
+          .collection('users')
+          .doc(id)
+          .update({chatRoomId: chat.toJson()});
     }
   }
 
@@ -113,7 +129,7 @@ class ChatService {
             otherPhotoUrl: chatroom.counselor.photoUrl ?? '1',
             lastMessage: message.content));
     saveUserChatlist(
-        chatroom.counselor.email,
+        chatroom.counselor.email.replaceAll('.', ''),
         MyChat(
             chatRoomId: chatroom.chatRoomId,
             otherEmail: chatroom.user.email,
@@ -128,23 +144,26 @@ class ChatService {
   }
 
   Future saveUserChatlist(String id, MyChat chat) async {
-    final snapshot = await _firestore.collection('users').doc(id).get();
-    List<MyChat> rooms = [];
-    if (snapshot.exists) {
-      final data = snapshot.data()!['chatlist'];
-      for (var e in data) {
-        rooms.add(MyChat.fromJson(e));
-      }
-      if (rooms.isEmpty) {
-        rooms = [chat];
-      } else {
-        rooms.add(chat);
-      }
-    }
-
     _firestore
         .collection('users')
         .doc(id)
-        .set({'chatlist': rooms.map((e) => e.toJson()).toList()});
+        .set({chat.chatRoomId: chat.toJson()});
+    // List<MyChat> rooms = [];
+    // if (snapshot.exists) {
+    //   final data = snapshot.data()!['chatlist'];
+    //   for (var e in data) {
+    //     rooms.add(MyChat.fromJson(e));
+    //   }
+    //   if (rooms.isEmpty) {
+    //     rooms = [chat];
+    //   } else {
+    //     rooms.add(chat);
+    //   }
+    // }
+
+    // _firestore
+    //     .collection('users')
+    //     .doc(id)
+    //     .set({'chatlist': rooms.map((e) => e.toJson())});
   }
 }
