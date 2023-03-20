@@ -24,7 +24,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
   int currentIndex = -1;
   List<bool> checkBoxList = List.generate(9, (index) => false); // false 8개
   // choosedAnswers : 0번 질문 부터 12번 질문까지에 대한 응답을 저장함 13개
-  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => 1); // test를 위해 -1 -> 1로 변경함
+  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
   List<String> SelectedDrugsName = []; // 마약 선택시에 초기화
   ScrollController _scrollController =
       ScrollController(); // Next 버튼 누르면 스크롤 위치 초기화 되게할 때 사용

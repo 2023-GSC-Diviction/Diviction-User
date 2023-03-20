@@ -24,8 +24,7 @@ final Map<String, int> sumScore = {'D': 0, 'A': 0, 'S': 0};
 class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 21번 질문까지에 대한 응답을 저장함 21개
-  // test를 위해 -1 -> 2로 변경함
-  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => 2);
+  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
   void onNextButtonPressed() {
     setState(() {
       if (currentIndex == 1) {
-        currentIndex += 20; // test를 위해 1 -> 20으로 변경함
+        currentIndex += 1;
         return;
       }
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리

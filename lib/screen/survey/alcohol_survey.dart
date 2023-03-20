@@ -22,7 +22,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
   List<int> choosedAnswers =
-      List.generate(MaxValue + 1, (index) => 1); // test를 위해 -1 -> 1로 변경
+      List.generate(MaxValue + 1, (index) => -1);
 
   @override
   Widget build(BuildContext context) {
