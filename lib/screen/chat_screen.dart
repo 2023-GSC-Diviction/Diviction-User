@@ -29,7 +29,6 @@ class ChatScreenState extends State<ChatScreen> {
   String newMessage = '';
   bool isSended = false;
   late String userId;
-  String path = '';
   final sendBoxSize = 40.0;
 
   @override
@@ -193,12 +192,16 @@ class ChatScreenState extends State<ChatScreen> {
     final picker = ImagePicker();
     try {
       final image = await picker.pickImage(source: ImageSource.gallery);
-
       if (image != null) {
         setState(() {
           isChoosedPicture = true;
-          path = image.path;
         });
+        final message = Message(
+            content: '@image/${image.path}',
+            sender: userId,
+            createdAt:
+                DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));
+        ChatService().sendImage(widget.chatroomId, image, message);
       }
       print(image);
     } catch (e) {

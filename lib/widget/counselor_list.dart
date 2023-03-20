@@ -1,6 +1,7 @@
 import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/screen/chat_screen.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
+import 'package:diviction_user/screen/profile_screen.dart';
 import 'package:diviction_user/service/chat_service.dart';
 import 'package:diviction_user/widget/profile_image.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class CounselorList extends StatelessWidget {
   Widget build(BuildContext context) {
     onProfilePressed(BuildContext context, String counselorEmail) async {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => DayCheckScreen()));
+          context, MaterialPageRoute(builder: (context) => ProfileScreen()));
     }
 
     void toChatroom(String chatroomId) {
@@ -67,7 +68,7 @@ class CounselorList extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                   onTap: () =>
-                      onButtonPressed(chats!.elementAt(index).email, null),
+                      onButtonPressed(chats!.elementAt(index).otherEmail, null),
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -81,11 +82,12 @@ class CounselorList extends StatelessWidget {
                       children: [
                         GestureDetector(
                             onTap: () => onProfilePressed(
-                                context, chats!.elementAt(index).email),
+                                context, chats!.elementAt(index).otherEmail),
                             child: Row(children: [
                               ProfileImage(
                                 onProfileImagePressed: () => onProfilePressed(
-                                    context, chats!.elementAt(index).email),
+                                    context,
+                                    chats!.elementAt(index).otherEmail),
                                 isChoosedPicture: false,
                                 path: null,
                                 type: 1,
@@ -96,7 +98,7 @@ class CounselorList extends StatelessWidget {
                               ),
                               Text.rich(
                                 TextSpan(
-                                    text: '${chats![index].name}\n',
+                                    text: '${chats![index].otherName}\n',
                                     style: TextStyles.mainTextStyle,
                                     children: <TextSpan>[
                                       TextSpan(
