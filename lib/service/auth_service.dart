@@ -50,10 +50,9 @@ class AuthService {
           {'email': email, 'password': password, 'authority': 'ROLE_USER'},
           false);
       if (result.result == Result.success) {
-        storage.write(
-            key: 'accessToken', value: result.response['accessToken']);
-        storage.write(
-            key: 'refreshToken', value: result.response['refreshToken']);
+        final token = result.response['token'];
+        storage.write(key: 'accessToken', value: token['accessToken']);
+        storage.write(key: 'refreshToken', value: token['refreshToken']);
         getUser(email);
         return true;
       } else {
