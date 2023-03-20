@@ -28,6 +28,7 @@ class RequestedCounselorScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('My Chat', style: TextStyles.titleTextStyle),
+          const SizedBox(height: 20),
           chatList.when(
               data: (item) => item.isEmpty
                   ? const Center(child: Text('empty'))

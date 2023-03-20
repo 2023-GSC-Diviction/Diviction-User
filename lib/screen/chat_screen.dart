@@ -1,3 +1,4 @@
+import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/model/chat.dart';
 import 'package:diviction_user/model/counselor.dart';
@@ -57,7 +58,8 @@ class ChatScreenState extends State<ChatScreen> {
         child: Scaffold(
             appBar: const MyAppbar(
               isMain: false,
-              hasBack: false,
+              hasBack: true,
+              hasDialog: false,
             ),
             extendBodyBehindAppBar: false,
             body: Column(
@@ -68,7 +70,9 @@ class ChatScreenState extends State<ChatScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Messages(
-                          messages: snapshot.data!.messages, userId: userId);
+                          messages: snapshot.data!.messages.reversed.toList(),
+                          userId: userId,
+                          counselorName: snapshot.data!.counselor.name);
                     } else {
                       return const Center(
                         child: Text('sendMessage'),
@@ -87,14 +91,14 @@ class ChatScreenState extends State<ChatScreen> {
         boxShadow: [
           BoxShadow(color: Color.fromARGB(18, 0, 0, 0), blurRadius: 10)
         ],
-        color: Colors.white,
+        color: const Color(0xffF4F4F5),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(children: [
         IconButton(
           padding: EdgeInsets.zero,
           onPressed: onSendImagePressed,
-          icon: const Icon(Icons.attach_file),
+          icon: const Icon(Icons.camera_alt),
           color: Colors.blue,
           iconSize: 25,
         ),
@@ -104,16 +108,39 @@ class ChatScreenState extends State<ChatScreen> {
         Expanded(
             child: TextField(
           maxLines: null,
-          style: TextStyle(color: Colors.black),
+          keyboardType: TextInputType.multiline,
+          textCapitalization: TextCapitalization.sentences,
           controller: _controller,
           decoration: InputDecoration(
             suffixIcon: IconButton(
               onPressed: onSendMessage,
-              icon: const Icon(Icons.upload_rounded),
+              icon: const Icon(Icons.send),
               color: Colors.blue,
+              iconSize: 25,
             ),
-            border: const OutlineInputBorder(borderSide: BorderSide.none),
-            labelText: 'Send a message...',
+            hintText: "Type your message here",
+            hintMaxLines: 1,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+            hintStyle: const TextStyle(
+              fontSize: 16,
+            ),
+            fillColor: Colors.white,
+            filled: true,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: const BorderSide(
+                color: Colors.white,
+                width: 0.2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: const BorderSide(
+                color: Colors.black26,
+                width: 0.2,
+              ),
+            ),
           ),
           onChanged: (value) {
             newMessage = value;
@@ -133,13 +160,14 @@ class ChatScreenState extends State<ChatScreen> {
       });
 
       newChatroom();
-    }
-    if (isSended) {
+    } else {
       ChatService().sendMessage(
         widget.chatroomId,
         message,
       );
     }
+    _controller.text = '';
+    FocusScope.of(context).unfocus();
   }
 
   newChatroom() async {

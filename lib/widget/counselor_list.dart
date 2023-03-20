@@ -42,7 +42,7 @@ class CounselorList extends StatelessWidget {
       String userEmail = prefs.getString('email')!;
       String chatroomId = (counselorEmail + userEmail).replaceAll('.', '');
       if (counselor == null) {
-        toChatroom(counselorEmail + userEmail);
+        toChatroom(chatroomId);
       } else {
         final chatList = await ChatService().getChatList();
         bool isExist = chatList
@@ -62,6 +62,7 @@ class CounselorList extends StatelessWidget {
     return counselor == null
         ? ListView.builder(
             shrinkWrap: true,
+            itemCount: chats!.length,
             padding: const EdgeInsets.only(bottom: 40),
             itemBuilder: (context, index) {
               return GestureDetector(
@@ -93,13 +94,19 @@ class CounselorList extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                '${chats![index].name}\n',
-                                style: TextStyles.mainTextStyle,
-                              ),
+                              Text.rich(
+                                TextSpan(
+                                    text: '${chats![index].name}\n',
+                                    style: TextStyles.mainTextStyle,
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: chats!
+                                              .elementAt(index)
+                                              .lastMessage,
+                                          style: TextStyles.shadowTextStyle),
+                                    ]),
+                              )
                             ])),
-                        Text(chats![index].lastMessage,
-                            style: TextStyles.shadowTextStyle)
                       ],
                     ),
                   ));

@@ -14,7 +14,6 @@ class ChatService {
     getUserId();
   }
 
-  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<MyChat> userChatlist = [];
   late SharedPreferences prefs;
@@ -32,27 +31,14 @@ class ChatService {
       if (snapshot.exists) {
         final List<MyChat> chats = [];
         final data = snapshot.data()?.values.first as List;
-        if (data != null) {
-          for (var e in data) {
-            chats.add(MyChat.fromJson(e));
-          }
-          return chats;
-        } else {
-          return [];
+
+        for (var e in data) {
+          chats.add(MyChat.fromJson(e));
         }
+        return chats;
       } else {
         return [];
       }
-      // final snapshot = await _ref
-      //     .child('users')
-      //     .child(user)
-      //     .get()
-      //     .catchError((e) => print(e.toString()));
-      // if (snapshot.exists) {
-      //   final data = List<Map>.from((snapshot.value));
-      //   return data.map((e) => MyChat.fromJson(e)).toList();
-      // }
-      // return userChatlist.map((e) => MyChat.fromJson(e)).toList();
     } catch (e) {
       throw e;
     }
@@ -62,16 +48,14 @@ class ChatService {
     try {
       final data =
           _firestore.collection('users').doc(user).snapshots().map((event) {
-        final data = List<Map>.from((event.data() as Map)['chatList']);
-        return data.map((e) => MyChat.fromJson(e)).toList();
+        final List<MyChat> chats = [];
+        final list = event.data()?.values.first as List;
+        for (var e in list) {
+          chats.add(MyChat.fromJson(e));
+        }
+        return chats;
       });
       yield* data;
-      // final data = _ref
-      //     .child('users')
-      //     .child(user)
-      //     .onValue
-      //     .map((event) => event.snapshot.value as List<Map>);
-      // yield* data.map((e) => e.map((e) => MyChat.fromJson(e)).toList());
     } catch (e) {
       throw e;
     }
@@ -86,8 +70,6 @@ class ChatService {
           .map((event) => ChatRoom.fromDocumentSnapshot(event));
 
       return stream;
-      // _ref.child(chatroomId).onValue.map((event) =>
-      //     ChatRoom.fromJson(event.snapshot.value as Map<dynamic, dynamic>));
     } catch (e) {
       throw e;
     }
@@ -104,25 +86,8 @@ class ChatService {
         _firestore
             .collection('chatrooms')
             .doc(chatRoomId)
-            .update({'messages': messages});
+            .update({'messages': messages.map((e) => e.toJson()).toList()});
       }
-      // final snapshot = await _ref.child(chatRoomId).get();
-      // if (snapshot.exists && snapshot.value != null) {
-      //   final messages = (snapshot.value! as Map<String, dynamic>)['messages'];
-      //   messages.add({
-      //     'content': message.content,
-      //     'sender': message.sender,
-      //     'createdAt': message.createdAt
-      //   });
-      //   _ref.child(chatRoomId).update({'messages': messages});
-      // }
-      // _ref.child(chatRoomId).update({
-      //   'messages': {
-      //     'content': message.content,
-      //     'sender': message.sender,
-      //     'createdAt': message.createdAt
-      //   }
-      // });
     } catch (e) {
       print(e);
     }
@@ -149,10 +114,7 @@ class ChatService {
         rooms.add(MyChat.fromJson(e));
       }
       userChatlist = rooms;
-      // userChatlist = snapshot
-      //     .data()!['chatlist']
-      //     .map<MyChat>((e) => MyChat.fromJson(e))
-      //     .toList();
+
       if (userChatlist.isEmpty) {
         userChatlist = [newChat];
       } else {
@@ -168,27 +130,5 @@ class ChatService {
         .collection('chatrooms')
         .doc(chatroom.chatRoomId)
         .set(chatroom.toJson());
-
-    // final snapshot = await _ref.child('users').child(user).get();
-
-    // if (snapshot.exists) {
-    //   userChatlist = snapshot.value as List<MyChat>;
-    //   if (userChatlist.isEmpty) {
-    //     userChatlist = [newChat];
-    //   } else {
-    //     userChatlist.add(newChat);
-    //   }
-    // } else {
-    //   userChatlist = [newChat];
-    // }
-    // _ref
-    //     .child('users')
-    //     .child(user)
-    //     .set(userChatlist.map((e) => e.toJson()).toList())
-    //     .then((value) => print('success'));
-    // _ref
-    //     .child(chatroom.chatRoomId)
-    //     .set(chatroom.toJson())
-    //     .then((value) => print('success'));
   }
 }

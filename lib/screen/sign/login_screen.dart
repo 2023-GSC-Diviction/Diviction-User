@@ -37,12 +37,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (isLogin) {
         case LoadState.success:
-          toMain();
           ref
               .read(authProvider.notifier)
               .saveData(textEditingControllerForId.text);
-          ref.invalidate(authProvider);
           ChatService();
+          ref.invalidate(authProvider);
+          toMain();
           break;
         case LoadState.fail:
           showSnackbar();
