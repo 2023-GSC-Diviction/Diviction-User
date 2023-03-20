@@ -8,9 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../provider/bottom_nav_provider.dart';
+import '../service/auth_service.dart';
 
 final bottomNavProvider =
     StateNotifierProvider<BottomNavState, int>((ref) => BottomNavState());
+
+final matchedProvider = FutureProvider((ref) => AuthService().getMatched());
 
 class BottomNavigation extends ConsumerWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -20,16 +23,33 @@ class BottomNavigation extends ConsumerWidget {
     const Color selected = Color.fromRGBO(63, 66, 72, 1);
     const Color unSelected = Color.fromRGBO(204, 210, 223, 1);
     final currentPage = ref.watch(bottomNavProvider);
+    final matched = ref.watch(matchedProvider);
 
     return Scaffold(
       body: SafeArea(
-        child: [
-          HomeSceen(),
-          CounselorScreen(),
-          CommunityScreen(),
-          ProfileScreen()
-        ].elementAt(currentPage),
-      ),
+          child: matched.when(data: (data) {
+        if (data == false) {
+          return [
+            const HomeSceen(),
+            CounselorScreen(),
+            const CommunityScreen(),
+            const ProfileScreen()
+          ].elementAt(currentPage);
+        } else {
+          return [
+            const HomeSceen(),
+            ChatScreen(
+              chatroomId: data,
+            ),
+            const CommunityScreen(),
+            const ProfileScreen()
+          ].elementAt(currentPage);
+        }
+      }, loading: () {
+        return const CircularProgressIndicator();
+      }, error: (e, s) {
+        return Text('fail to load');
+      })),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
