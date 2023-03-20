@@ -68,7 +68,6 @@ class AuthService {
           '$_baseUrl/auth/signUp/member',
           user.toJson(),
           false);
-      print(result);
       if (result.result == Result.success) {
         return true;
       } else {
@@ -76,6 +75,39 @@ class AuthService {
       }
     } catch (e) {
       throw false;
+    }
+  }
+
+  // Future<bool> duplicateEmailCheck(String user_email) async {
+  //   try {
+  //     NetWorkResult result = await DioClient().get(
+  //         '$_baseUrl/auth/chech/email/$user_email/role/ROLE_USER',
+  //         {},
+  //         false);
+  //     if (result.result == Result.success) {
+  //       return true;
+  //     } else {
+  //       throw false;
+  //     }
+  //   } catch (e) {
+  //     throw false;
+  //   }
+  // }
+
+  Future<NetWorkResult> userDataGet(String user_email) async {
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/member/get/email/$user_email',
+          {},
+          false);
+      if (result.result == Result.success) {
+        storage.write(key: 'id', value: result.response['id']);
+        return NetWorkResult(result: Result.success, response: result.response);
+      } else {
+        return NetWorkResult(result: Result.fail);
+      }
+    } catch (e) {
+      return NetWorkResult(result: Result.fail, response: e);
     }
   }
 }

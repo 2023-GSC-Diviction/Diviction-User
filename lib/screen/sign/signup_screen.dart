@@ -1,10 +1,16 @@
+import 'package:diviction_user/model/network_result.dart';
+import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/screen/sign/signup_profile_screen.dart';
 import 'package:diviction_user/util/input_validate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
+
+final String? _baseUrl = dotenv.env['BASE_URL'];
 
 class CustomTextEditingController {
   final TextEditingController idController = TextEditingController();
@@ -12,14 +18,14 @@ class CustomTextEditingController {
   final TextEditingController checkPwController = TextEditingController();
 }
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   TextEditingController textEditingControllerForId = TextEditingController();
   TextEditingController textEditingControllerForPw = TextEditingController();
   TextEditingController textEditingControllerForCheckPw =
@@ -79,11 +85,26 @@ class _SignupScreenState extends State<SignupScreen> {
         ));
   }
 
-  onPressedSignupButton() {
+  onPressedSignupButton() async {
     print('회원가입 버튼 눌림');
     print('아이디 : ${textEditingControllerForId.text}');
     print('비밀번호1 : ${textEditingControllerForPw.text}');
     print('비밀번호2 : ${textEditingControllerForCheckPw.text}');
+
+    // ID 중복 체크
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/auth/check/email/${textEditingControllerForId.text}/role/ROLE_USER',
+          {},
+          false);
+      if (result.response == false) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('이미 사용중인 ID 입니다.')));
+        return;
+      }
+    } catch (e) {
+      print(e);
+    }
 
     // 비밀번호 일치 체크
     if (textEditingControllerForId.text == '' ||

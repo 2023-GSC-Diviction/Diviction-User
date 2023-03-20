@@ -52,6 +52,8 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
       switch (isComplete) {
         case SignState.success:
           ref.invalidate(authProvider);
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('성공적으로 회원가입 되었습니다.')));
           toLogin();
           break;
 
@@ -190,6 +192,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
       userGender = 'FEMALE';
     });
     print(userGender);
+    // ref.read(authProvider.notifier).userDataGet('widget.id');
   }
 
   onPressedSignupButton() async {
@@ -209,9 +212,11 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
         address: textEditingControllerForAddress.text,
         birth: textEditingControllerForBirth.text,
         gender: 'MAIL',
-        profile_img_url: path);
+        profile_img_url: path
+    );
 
     ref.read(authProvider.notifier).signUp(user);
+
   }
 }
 

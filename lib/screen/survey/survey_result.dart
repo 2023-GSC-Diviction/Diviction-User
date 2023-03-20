@@ -24,19 +24,14 @@ class SurveyResult extends ConsumerWidget {
         ref
             .read(surveyProvider.notifier)
             .DASTdataGet('user1@gmail.com', '2023-03-17');
-        print('ref : $ref');
-
         break;
       case 'DASS':
         ref.read(surveyProvider.notifier).DASSdataSave(data[0]);
         ref.read(surveyProvider.notifier).DASSdataGet(2);
-        print('ref : $ref');
         break;
       case 'AUDIT':
         ref.read(surveyProvider.notifier).AUDITdataSave(data[0]);
         ref.read(surveyProvider.notifier).AUDITdataGet(2);
-        print('ref : $ref');
-
         break;
     }
 

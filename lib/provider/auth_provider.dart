@@ -1,3 +1,4 @@
+import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,35 @@ class AuthState extends StateNotifier<SignState> {
       var result = await AuthService().signUp(user);
       if (result) {
         state = SignState.success;
+      } else {
+        state = SignState.fail;
+      }
+    } catch (e) {
+      print(e);
+      state = SignState.fail;
+    }
+  }
+
+  // Future duplicateEmailCheck(String user_email) async {
+  //   try {
+  //     var result = await AuthService().duplicateEmailCheck(user_email);
+  //     if (result) {
+  //       state = SignState.success;
+  //     } else {
+  //       state = SignState.fail;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     state = SignState.fail;
+  //   }
+  // }
+
+  Future userDataGet(String user_email) async {
+    try {
+      var result = await AuthService().userDataGet(user_email);
+      if (result.result == Result.success) {
+        state = SignState.success;
+
       } else {
         state = SignState.fail;
       }

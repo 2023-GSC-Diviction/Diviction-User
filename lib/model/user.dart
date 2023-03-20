@@ -1,5 +1,5 @@
 class User {
-  // int id;
+  int? id;
   String email;
   String password;
   String name;
@@ -9,7 +9,9 @@ class User {
   String profile_img_url;
 
   User(
-      {required this.email,
+      {
+      this.id,
+      required this.email,
       required this.password,
       required this.name,
       required this.address,
