@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diviction_user/model/chat.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'firebase_storage_service.dart';
 
 class ChatService {
   static final ChatService _chatService = ChatService._internal();
@@ -93,42 +97,54 @@ class ChatService {
     }
   }
 
-  // Future sendImage() {}
+  Future sendImage(String chatRoomId, XFile file, Message message) async {
+    sendMessage(chatRoomId, message);
+    FirebaseStorageService()
+        .uploadImage('$chatRoomId/${file.path}', File(file.path));
+  }
 
   Future newChatRoom(ChatRoom chatroom, Message message) async {
-    final other =
-        chatroom.counselor.email == user ? chatroom.user : chatroom.counselor;
-    final newChat = MyChat(
-        chatRoomId: chatroom.chatRoomId,
-        email: other.email,
-        name: other.name,
-        photoUrl: other.photoUrl ?? '1',
-        lastMessage: message.content);
+    saveUserChatlist(
+        user,
+        MyChat(
+            chatRoomId: chatroom.chatRoomId,
+            otherEmail: chatroom.counselor.email,
+            otherName: chatroom.counselor.name,
+            otherPhotoUrl: chatroom.counselor.photoUrl ?? '1',
+            lastMessage: message.content));
+    saveUserChatlist(
+        chatroom.counselor.email,
+        MyChat(
+            chatRoomId: chatroom.chatRoomId,
+            otherEmail: chatroom.user.email,
+            otherName: chatroom.user.name,
+            otherPhotoUrl: chatroom.user.photoUrl ?? '1',
+            lastMessage: message.content));
 
-    final snapshot = await _firestore.collection('users').doc(user).get();
+    _firestore
+        .collection('chatrooms')
+        .doc(chatroom.chatRoomId)
+        .set(chatroom.toJson());
+  }
 
+  Future saveUserChatlist(String id, MyChat chat) async {
+    final snapshot = await _firestore.collection('users').doc(id).get();
+    List<MyChat> rooms = [];
     if (snapshot.exists) {
-      List<MyChat> rooms = [];
       final data = snapshot.data()!['chatlist'];
       for (var e in data) {
         rooms.add(MyChat.fromJson(e));
       }
-      userChatlist = rooms;
-
-      if (userChatlist.isEmpty) {
-        userChatlist = [newChat];
+      if (rooms.isEmpty) {
+        rooms = [chat];
       } else {
-        userChatlist.add(newChat);
+        rooms.add(chat);
       }
     }
 
     _firestore
         .collection('users')
-        .doc(user)
-        .set({'chatlist': userChatlist.map((e) => e.toJson()).toList()});
-    _firestore
-        .collection('chatrooms')
-        .doc(chatroom.chatRoomId)
-        .set(chatroom.toJson());
+        .doc(id)
+        .set({'chatlist': rooms.map((e) => e.toJson()).toList()});
   }
 }
