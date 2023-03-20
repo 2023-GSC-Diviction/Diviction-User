@@ -141,6 +141,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('check your email')));
     } else {
+      // 이메일 중복 체크
       checkEmail(textEditingControllerForId.text);
     }
   }

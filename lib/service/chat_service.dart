@@ -11,23 +11,23 @@ class ChatService {
     return _chatService;
   }
   ChatService._internal() {
-    getUserId();
+    getUserEmail();
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<MyChat> userChatlist = [];
   late SharedPreferences prefs;
 
-  String user = '';
+  String userEamil = '';
 
-  getUserId() async {
+  getUserEmail() async {
     prefs = await SharedPreferences.getInstance();
-    user = prefs.getString('email')!.replaceAll('.', '');
+    userEamil = prefs.getString('email')!.replaceAll('.', '');
   }
 
   Future<List<MyChat>> getChatList() async {
     try {
-      final snapshot = await _firestore.collection('users').doc(user).get();
+      final snapshot = await _firestore.collection('users').doc(userEamil).get();
       if (snapshot.exists) {
         final List<MyChat> chats = [];
         final data = snapshot.data()?.values.first as List;
@@ -47,7 +47,7 @@ class ChatService {
   Stream<List<MyChat>> getChatListData() async* {
     try {
       final data =
-          _firestore.collection('users').doc(user).snapshots().map((event) {
+          _firestore.collection('users').doc(userEamil).snapshots().map((event) {
         final List<MyChat> chats = [];
         final list = event.data()?.values.first as List;
         for (var e in list) {
@@ -97,7 +97,7 @@ class ChatService {
 
   Future newChatRoom(ChatRoom chatroom, Message message) async {
     final other =
-        chatroom.counselor.email == user ? chatroom.user : chatroom.counselor;
+        chatroom.counselor.email == userEamil ? chatroom.user : chatroom.counselor;
     final newChat = MyChat(
         chatRoomId: chatroom.chatRoomId,
         email: other.email,
@@ -105,7 +105,7 @@ class ChatService {
         photoUrl: other.photoUrl ?? '1',
         lastMessage: message.content);
 
-    final snapshot = await _firestore.collection('users').doc(user).get();
+    final snapshot = await _firestore.collection('users').doc(userEamil).get();
 
     if (snapshot.exists) {
       List<MyChat> rooms = [];
@@ -124,7 +124,7 @@ class ChatService {
 
     _firestore
         .collection('users')
-        .doc(user)
+        .doc(userEamil)
         .set({'chatlist': userChatlist.map((e) => e.toJson()).toList()});
     _firestore
         .collection('chatrooms')

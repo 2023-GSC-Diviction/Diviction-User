@@ -5,6 +5,7 @@ import 'package:diviction_user/model/survey_dast.dart';
 import 'package:diviction_user/network/dio_client.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
 
@@ -15,7 +16,18 @@ class SurveyService {
   factory SurveyService() {
     return _authService;
   }
-  SurveyService._internal();
+
+  SurveyService._internal() {
+    getUserId();
+  }
+
+  int userId = -1;
+  late SharedPreferences prefs;
+
+  getUserId() async {
+    prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('id')!;
+  }
 
   final String? _baseUrl = dotenv.env['BASE_URL'];
 
@@ -64,15 +76,10 @@ class SurveyService {
     }
   }
 
-  Future<NetWorkResult> DASTdataGet(String member_email, String date) async {
+  Future<NetWorkResult> DASTdataGet() async {
     try {
-      NetWorkResult result = await DioClient().post(
-          '$_baseUrl/dast/get',
-          {
-            'member_email': member_email,
-            'date': date,
-          },
-          false);
+      NetWorkResult result = await DioClient()
+          .get('$_baseUrl/dast/list/member/${userId}', {}, false);
       print(result.response);
       if (result.result == Result.success) {
         return NetWorkResult(result: Result.success, response: result.response);
@@ -84,10 +91,10 @@ class SurveyService {
     }
   }
 
-  Future<NetWorkResult> DASSdataGet(int memberId) async {
+  Future<NetWorkResult> DASSdataGet() async {
     try {
       NetWorkResult result = await DioClient()
-          .get('$_baseUrl/dass/list/member/$memberId', {}, false);
+          .get('$_baseUrl/dass/list/member/$userId', {}, false);
       print(result.response);
       if (result.result == Result.success) {
         return NetWorkResult(result: Result.success, response: result.response);
@@ -99,10 +106,10 @@ class SurveyService {
     }
   }
 
-  Future<NetWorkResult> AUDITdataGet(int memberId) async {
+  Future<NetWorkResult> AUDITdataGet() async {
     try {
       NetWorkResult result = await DioClient()
-          .get('$_baseUrl/audit/list/member/$memberId', {}, false);
+          .get('$_baseUrl/audit/list/member/$userId', {}, false);
       print(result.response);
       if (result.result == Result.success) {
         return NetWorkResult(result: Result.success, response: result.response);
