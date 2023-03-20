@@ -1,7 +1,11 @@
 import 'package:diviction_user/model/counselor.dart';
+import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/service/counselor_service.dart';
+import 'package:diviction_user/service/drug_service.dart';
 import 'package:diviction_user/widget/counselor_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../model/drug.dart';
 
 class CounselorProvider extends StateNotifier<List<Counselor>> {
   CounselorProvider() : super(<Counselor>[]);
@@ -14,9 +18,16 @@ class CounselorProvider extends StateNotifier<List<Counselor>> {
     super.state = value;
   }
 
+  void getCounselor() async {
+    var counselor = await _counselorService.getCounselors(_options);
+    if (counselor.isNotEmpty) {
+      state = counselor;
+    }
+  }
+
   void addOption(String type, String option) {
     _options[type] = option;
-    _counselorService.getCounselorsByOption(_options).then((value) {
+    _counselorService.getCounselors(_options).then((value) {
       state = value;
     }).catchError((onError) => null);
   }

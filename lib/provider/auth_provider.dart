@@ -2,16 +2,21 @@ import 'package:diviction_user/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
 
-enum SignState { proceeding, success, fail }
+enum LoadState {
+  proceeding,
+  success,
+  fail,
+}
 
-class AuthState extends StateNotifier<SignState> {
-  AuthState() : super(SignState.proceeding);
+class AuthState extends StateNotifier<LoadState> {
+  AuthState() : super(LoadState.proceeding);
 
   @override
-  set state(SignState value) {
+  set state(LoadState value) {
     // TODO: implement state
     super.state = value;
   }
@@ -19,28 +24,35 @@ class AuthState extends StateNotifier<SignState> {
   Future signIn(String email, String password) async {
     try {
       var result = await AuthService().signIn(email, password);
-      if (result.hashCode == 200) {
-        state = SignState.success;
+      if (result) {
+        state = LoadState.success;
       } else {
-        state = SignState.fail;
+        state = LoadState.fail;
       }
     } catch (e) {
       print(e);
-      state = SignState.fail;
+      state = LoadState.fail;
     }
   }
 
-  Future signUp(User user) async {
+  Future signUp(Map<String, String> user) async {
     try {
       var result = await AuthService().signUp(user);
       if (result) {
-        state = SignState.success;
+        state = LoadState.success;
       } else {
-        state = SignState.fail;
+        state = LoadState.fail;
       }
     } catch (e) {
       print(e);
-      state = SignState.fail;
+      state = LoadState.fail;
+    }
+  }
+
+  saveData(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('email') == null || prefs.getString('email') != email) {
+      AuthService().getUser(email);
     }
   }
 }

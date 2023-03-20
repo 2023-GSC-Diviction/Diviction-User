@@ -5,11 +5,16 @@ import 'package:flutter/src/widgets/placeholder.dart';
 
 class MyAppbar extends StatelessWidget with PreferredSizeWidget {
   const MyAppbar(
-      {required this.isMain, this.title, required this.hasBack, super.key});
+      {required this.isMain,
+      this.title,
+      required this.hasBack,
+      this.hasDialog,
+      super.key});
 
   final bool isMain;
   final String? title;
   final bool hasBack;
+  final bool? hasDialog;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -26,7 +31,9 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
                 size: 20,
                 color: Colors.black45,
               ),
-              onPressed: () => backDialog(context))
+              onPressed: () => hasDialog != null && hasDialog == false
+                  ? Navigator.pop(context)
+                  : backDialog(context))
           : IconButton(
               icon: const Icon(
                 Icons.notifications,

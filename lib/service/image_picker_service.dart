@@ -1,6 +1,13 @@
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerService {
+  static final ImagePickerService _imagePickerService =
+      ImagePickerService._internal();
+  factory ImagePickerService() {
+    return _imagePickerService;
+  }
+  ImagePickerService._internal();
+
   final ImagePicker _picker = ImagePicker();
   Future<List<XFile>> pickImage() async {
     try {

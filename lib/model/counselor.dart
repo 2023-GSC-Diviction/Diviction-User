@@ -1,4 +1,5 @@
 class Counselor {
+  int id;
   String email;
   String password;
   String name;
@@ -9,7 +10,8 @@ class Counselor {
   bool confirm;
 
   Counselor(
-      {required this.email,
+      {required this.id,
+      required this.email,
       required this.password,
       required this.name,
       required this.address,
@@ -20,12 +22,14 @@ class Counselor {
 
   factory Counselor.fromJson(Map<String, dynamic> json) {
     return Counselor(
+        id: json['id'],
         email: json['email'],
         password: json['password'],
         name: json['name'],
         address: json['address'],
         birth: json['birth'],
         gender: json['gender'],
+        profileUrl: json['profile_img_url'],
         confirm: json['confirm']);
   }
 }

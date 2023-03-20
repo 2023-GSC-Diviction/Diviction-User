@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:diviction_user/screen/counselor/find_counselor_screen.dart';
 import 'package:diviction_user/screen/counselor/requested_counselor_screen.dart';
+import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

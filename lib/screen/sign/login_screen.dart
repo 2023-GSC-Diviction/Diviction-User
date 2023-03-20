@@ -1,5 +1,6 @@
 import 'package:diviction_user/provider/auth_provider.dart';
 import 'package:diviction_user/screen/sign/signup_screen.dart';
+import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +9,7 @@ import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import '../bottom_nav.dart';
 
-final authProvider = StateNotifierProvider.autoDispose<AuthState, SignState>(
+final authProvider = StateNotifierProvider.autoDispose<AuthState, LoadState>(
     (ref) => AuthState());
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -19,11 +20,11 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  TextEditingController textEditingController_id = TextEditingController();
-  TextEditingController textEditingController_pw = TextEditingController();
+  TextEditingController textEditingControllerForId = TextEditingController();
+  TextEditingController textEditingControllerForPw = TextEditingController();
 
   @override
-  void dispose() {
+  void disposelin() {
     // TODO: implement dispose
     super.dispose();
     ref.invalidate(authProvider);
@@ -35,11 +36,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (isLogin) {
-        case SignState.success:
-          toMain();
+        case LoadState.success:
+          ref
+              .read(authProvider.notifier)
+              .saveData(textEditingControllerForId.text);
+          ChatService();
           ref.invalidate(authProvider);
+          toMain();
           break;
-        case SignState.fail:
+        case LoadState.fail:
           showSnackbar();
           break;
         default:
@@ -66,12 +71,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               _CustomInputField(
                 HintText: 'E-Mail',
-                textEditingController: textEditingController_id,
+                textEditingController: textEditingControllerForId,
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               _CustomInputField(
                 HintText: 'Password',
-                textEditingController: textEditingController_pw,
+                textEditingController: textEditingControllerForPw,
               ),
               const _PushSignupPage(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.20),
@@ -112,19 +117,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   onPressedLoginButton() async {
     print('로그인 버튼 눌림');
-    print('아이디 : ${textEditingController_id.text}');
-    print('비밀번호 : ${textEditingController_pw.text}');
+    print('아이디 : ${textEditingControllerForId.text}');
+    print('비밀번호 : ${textEditingControllerForPw.text}');
 
-    if (textEditingController_id.text == '' ||
-        textEditingController_pw.text == '') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    if (textEditingControllerForId.text == '' ||
+        textEditingControllerForPw.text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('fill in the blank'),
         duration: Duration(seconds: 1),
       ));
     } else {
-      ref
-          .read(authProvider.notifier)
-          .signIn(textEditingController_id.text, textEditingController_pw.text);
+      ref.read(authProvider.notifier).signIn(
+          textEditingControllerForId.text, textEditingControllerForPw.text);
     }
   }
 }

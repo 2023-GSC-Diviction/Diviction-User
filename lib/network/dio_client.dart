@@ -44,19 +44,19 @@ class DioClient {
       String url, Map<String, dynamic>? parameter, bool useToken) async {
     try {
       print("요청한 url : ${url}");
+      _getToken();
       Response response = await _dio.get(url,
           queryParameters: parameter,
           options: useToken
-              ? Options(headers: {
-                  HttpHeaders.authorizationHeader: _acToken,
-                  HttpHeaders.contentTypeHeader: 'application/json',
-                  'Content-Type': 'application/json',
-                  'RT': _refToken
-                })
-              : Options(headers: {
-                  HttpHeaders.contentTypeHeader: 'application/json',
-                  'Content-Type': 'application/json',
-                }));
+              ? Options(
+                  contentType: Headers.jsonContentType,
+                  headers: {
+                    HttpHeaders.authorizationHeader: 'Bearer $_acToken',
+                    'RT':
+                        _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
+                  },
+                )
+              : Options(contentType: Headers.jsonContentType));
       if (response.statusCode == 200) {
         print("${response.realUri} [200] 요청성공");
         _checkToken(response.headers);
@@ -88,29 +88,24 @@ class DioClient {
   Future<NetWorkResult> post(String url, dynamic data, bool useToken) async {
     try {
       print("요청한 url : ${url}");
-      Response response = await _dio.post(
-        url,
-        data: json.encode(data),
-        options: useToken
-            ? Options(
-                headers: {
-                  HttpHeaders.contentTypeHeader: 'application/json',
-                  // HttpHeaders.authorizationHeader: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc4OTc4NTU4fQ.-V7EAermuJTgi7oiCOa_tD8XhSvNo42km8dxs8aVniNvm0UiGEA_1wPY_YBSvym-kObOAXe4KuO4fdeTBQeOxw', // AT
-                  // 'RT': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjc5NTgxNTU4fQ.NB3w7QZfdvZ4kG7N8Pw2F_sh2rVJ-fKyiDN8ad24P2a9bhQE-4Dc4sTM-aRIPzNwetEL5bdCIDcteahNFY2c8g', // RT
-                },
-              )
-            : Options(
-                headers: {
-                  HttpHeaders.contentTypeHeader: 'application/json',
-                },
-              ),
-      );
+      _getToken();
+      Response response = await _dio.post(url,
+          data: json.encode(data),
+          options: useToken
+              ? Options(
+                  contentType: Headers.jsonContentType,
+                  headers: {
+                    HttpHeaders.authorizationHeader: 'Bearer $_acToken',
+                    'RT':
+                        _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
+                  },
+                )
+              : Options(contentType: Headers.jsonContentType));
       if (response.statusCode == 200) {
         print("${response.realUri} [200] 요청성공");
         _checkToken(response.headers);
         return NetWorkResult(result: Result.success, response: response.data);
       } else if (response.statusCode == 401) {
-
         if (response.headers.value('CODE') == 'RTE') {
           print("${response.realUri} [401] 요청실패 RTE");
           return NetWorkResult(result: Result.tokenExpired);

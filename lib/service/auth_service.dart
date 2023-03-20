@@ -2,6 +2,7 @@ import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
 
@@ -53,6 +54,7 @@ class AuthService {
             key: 'accessToken', value: result.response['accessToken']);
         storage.write(
             key: 'refreshToken', value: result.response['refreshToken']);
+        getUser(email);
         return true;
       } else {
         throw Exception('Failed to login');
@@ -62,20 +64,51 @@ class AuthService {
     }
   }
 
-  Future<bool> signUp(User user) async {
+  Future<bool> signUp(Map<String, String> user) async {
     try {
-      NetWorkResult result = await DioClient().post(
-          '$_baseUrl/auth/signUp/member',
-          user.toJson(),
-          false);
-      print(result);
+      NetWorkResult result =
+          await DioClient().post('$_baseUrl/auth/signUp/member', user, false);
       if (result.result == Result.success) {
+        User user = User.fromJson(result.response);
+        user.savePreference(user);
+
         return true;
       } else {
-        throw false;
+        throw Exception('Failed to signUp');
       }
     } catch (e) {
-      throw false;
+      throw Exception('Failed to signUp');
+    }
+  }
+
+  Future<bool> emailCheck(String email, String role) async {
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/auth/check/email/$email/role/$role',
+          {'email': email, 'role': role},
+          false);
+      if (result.result == Result.success) {
+        return result.response;
+      } else {
+        throw Exception('Failed to emailCheck');
+      }
+    } catch (e) {
+      throw Exception('Failed to emailCheck');
+    }
+  }
+
+  Future getUser(String email) async {
+    try {
+      NetWorkResult result = await DioClient().get(
+          '$_baseUrl/member/get/email/$email', {'user_email': email}, true);
+      if (result.result == Result.success) {
+        User user = User.fromJson(result.response);
+        user.savePreference(user);
+      } else {
+        throw Exception('Failed to getUser');
+      }
+    } catch (e) {
+      throw Exception('Failed to getUser');
     }
   }
 }

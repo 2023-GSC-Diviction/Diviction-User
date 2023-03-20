@@ -1,3 +1,4 @@
+import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/widget/profile_button.dart';
@@ -22,21 +23,27 @@ class ChatBubbles extends StatelessWidget {
         children: [
           if (isMe)
             Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: ChatBubble(
-                clipper: ChatBubbleClipper8(type: BubbleType.sendBubble),
-                alignment: Alignment.topRight,
-                backGroundColor: Colors.blue,
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.7,
-                  ),
-                  child: Text(
-                    message,
-                    style: TextStyles.blueBottonTextStyle,
-                  ),
-                ),
-              ),
+              padding: const EdgeInsets.only(bottom: 10),
+              child: BubbleSpecialOne(
+                  text: message,
+                  isSender: true,
+                  color: Colors.blue,
+                  textStyle: TextStyles.blueBottonTextStyle),
+              // ChatBubble(
+              //   clipper: ChatBubbleClipper(type: BubbleType.sendBubble),
+              //   alignment: Alignment.topRight,
+              //   backGroundColor: Colors.blue,
+              //   child: Container(
+              //     constraints: BoxConstraints(
+              //       maxWidth: MediaQuery.of(context).size.width * 0.7,
+              //     ),
+              //     padding: const EdgeInsets.symmetric(horizontal: 3),
+              //     child: Text(
+              //       message,
+              //       style: TextStyles.blueBottonTextStyle,
+              //     ),
+              //   ),
+              // ),
             ),
           if (!isMe)
             Padding(
@@ -50,26 +57,33 @@ class ChatBubbles extends StatelessWidget {
                           onProfilePressed: onProfilePressed),
                       Padding(
                         padding: const EdgeInsets.only(left: 35),
-                        child: ChatBubble(
-                          clipper: ChatBubbleClipper8(
-                              type: BubbleType.receiverBubble),
-                          backGroundColor: Palette.chatGrayColor,
-                          margin: const EdgeInsets.only(top: 7),
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width * 0.7,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  message,
-                                  style: TextStyles.chatNotMeBubbleTextStyle,
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: BubbleSpecialOne(
+                          text: message,
+                          isSender: false,
+                          color: Palette.chatGrayColor,
+                          textStyle: TextStyles.chatNotMeBubbleTextStyle,
                         ),
+                        // ChatBubble(
+                        //   clipper: ChatBubbleClipper1(
+                        //       type: BubbleType.receiverBubble),
+                        //   backGroundColor: Palette.chatGrayColor,
+                        //   margin: const EdgeInsets.only(top: 7),
+                        //   child: Container(
+                        //     constraints: BoxConstraints(
+                        //       maxWidth: MediaQuery.of(context).size.width * 0.7,
+                        //     ),
+                        //     padding: const EdgeInsets.symmetric(horizontal: 3),
+                        //     child: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: [
+                        //         Text(
+                        //           message,
+                        //           style: TextStyles.chatNotMeBubbleTextStyle,
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       )
                     ]))
         ]);

@@ -1,10 +1,17 @@
 import 'package:diviction_user/screen/sign/signup_profile_screen.dart';
+import 'package:diviction_user/service/auth_service.dart';
 import 'package:diviction_user/util/input_validate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
+
+enum EmailDuplicateState { proceeding, success, fail, apifail }
+
+final idCheckProvider =
+    StateProvider<EmailDuplicateState>((ref) => EmailDuplicateState.proceeding);
 
 class CustomTextEditingController {
   final TextEditingController idController = TextEditingController();
@@ -12,14 +19,14 @@ class CustomTextEditingController {
   final TextEditingController checkPwController = TextEditingController();
 }
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  SignupScreenState createState() => SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class SignupScreenState extends ConsumerState<SignupScreen> {
   TextEditingController textEditingControllerForId = TextEditingController();
   TextEditingController textEditingControllerForPw = TextEditingController();
   TextEditingController textEditingControllerForCheckPw =
@@ -27,56 +34,90 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final idCheckState = ref.watch(idCheckProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      switch (idCheckState) {
+        case EmailDuplicateState.success:
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SignUpProfileScreen(
+                      id: textEditingControllerForId.text,
+                      password: textEditingControllerForPw.text)));
+          break;
+        case EmailDuplicateState.fail:
+          showSnackbar('duplicate email');
+          break;
+        case EmailDuplicateState.apifail:
+          showSnackbar('sign up failed');
+          break;
+        default:
+      }
+    });
+
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
     return GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Scaffold(
-          body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Column(
+            body: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2),
-                      const TitleHeader(
-                        titleContext: 'Sign Up',
-                        subContext:
-                            'Experience a service that helps prevent and treat various addictions with Diviction.',
+                      Column(
+                        children: [
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.2),
+                          const TitleHeader(
+                            titleContext: 'Sign Up',
+                            subContext:
+                                'Experience a service that helps prevent and treat various addictions with Diviction.',
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
+                          _CustomInputField(
+                            HintText: 'E-Mail',
+                            textEditingController: textEditingControllerForId,
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.015),
+                          _CustomInputField(
+                            HintText: 'Password',
+                            textEditingController: textEditingControllerForPw,
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.015),
+                          _CustomInputField(
+                            HintText: 'Check your Password',
+                            textEditingController:
+                                textEditingControllerForCheckPw,
+                          ),
+                          const _PopLoginPage(),
+                        ],
                       ),
+                      CustomRoundButton(
+                          title: 'Create Account',
+                          onPressed: onPressedSignupButton),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05),
-                      _CustomInputField(
-                        HintText: 'E-Mail',
-                        textEditingController: textEditingControllerForId,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.015),
-                      _CustomInputField(
-                        HintText: 'Password',
-                        textEditingController: textEditingControllerForPw,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.015),
-                      _CustomInputField(
-                        HintText: 'Check your Password',
-                        textEditingController: textEditingControllerForCheckPw,
-                      ),
-                      const _PopLoginPage(),
-                    ],
-                  ),
-                  CustomRoundButton(
-                      title: 'Create Account',
-                      onPressed: onPressedSignupButton),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                ],
-              )),
-        ));
+                          height: MediaQuery.of(context).size.height * 0.10),
+                    ]))));
+  }
+
+  void showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   onPressedSignupButton() {
@@ -100,14 +141,20 @@ class _SignupScreenState extends State<SignupScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('check your email')));
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => SignUpProfileScreen(
-            id: textEditingControllerForId.text,
-            password: textEditingControllerForPw.text,
-          ),
-        ),
-      );
+      checkEmail(textEditingControllerForId.text);
+    }
+  }
+
+  void checkEmail(String email) async {
+    try {
+      bool result = await AuthService().emailCheck(email, 'ROLE_USER');
+      if (result) {
+        ref.read(idCheckProvider.notifier).state = EmailDuplicateState.success;
+      } else {
+        ref.read(idCheckProvider.notifier).state = EmailDuplicateState.fail;
+      }
+    } catch (e) {
+      ref.read(idCheckProvider.notifier).state = EmailDuplicateState.apifail;
     }
   }
 }

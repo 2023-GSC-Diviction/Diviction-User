@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "276358087558",
+    "firebase_url": "https://sturdy-now-380610-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sturdy-now-380610",
+    "storage_bucket": "sturdy-now-380610.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276358087558:android:62c36e0ccc07d1776f6207",
+        "android_client_info": {
+          "package_name": "com.diviction.diviction_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276358087558-uo4c1du1ioia6lo0cj4p07nernuh6p59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwCHIx8ZfRVn-nhc8RhAFd_Dju99salWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276358087558-uo4c1du1ioia6lo0cj4p07nernuh6p59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
