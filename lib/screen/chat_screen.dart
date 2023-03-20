@@ -63,28 +63,19 @@ class ChatScreenState extends State<ChatScreen> {
             body: Column(
               children: [
                 Expanded(
-                  child: Consumer(builder: (context, ref, child) {
-                    try {
-                      final chatProvider = StreamProvider((ref) =>
-                          ChatService().getChatRoomData(widget.chatroomId));
-                      return ref.watch(chatProvider).when(
-                          data: (data) {
-                            return Messages(
-                                messages: data.messages, userId: userId);
-                          },
-                          loading: () => const Center(
-                                child: Text('loading'),
-                              ),
-                          error: (error, stack) => const Center(
-                                child: Text('error'),
-                              ));
-                    } catch (e) {
+                    child: StreamBuilder(
+                  stream: ChatService().getChatRoomData(widget.chatroomId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Messages(
+                          messages: snapshot.data!.messages, userId: userId);
+                    } else {
                       return const Center(
-                        child: Text('error'),
+                        child: Text('sendMessage'),
                       );
                     }
-                  }),
-                ),
+                  },
+                )),
                 sendMesssage()
               ],
             )));
@@ -137,7 +128,10 @@ class ChatScreenState extends State<ChatScreen> {
         createdAt: DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));
 
     if (widget.counselor != null && isSended == false) {
-      isSended = true;
+      setState(() {
+        isSended = true;
+      });
+
       newChatroom();
     }
     if (isSended) {

@@ -1,5 +1,6 @@
 import 'package:diviction_user/provider/auth_provider.dart';
 import 'package:diviction_user/screen/sign/signup_screen.dart';
+import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,6 +42,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               .read(authProvider.notifier)
               .saveData(textEditingControllerForId.text);
           ref.invalidate(authProvider);
+          ChatService();
           break;
         case LoadState.fail:
           showSnackbar();

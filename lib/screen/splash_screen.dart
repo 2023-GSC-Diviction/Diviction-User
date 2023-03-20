@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../service/chat_service.dart';
+
 final loginStateProvider =
     FutureProvider.autoDispose((ref) => AuthService().isLogin());
 
@@ -19,6 +21,7 @@ class SplashScreen extends ConsumerWidget {
     String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
     toMainScreen(bool result) {
+      ChatService();
       if (result) {
         Navigator.pushAndRemoveUntil(
             context,
