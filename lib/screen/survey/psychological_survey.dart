@@ -1,5 +1,7 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
+import 'package:diviction_user/model/survey_dass.dart';
+import 'package:diviction_user/screen/survey/survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:diviction_user/widget/survey/answer_button.dart';
@@ -14,10 +16,14 @@ class PsychologicalSurvey extends StatefulWidget {
 }
 
 final int MaxValue = 21;
+// 21개 문항 각각 어느 타입의 질문인지
+final String Question_type = 'SADADSASADSSDSADDSAAD';
+
+final Map<String, int> sumScore = {'D': 0, 'A': 0, 'S': 0};
 
 class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
   int currentIndex = 1;
-  // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
+  // choosedAnswers : 1번 질문 부터 21번 질문까지에 대한 응답을 저장함 21개
   List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
 
   @override
@@ -98,7 +104,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
 
   void onNextButtonPressed() {
     setState(() {
-      if (currentIndex == 0) {
+      if (currentIndex == 1) {
         currentIndex += 1;
         return;
       }
@@ -116,10 +122,24 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
         print("심리검사 완료");
         // 점수 합산 - (psychological) 제일 앞 값 제거
         var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length);
-        var sum = AnswerResult.reduce((value, element) => value + element);
+        for (int i = 0; i < AnswerResult.length; i++) {
+          var type = Question_type.substring(i, i+1);
+          sumScore[type] = sumScore[type]! + AnswerResult[i];
+        }
         print('1~21번 문항에 대한 응답값 : $AnswerResult');
-        print('총 점수 : $sum');
+        print('우울 : ${sumScore['D']}, 불안 : ${sumScore['A']}, 스트레스 : ${sumScore['S']}');
+
         // 화면 전환 - 결과화면으로 이동
+        SurveyDASS surveyDASS = SurveyDASS(
+          memberId: 2,
+          melancholyScore: sumScore['D']!,
+          unrestScore: sumScore['A']!,
+          stressScore: sumScore['S']!,
+        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SurveyResult(),
+          settings: RouteSettings(arguments: [surveyDASS, 'DASS']),
+        ));
       }
     });
   }

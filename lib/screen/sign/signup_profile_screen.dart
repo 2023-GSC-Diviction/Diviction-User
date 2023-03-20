@@ -194,8 +194,8 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
 
   onPressedSignupButton() async {
     print('프로필 완성 버튼 눌림');
-    print('email : $widget.id');
-    print('password : $widget.password');
+    print('email : ${widget.id}');
+    print('password : ${widget.password}');
     print('이름 : ${textEditingControllerForName.text}');
     print('생년월일 : ${textEditingControllerForBirth.text}');
     print('주소 : ${textEditingControllerForAddress.text}');

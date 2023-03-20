@@ -1,10 +1,15 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/config/text_for_survey.dart';
+import 'package:diviction_user/model/survey_dast.dart';
+import 'package:diviction_user/screen/survey/survey_result.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:diviction_user/widget/survey/answer_button.dart';
 import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../provider/survey_provider.dart';
 
 class DrugSurvey extends StatefulWidget {
   const DrugSurvey({Key? key}) : super(key: key);
@@ -125,7 +130,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
           print('어떤 약물을 사용했는지 입력하지 않았습니다.'); // -> 나중엔 토스트로 띄우기
           return;
         }
-        currentIndex += 1;
+        currentIndex += 12; // test로 += 1을 12로 변경함
         return;
       }
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
@@ -147,6 +152,19 @@ class _DrugSurveyState extends State<DrugSurvey> {
         print('1~10번 문항에 대한 응답값 : $AnswerResult');
         print('총 점수 : $sum');
         // 화면 전환 - 결과화면으로 이동
+        SurveyDAST surveyDAST = SurveyDAST(
+            drug: SelectedDrugsName,
+            date: DateTime.now().toString().split(' ')[0],
+            userId: 'user1@gmail.com',
+            frequency: choosedAnswers[0],
+            injection: choosedAnswers[11],
+            cure: choosedAnswers[12],
+            question: sum,
+        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SurveyResult(),
+          settings: RouteSettings(arguments: [surveyDAST, 'DAST']),
+        ));
       }
     });
   }
