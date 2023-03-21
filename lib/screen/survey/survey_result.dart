@@ -21,15 +21,15 @@ class SurveyResult extends ConsumerWidget {
     switch (data[1]) {
       case 'DAST':
         ref.read(surveyProvider.notifier).DASTdataSave(data[0]);
-        ref.read(surveyProvider.notifier).DASTdataGet();
+        // ref.read(surveyProvider.notifier).DASTdataGet();
         break;
       case 'DASS':
         ref.read(surveyProvider.notifier).DASSdataSave(data[0]);
-        ref.read(surveyProvider.notifier).DASSdataGet();
+        // ref.read(surveyProvider.notifier).DASSdataGet();
         break;
       case 'AUDIT':
         ref.read(surveyProvider.notifier).AUDITdataSave(data[0]);
-        ref.read(surveyProvider.notifier).AUDITdataGet();
+        // ref.read(surveyProvider.notifier).AUDITdataGet();
         break;
     }
 

@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diviction_user/model/chat.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'firebase_storage_service.dart';
 
 class ChatService {
   static final ChatService _chatService = ChatService._internal();
@@ -18,23 +22,23 @@ class ChatService {
   List<MyChat> userChatlist = [];
   late SharedPreferences prefs;
 
-  String userEamil = '';
+  String userEmail = '';
 
   getUserEmail() async {
     prefs = await SharedPreferences.getInstance();
-    userEamil = prefs.getString('email')!.replaceAll('.', '');
+    userEmail = prefs.getString('email')!.replaceAll('.', '');
   }
 
   Future<List<MyChat>> getChatList() async {
     try {
-      final snapshot = await _firestore.collection('users').doc(userEamil).get();
+      final snapshot = await _firestore.collection('users').doc(userEmail).get();
       if (snapshot.exists) {
         final List<MyChat> chats = [];
-        final data = snapshot.data()?.values.first as List;
+        (snapshot.data() as Map)
+            .entries
+            .map((e) => chats.add(MyChat.fromJson(e.value)))
+            .toList();
 
-        for (var e in data) {
-          chats.add(MyChat.fromJson(e));
-        }
         return chats;
       } else {
         return [];
@@ -47,12 +51,13 @@ class ChatService {
   Stream<List<MyChat>> getChatListData() async* {
     try {
       final data =
-          _firestore.collection('users').doc(userEamil).snapshots().map((event) {
+      _firestore.collection('users').doc(userEmail).snapshots().map((event) {
         final List<MyChat> chats = [];
-        final list = event.data()?.values.first as List;
-        for (var e in list) {
-          chats.add(MyChat.fromJson(e));
-        }
+        (event.data() as Map)
+            .entries
+            .map((e) => chats.add(MyChat.fromJson(e.value)))
+            .toList();
+
         return chats;
       });
       yield* data;
@@ -78,7 +83,7 @@ class ChatService {
   void sendMessage(String chatRoomId, Message message) async {
     try {
       final snapshot =
-          await _firestore.collection('chatrooms').doc(chatRoomId).get();
+      await _firestore.collection('chatrooms').doc(chatRoomId).get();
       if (snapshot.exists) {
         final roomData = ChatRoom.fromDocumentSnapshot(snapshot);
         final messages = roomData.messages;
@@ -88,47 +93,77 @@ class ChatService {
             .doc(chatRoomId)
             .update({'messages': messages.map((e) => e.toJson()).toList()});
       }
+
+      savaLastMessage(userEmail, chatRoomId, message);
+      savaLastMessage(chatRoomId.split('&')[0], chatRoomId, message);
     } catch (e) {
       print(e);
     }
   }
 
-  // Future sendImage() {}
+  savaLastMessage(String id, String chatRoomId, Message message) async {
+    final snapshot = await _firestore.collection('users').doc(id).get();
+    if (snapshot.exists) {
+      final chat = MyChat.fromJson(snapshot.data()![chatRoomId]);
+      chat.lastMessage = message.content;
+      _firestore
+          .collection('users')
+          .doc(id)
+          .update({chatRoomId: chat.toJson()});
+    }
+  }
+
+  Future sendImage(String chatRoomId, XFile file, Message message) async {
+    sendMessage(chatRoomId, message);
+    FirebaseStorageService()
+        .uploadImage('$chatRoomId/${file.path}', File(file.path));
+  }
 
   Future newChatRoom(ChatRoom chatroom, Message message) async {
-    final other =
-        chatroom.counselor.email == userEamil ? chatroom.user : chatroom.counselor;
-    final newChat = MyChat(
-        chatRoomId: chatroom.chatRoomId,
-        email: other.email,
-        name: other.name,
-        photoUrl: other.photoUrl ?? '1',
-        lastMessage: message.content);
+    saveUserChatlist(
+        userEmail,
+        MyChat(
+            chatRoomId: chatroom.chatRoomId,
+            otherEmail: chatroom.counselor.email,
+            otherName: chatroom.counselor.name,
+            otherPhotoUrl: chatroom.counselor.photoUrl ?? '1',
+            lastMessage: message.content));
+    saveUserChatlist(
+        chatroom.counselor.email.replaceAll('.', ''),
+        MyChat(
+            chatRoomId: chatroom.chatRoomId,
+            otherEmail: chatroom.user.email,
+            otherName: chatroom.user.name,
+            otherPhotoUrl: chatroom.user.photoUrl ?? '1',
+            lastMessage: message.content));
 
-    final snapshot = await _firestore.collection('users').doc(userEamil).get();
-
-    if (snapshot.exists) {
-      List<MyChat> rooms = [];
-      final data = snapshot.data()!['chatlist'];
-      for (var e in data) {
-        rooms.add(MyChat.fromJson(e));
-      }
-      userChatlist = rooms;
-
-      if (userChatlist.isEmpty) {
-        userChatlist = [newChat];
-      } else {
-        userChatlist.add(newChat);
-      }
-    }
-
-    _firestore
-        .collection('users')
-        .doc(userEamil)
-        .set({'chatlist': userChatlist.map((e) => e.toJson()).toList()});
     _firestore
         .collection('chatrooms')
         .doc(chatroom.chatRoomId)
         .set(chatroom.toJson());
+  }
+
+  Future saveUserChatlist(String id, MyChat chat) async {
+    _firestore
+        .collection('users')
+        .doc(id)
+        .set({chat.chatRoomId: chat.toJson()});
+    // List<MyChat> rooms = [];
+    // if (snapshot.exists) {
+    //   final data = snapshot.data()!['chatlist'];
+    //   for (var e in data) {
+    //     rooms.add(MyChat.fromJson(e));
+    //   }
+    //   if (rooms.isEmpty) {
+    //     rooms = [chat];
+    //   } else {
+    //     rooms.add(chat);
+    //   }
+    // }
+
+    // _firestore
+    //     .collection('users')
+    //     .doc(id)
+    //     .set({'chatlist': rooms.map((e) => e.toJson())});
   }
 }

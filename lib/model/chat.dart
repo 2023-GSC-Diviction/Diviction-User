@@ -104,32 +104,32 @@ class Message {
 
 class MyChat {
   String chatRoomId;
-  String email;
-  String name;
-  String photoUrl;
+  String otherEmail;
+  String otherName;
+  String otherPhotoUrl;
   String lastMessage;
 
   MyChat(
       {required this.chatRoomId,
-      required this.email,
-      required this.name,
-      required this.photoUrl,
+      required this.otherEmail,
+      required this.otherName,
+      required this.otherPhotoUrl,
       required this.lastMessage});
 
   factory MyChat.fromJson(Map<dynamic, dynamic> json) {
     return MyChat(
         chatRoomId: json['chatRoomId'],
-        email: json['email'],
-        name: json['name'],
-        photoUrl: json['photoUrl'],
+        otherEmail: json['otherEmail'],
+        otherName: json['otherName'],
+        otherPhotoUrl: json['otherPhotoUrl'],
         lastMessage: json['lastMessage']);
   }
   toJson() {
     return {
       'chatRoomId': chatRoomId,
-      'email': email,
-      'name': name,
-      'photoUrl': photoUrl,
+      'otherEmail': otherEmail,
+      'otherName': otherName,
+      'otherPhotoUrl': otherPhotoUrl,
       'lastMessage': lastMessage,
     };
   }

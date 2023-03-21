@@ -12,13 +12,13 @@ class CounselorScreen extends ConsumerWidget {
   CounselorScreen({super.key});
 
   final PageController _pageController = PageController(initialPage: 0);
-  final pageProvider = StateProvider<int>((ref) => 0);
+  final pageProvider = StateProvider<int>((ref) => 1);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _pageController.addListener(() {
       ref.read(pageProvider.notifier).state =
-          _pageController.page?.round() ?? 0;
+          _pageController.page?.round() ?? 1;
     });
     int index = ref.watch(pageProvider);
     final page = [
