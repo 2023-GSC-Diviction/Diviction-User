@@ -13,12 +13,6 @@ enum EmailDuplicateState { proceeding, success, fail, apifail }
 final idCheckProvider =
     StateProvider<EmailDuplicateState>((ref) => EmailDuplicateState.proceeding);
 
-class CustomTextEditingController {
-  final TextEditingController idController = TextEditingController();
-  final TextEditingController pwController = TextEditingController();
-  final TextEditingController checkPwController = TextEditingController();
-}
-
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 

@@ -53,7 +53,7 @@ class SplashScreen extends ConsumerWidget {
       isLogin.when(
         data: (value) {
           if (value == true) {
-            checkDay();
+            checkDay(); //
           } else if (value == false) {
             toLoginScreen();
           }

@@ -4,9 +4,10 @@ import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/user.dart';
+import 'package:http/http.dart' as http;
 
 const storage = fss.FlutterSecureStorage();
 
@@ -65,19 +66,54 @@ class AuthService {
     }
   }
 
-  Future<bool> signUp(Map<String, String> user) async {
+  // Future<bool> signUp({
+  //   required Map<String, dynamic> user,
+  // }) async {
+  //   try {
+  //     print('user.toString() : ${user.toString()}');
+  //     NetWorkResult result = await DioClient()
+  //         .Signup_post('$_baseUrl/auth/signUp/member', user, false);
+  //     if (result.result == Result.success) {
+  //       User user = User.fromJson(result.response);
+  //       user.savePreference(user);
+  //       return true;
+  //     } else {
+  //       throw Exception('Failed to signUp');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to signUp');
+  //   }
+  // }
+
+  Future SignupWithloadImage({
+    required XFile file,
+    required Map<String, String> user,
+  }) async {
     try {
-      NetWorkResult result =
-          await DioClient().post('$_baseUrl/auth/signUp/member', user, false);
-      if (result.result == Result.success) {
-        User user = User.fromJson(result.response);
+      final url = Uri.parse('$_baseUrl/auth/signUp/member');
+      final request = http.MultipartRequest('POST', url);
+      // 파일 업로드를 위한 http.MultipartRequest 생성
+      http.MultipartFile multipartFile =
+          await http.MultipartFile.fromPath('multipartFile', file.path);
+      request.headers.addAll(
+          {"Content-Type": "multipart/form-data"}); // request에 header 추가
+
+      // 이미지 파일을 http.MultipartFile로 변환하여 request에 추가
+      request.files.add(multipartFile);
+      request.fields.addAll(user); // request에 fields 추가
+
+      var streamedResponse = await request.send();
+      var result = await http.Response.fromStream(streamedResponse);
+      print(result.body);
+      if (result.statusCode == 200) {
+        User user = User.fromJson(result.body as Map<String, dynamic>);
         user.savePreference(user);
         ChatService();
-
         return true;
       } else {
         throw Exception('Failed to signUp');
       }
+      return false;
     } catch (e) {
       throw Exception('Failed to signUp');
     }
