@@ -21,6 +21,7 @@ class CounselorList extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => ProfileScreen(
                     email: counselorEmail,
+                    isMe: false,
                   )));
     }
 

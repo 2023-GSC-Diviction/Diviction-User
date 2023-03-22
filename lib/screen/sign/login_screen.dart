@@ -40,7 +40,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ref
               .read(authProvider.notifier)
               .saveData(textEditingControllerForId.text);
-          ChatService();
           ref.invalidate(authProvider);
           toMain();
           break;

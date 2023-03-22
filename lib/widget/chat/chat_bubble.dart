@@ -70,6 +70,7 @@ class ChatBubbles extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) => ProfileScreen(
                   email: counselor.email,
+                  isMe: false,
                 )));
   }
 }

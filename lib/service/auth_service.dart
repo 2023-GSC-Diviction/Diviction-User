@@ -1,3 +1,4 @@
+import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/service/chat_service.dart';
@@ -105,6 +106,21 @@ class AuthService {
       if (result.result == Result.success) {
         User user = User.fromJson(result.response);
         user.savePreference(user);
+      } else {
+        throw Exception('Failed to getUser');
+      }
+    } catch (e) {
+      throw Exception('Failed to getUser');
+    }
+  }
+
+  Future<Counselor> getCounselor(String email) async {
+    try {
+      NetWorkResult result = await DioClient()
+          .get('$_baseUrl/counselor/email/$email', {'user_email': email}, true);
+      if (result.result == Result.success) {
+        Counselor counselor = Counselor.fromJson(result.response);
+        return counselor;
       } else {
         throw Exception('Failed to getUser');
       }

@@ -1,4 +1,7 @@
+import 'package:diviction_user/config/style.dart';
+import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../model/survey_result.dart';
@@ -37,20 +40,19 @@ final surdata = [
   ),
 ];
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+final editModeProvider = StateProvider((ref) => false);
 
+class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({Key? key, required this.email, required this.isMe})
+      : super(key: key);
+
+  final String email;
+  final bool isMe;
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  bool isChoosedPicture = false;
-  // 수정권한 부여, 프로필 수정 페이지와 미리보기 페이지의 차이점이 없어서 스크린을 2개로 만들기가 애매합니다.
-  bool isMyPage = true; // 로그인시 받아온 이메일 값과 해당 정보의 이메일 값을 비교해서 초기화 시키기
-  bool isEditMode = false; // Edit 버튼 눌림
-  String path = 'asset/image/DefaultProfileImage.png';
-
+class ProfileScreenState extends ConsumerState<ProfileScreen> {
   // '대표 서비스', '한줄소개', '활동 지역', '연락 가능 시간', '질문답변'
   List<String> Title = [
     // 'Name',
@@ -71,112 +73,167 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final editMode = ref.watch(editModeProvider);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: SafeArea(
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              // 상담 요청
-            },
-            label: const Text('request consult'),
-            icon: const Icon(Icons.favorite),
-            backgroundColor: Colors.blue,
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _Header(
-                      isMyPage: isMyPage,
-                      isEditMode: isEditMode,
-                      onEditButtonpressed: onEditButtonpressed),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.0115),
-                  ProfileImage(
-                    onProfileImagePressed: onProfileImagePressed,
-                    isChoosedPicture: isChoosedPicture,
-                    path: path,
-                    type: 0,
-                    imageSize: MediaQuery.of(context).size.height * 0.12,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.014),
-                  const Text(
-                    'Exodus Trivellan', // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Text(
-                    'Alcoholism Counselor', // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.032),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const ReviewCountTexts(
-                          SubContent: '200',
-                          TitleContent: 'Contacted',
-                        ),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1),
-                        // SizedBox(child: right_line()),
-                        const ReviewCountTexts(
-                          SubContent: '125',
-                          TitleContent: 'Consulting',
-                        ),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1),
-                        // SizedBox(child: right_line()),
-                        const ReviewCountTexts(
-                          SubContent: '29Y',
-                          TitleContent: 'Career',
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.032),
-                  Column(
-                    children: [0, 1, 2, 3, 4]
-                        .map(
-                          (index) => IntrinsicHeight(
-                            child: CustomTextEditor(
-                              TitleContent: Title[index],
-                              textEditingController:
-                                  textEditingController[index],
-                              isreadOnly: !isEditMode,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.032),
-                  SurveyChart(
-                    list: surdata,
-                  )
-                ],
+          child: Scaffold(
+              backgroundColor: Palette.appColor,
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () {
+                  // 상담 요청
+                },
+                label: const Text('request consult'),
+                icon: const Icon(Icons.add_reaction_sharp),
+                backgroundColor: Palette.appColor,
               ),
-            ),
-          ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              body: NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverAppBar(
+                          backgroundColor: Palette.appColor,
+                          expandedHeight:
+                              MediaQuery.of(context).size.height * 0.4,
+                          floating: false,
+                          pinned: true,
+                          flexibleSpace: FlexibleSpaceBar(
+                              background: _Header(isMe: widget.isMe))),
+                    ];
+                  },
+                  body: SingleChildScrollView(
+                      child: Column(children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Column(
+                        children: [
+                          Column(
+                            children: [0, 1, 2, 3, 4]
+                                .map(
+                                  (index) => IntrinsicHeight(
+                                    child: CustomTextEditor(
+                                      TitleContent: Title[index],
+                                      textEditingController:
+                                          textEditingController[index],
+                                      isreadOnly: !editMode,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                          const SizedBox(height: 20),
+                          SurveyChart(
+                            list: surdata,
+                          )
+                        ],
+                      ),
+                    )
+                  ]))))),
+    );
+  }
+}
+
+class _Header extends ConsumerStatefulWidget {
+  const _Header({
+    Key? key,
+    required this.isMe,
+  }) : super(key: key);
+
+  final bool isMe;
+
+  @override
+  _HeaderState createState() => _HeaderState();
+}
+
+class _HeaderState extends ConsumerState<_Header> {
+  bool isChoosedPicture = false;
+  // 수정권한 부여, 프로필 수정 페이지와 미리보기 페이지의 차이점이 없어서 스크린을 2개로 만들기가 애매합니다.
+  // 로그인시 받아온 이메일 값과 해당 정보의 이메일 값을 비교해서 초기화 시키기
+  String path = 'asset/image/DefaultProfileImage.png';
+
+  @override
+  Widget build(BuildContext context) {
+    final editMode = ref.watch(editModeProvider);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _TopBar(
+            isMyPage: widget.isMe, onEditButtonpressed: onEditButtonpressed),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.0115),
+        Padding(
+          padding: const EdgeInsets.only(top: 12, left: 35, right: 35),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Exodus Trivellan', // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                const Text(
+                  'Alcoholism Counselor', // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white54,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.032),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ProfileImage(
+                          onProfileImagePressed: onProfileImagePressed,
+                          isChoosedPicture: isChoosedPicture,
+                          path: path,
+                          type: editMode ? 0 : 1,
+                          imageSize: MediaQuery.of(context).size.height * 0.15,
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.05),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            // ReviewCountTexts(
+                            //   subContent: '200',
+                            //   titleContent: 'Contacted',
+                            // ),
+                            // SizedBox(child: right_line()),
+                            ReviewCountTexts(
+                              subContent: '125',
+                              titleContent: 'Consulting',
+                            ),
+                            // SizedBox(child: right_line()),
+                            ReviewCountTexts(
+                              subContent: '29Y',
+                              titleContent: 'Career',
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
+              ]),
         ),
-      ),
+      ],
     );
   }
 
@@ -195,104 +252,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   onEditButtonpressed() {
     // 수정후 Done 버튼이 눌렸을 때 API Call을 통해서 내용 업데이트 해줘야 함
-    if (isEditMode) {
+    if (ref.read(editModeProvider.notifier).state) {
       // API Call - 회원 프로필 업데이트
     }
-    setState(() {
-      isEditMode = !isEditMode;
-    });
+    ref.read(editModeProvider.notifier).state = !ref.read(editModeProvider);
   }
 }
 
-class _Header extends StatelessWidget {
+class _TopBar extends ConsumerWidget {
   final bool isMyPage;
-  final bool isEditMode;
   final VoidCallback onEditButtonpressed;
 
-  const _Header({
+  const _TopBar({
     Key? key,
     required this.isMyPage,
-    required this.isEditMode,
     required this.onEditButtonpressed,
   }) : super(key: key);
-
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.07,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Profile',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 23,
-              ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isEditMode = ref.watch(editModeProvider);
+    // TODO: implement build
+    return Container(
+      padding: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width * 0.05,
+        right: MediaQuery.of(context).size.width * 0.05,
+      ),
+      height: MediaQuery.of(context).size.height * 0.07,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Profile',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              fontSize: 23,
             ),
-            if (isMyPage)
-              TextButton(
-                onPressed: onEditButtonpressed,
-                child: Text(
-                  isEditMode ? 'Done' : 'Edit',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color:
-                        isEditMode ? Colors.redAccent : const Color(0xFF3AAFA1),
-                    // color: Colors.white,
-                  ),
+          ),
+          if (isMyPage)
+            TextButton(
+              onPressed: onEditButtonpressed,
+              child: Text(
+                isEditMode ? 'Done' : 'Edit',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: isEditMode
+                      ? Colors.redAccent
+                      : Color.fromARGB(255, 227, 250, 247),
+                  // color: Colors.white,
                 ),
-              )
-          ],
-        ),
+              ),
+            )
+        ],
       ),
     );
   }
 }
 
 class ReviewCountTexts extends StatelessWidget {
-  final String TitleContent;
-  final String SubContent;
+  final String titleContent;
+  final String subContent;
 
   const ReviewCountTexts({
     Key? key,
-    required this.TitleContent,
-    required this.SubContent,
+    required this.titleContent,
+    required this.subContent,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Flexible(
         flex: 1,
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                SubContent,
-                style: const TextStyle(
-                  fontSize: 28,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              subContent,
+              style: const TextStyle(
+                  fontSize: 23,
                   fontWeight: FontWeight.w900,
-                ),
-                maxLines: 1,
+                  color: Colors.white),
+              maxLines: 1,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.002,
+            ),
+            Text(
+              titleContent,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color.fromARGB(165, 255, 255, 255),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.002,
-              ),
-              Text(
-                TitleContent,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey[700],
-                ),
-                maxLines: 1,
-              ),
-            ],
-          ),
+              maxLines: 1,
+            ),
+          ],
         ));
   }
 }

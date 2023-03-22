@@ -25,6 +25,7 @@ class ChatList extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => ProfileScreen(
                     email: counselorEmail,
+                    isMe: false,
                   )));
     }
 
@@ -44,7 +45,7 @@ class ChatList extends StatelessWidget {
       String userEmail = prefs.getString('email')!;
       String chatroomId = ('$counselorEmail&$userEmail').replaceAll('.', '');
 
-      final counselor = await AuthService().getUser(counselorEmail);
+      final counselor = await AuthService().getCounselor(counselorEmail);
 
       toChatroom(chatroomId, counselor);
     }

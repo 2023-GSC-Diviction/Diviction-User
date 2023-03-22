@@ -78,21 +78,39 @@ class _ProfileImageState extends State<ProfileImage> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      IconButton(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.topCenter,
-        onPressed: widget.onProfileImagePressed,
-        // ClipOval : 아래 자식의 UI를 동그랗게 만들어주는 위젯
-        icon: (() {
-          if (widget.isChoosedPicture) {
-            return ClipOval(child: choosedImage());
-          } else {
-            return ClipOval(child: defaultImage());
-          }
-        })(),
-        // 이미지 크기는 iconSize에서 조절함
-        iconSize: widget.imageSize,
-      ),
+      GestureDetector(
+          onTap: widget.onProfileImagePressed,
+          child: Container(
+            width: widget.imageSize,
+            height: widget.imageSize,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+              image: DecorationImage(
+                  image: true
+                      ? NetworkImage(
+                          'https://www.gravatar.com/avatar/e639d0534d6d5202f4f088ffe95f7b48?s=192&d=identicon&r=PG')
+                      : const AssetImage('assets/images/test.png')
+                          as ImageProvider,
+                  fit: BoxFit.cover),
+            ),
+          )),
+      // IconButton(
+      //   padding: EdgeInsets.zero,
+      //   alignment: Alignment.topCenter,
+      //   onPressed: widget.onProfileImagePressed,
+      //   // ClipOval : 아래 자식의 UI를 동그랗게 만들어주는 위젯
+      //   icon: (() {
+      //     if (widget.isChoosedPicture) {
+      //       return ClipOval(child: choosedImage());
+      //     } else {
+      //       return ClipOval(child: defaultImage());
+      //     }
+      //   })(),
+      //   // 이미지 크기는 iconSize에서 조절함
+      //   iconSize: widget.imageSize,
+      // ),
       widget.type == 0
           ? Positioned(
               // Positioned : 위치 정렬에 쓰임. 아래는 오른쪽 아래로 부터 0.01만큼 떨어지게 배치하라는 코드
@@ -127,7 +145,7 @@ class _ProfileImageState extends State<ProfileImage> {
 
   Widget defaultImage() {
     return Image.asset(
-      'assets/icons/psychological_icon.png',
+      'assets/images/test.png',
       width: widget.imageSize,
       height: widget.imageSize,
       fit: BoxFit.cover,

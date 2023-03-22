@@ -30,6 +30,7 @@ class ProfileButton extends StatelessWidget {
           type: 1,
           imageSize: 25,
         ),
+        const SizedBox(width: 5),
         GestureDetector(
             onTap: () => onProfilePressed(context),
             child: Text(nickname, style: TextStyles.chatNicknameTextStyle)),
