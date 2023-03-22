@@ -23,15 +23,16 @@ class _CustomTextEditorState extends State<CustomTextEditor> {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
           children: [
-            SizedBox(
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
               width: MediaQuery.of(context).size.width,
               child: Text(
                 widget.TitleContent,
-                style: TextStyle(
-                  fontSize: 20,
+                style: const TextStyle(
+                  fontSize: 17,
                   fontWeight: FontWeight.w600,
                 ),
               ),

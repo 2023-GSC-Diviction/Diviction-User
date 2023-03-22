@@ -12,45 +12,83 @@ class CounselorScreen extends ConsumerWidget {
   CounselorScreen({super.key});
 
   final PageController _pageController = PageController(initialPage: 0);
-  final pageProvider = StateProvider<int>((ref) => 1);
+  final pageProvider = StateProvider<int>((ref) => 0);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     _pageController.addListener(() {
       ref.read(pageProvider.notifier).state =
-          _pageController.page?.round() ?? 1;
+          _pageController.page?.round() ?? 0;
     });
     int index = ref.watch(pageProvider);
     final page = [
+      const RequestedCounselorScreen(),
       const FindCounselorScreen(),
-      const RequestedCounselorScreen()
     ];
 
     Widget bottomBar() {
       return InkWell(
           onTap: () {
-            _pageController.animateToPage(index == 1 ? 0 : 1,
+            _pageController.animateToPage(index == 0 ? 1 : 0,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut);
           },
           child: Container(
               decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border.symmetric(
-                    horizontal: BorderSide(
-                        width: 1, color: Palette.bottomBoxBorderColor)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    spreadRadius: 5,
+                    offset: Offset(0, 0),
+                  )
+                ],
+                color: Colors.blue,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              padding: const EdgeInsets.all(12),
-              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
+              width: MediaQuery.of(context).size.width - 30,
+              alignment: Alignment.centerLeft,
+              height: 100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(index == 0 ? 'my chat' : 'counselor list',
-                      style: TextStyles.bottomTextStyle),
-                  Icon(index == 0
-                      ? Icons.arrow_right_sharp
-                      : Icons.arrow_left_sharp)
+                  if (index == 0) ...[
+                    const Text.rich(
+                      TextSpan(
+                          text: 'Want find Counselor?\n',
+                          style: TextStyles.counselorTitle,
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: ' find your counselor',
+                                style: TextStyles.counselorMiddle)
+                          ]),
+                      textAlign: TextAlign.start,
+                    ),
+                    const Icon(
+                      Icons.arrow_right_sharp,
+                      size: 50,
+                      color: Colors.white,
+                    )
+                  ] else ...[
+                    const Text.rich(
+                      TextSpan(
+                          text: 'Back to my chat',
+                          style: TextStyles.counselorTitle,
+                          children: <TextSpan>[
+                            TextSpan(text: '', style: TextStyles.titleTextStyle)
+                          ]),
+                      textAlign: TextAlign.start,
+                    ),
+                    const Icon(
+                      Icons.arrow_left_sharp,
+                      size: 50,
+                      color: Colors.white,
+                    )
+                  ],
                 ],
               )));
     }

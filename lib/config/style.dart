@@ -79,6 +79,18 @@ class TextStyles {
     decorationThickness: 1.5, // 밑줄 두께
     // fontStyle: FontStyle
   );
+  static const TextStyle counselorTitle = TextStyle(
+      fontSize: 22,
+      color: Color.fromRGBO(255, 255, 255, 1),
+      height: 1.4,
+      letterSpacing: 0.02,
+      fontWeight: FontWeight.w700);
+  static const TextStyle counselorMiddle = TextStyle(
+      fontSize: 18,
+      color: Color.fromRGBO(255, 255, 255, 1),
+      height: 1.4,
+      letterSpacing: 0.02,
+      fontWeight: FontWeight.w700);
 }
 
 class Palette {

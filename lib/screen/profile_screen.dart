@@ -77,6 +77,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
       child: SafeArea(
         child: Scaffold(
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              // 상담 요청
+            },
+            label: const Text('request consult'),
+            icon: const Icon(Icons.favorite),
+            backgroundColor: Colors.blue,
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(top: 12),
@@ -94,13 +104,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     isChoosedPicture: isChoosedPicture,
                     path: path,
                     type: 0,
-                    imageSize: MediaQuery.of(context).size.height * 0.13,
+                    imageSize: MediaQuery.of(context).size.height * 0.12,
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.014),
                   const Text(
                     'Exodus Trivellan', // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
                     style: TextStyle(
-                      fontSize: 31,
+                      fontSize: 25,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -108,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     'Alcoholism Counselor', // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 17,
                       color: Colors.grey[700],
                       fontWeight: FontWeight.w500,
                     ),
@@ -116,9 +126,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.032),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.11,
+                    margin: const EdgeInsets.symmetric(horizontal: 25),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         const ReviewCountTexts(
                           SubContent: '200',
@@ -208,7 +219,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.07,
         child: Row(
@@ -219,7 +230,7 @@ class _Header extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 26,
+                fontSize: 23,
               ),
             ),
             if (isMyPage)
@@ -254,31 +265,34 @@ class ReviewCountTexts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.20,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            SubContent,
-            style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w900,
-            ),
+    return Flexible(
+        flex: 1,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                SubContent,
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                ),
+                maxLines: 1,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.002,
+              ),
+              Text(
+                TitleContent,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey[700],
+                ),
+                maxLines: 1,
+              ),
+            ],
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.002,
-          ),
-          Text(
-            TitleContent,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w400,
-              color: Colors.grey[700],
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
