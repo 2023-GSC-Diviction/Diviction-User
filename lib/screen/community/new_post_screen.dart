@@ -46,10 +46,10 @@ class NewPostScreenState extends State<NewPostScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const ProfileButton(
-                        nickname: 'nickname',
-                        id: 'id',
-                      ),
+                      // const ProfileButton(
+                      //   nickname: 'nickname',
+                      //   id: 'id',
+                      // ),
                       const SizedBox(
                         height: 10,
                       ),

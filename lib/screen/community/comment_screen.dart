@@ -116,10 +116,11 @@ class _CommentItemState extends State<CommentItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileButton(
-          nickname: widget.comment.id,
-          id: widget.comment.id,
-        ),
+        // ProfileButton(
+        //   nickname: widget.comment.id,
+        //   path: ,
+        //   id: widget.comment.id,
+        // ),
         Container(
           margin:
               const EdgeInsets.only(bottom: 10, top: 15, left: 30, right: 10),

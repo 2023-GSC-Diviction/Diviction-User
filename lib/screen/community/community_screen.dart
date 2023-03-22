@@ -138,11 +138,11 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      ProfileButton(
-        nickname: post.id,
-        id: 'id',
-        onProfilePressed: onProfilePressed,
-      ),
+      // ProfileButton(
+      //   nickname: post.id,
+      //   id: 'id',
+      //   onProfilePressed: onProfilePressed,
+      // ),
       Container(
           margin:
               const EdgeInsets.only(bottom: 10, top: 15, left: 10, right: 10),
