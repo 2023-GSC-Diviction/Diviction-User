@@ -8,6 +8,8 @@ import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:diviction_user/widget/survey/answer_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:diviction_user/util/getUserData.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AlcoholSurvey extends StatefulWidget {
   const AlcoholSurvey({Key? key}) : super(key: key);
@@ -103,7 +105,8 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
     });
   }
 
-  void onNextButtonPressed() {
+  void onNextButtonPressed() async {
+    int? userId = await getUserData.getUserId();
     setState(() {
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
       // if (choosedAnswers[currentIndex] == -1) {
@@ -125,7 +128,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
 
         // 화면 전환 - 결과화면으로 이동
         SurveyAUDIT surveyAUDIT = SurveyAUDIT(
-          memberId: 2,
+          memberId: userId,
           q1: AnswerResult[AnswerResult.length-1],
           score: sum,
         );

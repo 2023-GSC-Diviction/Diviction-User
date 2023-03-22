@@ -7,6 +7,7 @@ import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:diviction_user/widget/survey/answer_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:diviction_user/util/getUserData.dart';
 
 class PsychologicalSurvey extends StatefulWidget {
   const PsychologicalSurvey({Key? key}) : super(key: key);
@@ -102,7 +103,8 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
     });
   }
 
-  void onNextButtonPressed() {
+  void onNextButtonPressed() async {
+    int? userId = await getUserData.getUserId();
     setState(() {
       if (currentIndex == 1) {
         currentIndex += 1;
@@ -131,9 +133,9 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
 
         // 화면 전환 - 결과화면으로 이동
         SurveyDASS surveyDASS = SurveyDASS(
-          memberId: 2,
-          melancholyScore: sumScore['D']!,
-          unrestScore: sumScore['A']!,
+          memberId: userId,
+          melancholyScore: sumScore['D']!, // Depress
+          unrestScore: sumScore['A']!, // Anxious
           stressScore: sumScore['S']!,
         );
         Navigator.of(context).push(MaterialPageRoute(

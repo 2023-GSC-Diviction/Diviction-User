@@ -4,9 +4,11 @@ import 'package:diviction_user/model/survey_dass.dart';
 import 'package:diviction_user/model/survey_dast.dart';
 import 'package:diviction_user/service/auth_service.dart';
 import 'package:diviction_user/service/survey_service.dart';
+import 'package:diviction_user/util/getUserData.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
 
@@ -72,9 +74,9 @@ class SurveyState extends StateNotifier<SaveState> {
     }
   }
 
-  Future DASTdataGet(String member_email, String date) async {
+  Future DASTdataGet() async {
     try {
-      var result = await SurveyService().DASTdataGet(member_email, date);
+      var result = await SurveyService().DASTdataGet();
       if (result.result == Result.success) {
         state = SaveState.success;
         print("DAST 데이터 불러오기 완료");
@@ -89,9 +91,9 @@ class SurveyState extends StateNotifier<SaveState> {
     }
   }
 
-  Future DASSdataGet(int memberId) async {
+  Future DASSdataGet() async {
     try {
-      var result = await SurveyService().DASSdataGet(memberId);
+      var result = await SurveyService().DASSdataGet();
       if (result.result == Result.success) {
         state = SaveState.success;
         print("DASS 데이터 불러오기 완료");
@@ -106,9 +108,9 @@ class SurveyState extends StateNotifier<SaveState> {
     }
   }
 
-  Future AUDITdataGet(int memberId) async {
+  Future AUDITdataGet() async {
     try {
-      var result = await SurveyService().AUDITdataGet(memberId);
+      var result = await SurveyService().AUDITdataGet();
       if (result.result == Result.success) {
         state = SaveState.success;
         print("AUDIT 데이터 불러오기 완료");

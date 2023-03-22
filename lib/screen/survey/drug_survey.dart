@@ -8,6 +8,7 @@ import 'package:diviction_user/widget/survey/back_and_next_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:diviction_user/util/getUserData.dart';
 
 import '../../provider/survey_provider.dart';
 
@@ -123,14 +124,15 @@ class _DrugSurveyState extends State<DrugSurvey> {
     });
   }
 
-  void onNextButtonPressed() {
+  void onNextButtonPressed() async {
+    String userEmail = await getUserData.getUserEmail();
     setState(() {
       if (currentIndex == -1) {
         if (SelectedDrugsName.length == 0) {
           print('어떤 약물을 사용했는지 입력하지 않았습니다.'); // -> 나중엔 토스트로 띄우기
           return;
         }
-        currentIndex += 12; // test로 += 1을 12로 변경함
+        currentIndex += 1;
         return;
       }
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
@@ -153,13 +155,13 @@ class _DrugSurveyState extends State<DrugSurvey> {
         print('총 점수 : $sum');
         // 화면 전환 - 결과화면으로 이동
         SurveyDAST surveyDAST = SurveyDAST(
-            drug: SelectedDrugsName,
-            date: DateTime.now().toString().split(' ')[0],
-            userId: 'user1@gmail.com',
-            frequency: choosedAnswers[0],
-            injection: choosedAnswers[11],
-            cure: choosedAnswers[12],
-            question: sum,
+          drug: SelectedDrugsName,
+          date: DateTime.now().toString().split(' ')[0],
+          member_email: userEmail,
+          frequency: choosedAnswers[0],
+          injection: choosedAnswers[11],
+          cure: choosedAnswers[12],
+          question: sum,
         );
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SurveyResult(),

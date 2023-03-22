@@ -1,7 +1,7 @@
 class SurveyDAST {
   List<String> drug;
   String date;
-  String userId;
+  String member_email;
   int frequency;
   int injection;
   int cure;
@@ -10,7 +10,7 @@ class SurveyDAST {
   SurveyDAST({
     required this.drug,
     required this.date,
-    required this.userId,
+    required this.member_email,
     required this.frequency,
     required this.injection,
     required this.cure,
@@ -20,7 +20,7 @@ class SurveyDAST {
   Map<String, dynamic> toJson() => {
         'drug': drug,
         'date': date,
-        'userId': userId,
+        'member_email': member_email,
         'frequency': frequency,
         'injection': injection,
         'cure': cure,

@@ -15,23 +15,23 @@ class ChatService {
     return _chatService;
   }
   ChatService._internal() {
-    getUserId();
+    getUserEmail();
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<MyChat> userChatlist = [];
   late SharedPreferences prefs;
 
-  String user = '';
+  String userEmail = '';
 
-  getUserId() async {
+  getUserEmail() async {
     prefs = await SharedPreferences.getInstance();
-    user = prefs.getString('email')!.replaceAll('.', '');
+    userEmail = prefs.getString('email')!.replaceAll('.', '');
   }
 
   Future<List<MyChat>> getChatList() async {
     try {
-      final snapshot = await _firestore.collection('users').doc(user).get();
+      final snapshot = await _firestore.collection('users').doc(userEmail).get();
       if (snapshot.exists) {
         final List<MyChat> chats = [];
         (snapshot.data() as Map)
@@ -51,7 +51,7 @@ class ChatService {
   Stream<List<MyChat>> getChatListData() async* {
     try {
       final data =
-          _firestore.collection('users').doc(user).snapshots().map((event) {
+      _firestore.collection('users').doc(userEmail).snapshots().map((event) {
         final List<MyChat> chats = [];
         (event.data() as Map)
             .entries
@@ -83,7 +83,7 @@ class ChatService {
   void sendMessage(String chatRoomId, Message message) async {
     try {
       final snapshot =
-          await _firestore.collection('chatrooms').doc(chatRoomId).get();
+      await _firestore.collection('chatrooms').doc(chatRoomId).get();
       if (snapshot.exists) {
         final roomData = ChatRoom.fromDocumentSnapshot(snapshot);
         final messages = roomData.messages;
@@ -94,7 +94,7 @@ class ChatService {
             .update({'messages': messages.map((e) => e.toJson()).toList()});
       }
 
-      savaLastMessage(user, chatRoomId, message);
+      savaLastMessage(userEmail, chatRoomId, message);
       savaLastMessage(chatRoomId.split('&')[0], chatRoomId, message);
     } catch (e) {
       print(e);
@@ -121,7 +121,7 @@ class ChatService {
 
   Future newChatRoom(ChatRoom chatroom, Message message) async {
     saveUserChatlist(
-        user,
+        userEmail,
         MyChat(
             chatRoomId: chatroom.chatRoomId,
             otherEmail: chatroom.counselor.email,
