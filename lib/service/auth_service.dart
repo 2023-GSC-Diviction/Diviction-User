@@ -1,13 +1,11 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
+import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
+import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -76,8 +74,8 @@ class AuthService {
   //     NetWorkResult result = await DioClient()
   //         .Signup_post('$_baseUrl/auth/signUp/member', user, false);
   //     if (result.result == Result.success) {
-  //       // User user = User.fromJson(result.response);
-  //       // user.savePreference(user);
+  //       User user = User.fromJson(result.response);
+  //       user.savePreference(user);
   //       return true;
   //     } else {
   //       throw Exception('Failed to signUp');
@@ -91,10 +89,8 @@ class AuthService {
     required XFile file,
     required Map<String, String> user,
   }) async {
-    String url = '$_baseUrl/auth/signUp/member';
-    final uri = Uri.parse(url);
     try {
-      final url = Uri.parse('http://15.164.100.67:8080/auth/signUp/member');
+      final url = Uri.parse('$_baseUrl/auth/signUp/member');
       final request = http.MultipartRequest('POST', url);
       // 파일 업로드를 위한 http.MultipartRequest 생성
       http.MultipartFile multipartFile =
@@ -109,13 +105,14 @@ class AuthService {
       var streamedResponse = await request.send();
       var result = await http.Response.fromStream(streamedResponse);
       print(result.body);
-      // if (result.result == Result.success) {
-      //   User user = User.fromJson(result.response);
-      //   user.savePreference(user);
-      //   return true;
-      // } else {
-      //   throw Exception('Failed to signUp');
-      // }
+      if (result.statusCode == 200) {
+        User user = User.fromJson(result.body as Map<String, dynamic>);
+        user.savePreference(user);
+        ChatService();
+        return true;
+      } else {
+        throw Exception('Failed to signUp');
+      }
       return false;
     } catch (e) {
       throw Exception('Failed to signUp');
@@ -145,6 +142,21 @@ class AuthService {
       if (result.result == Result.success) {
         User user = User.fromJson(result.response);
         user.savePreference(user);
+      } else {
+        throw Exception('Failed to getUser');
+      }
+    } catch (e) {
+      throw Exception('Failed to getUser');
+    }
+  }
+
+  Future<Counselor> getCounselor(String email) async {
+    try {
+      NetWorkResult result = await DioClient()
+          .get('$_baseUrl/counselor/email/$email', {'user_email': email}, true);
+      if (result.result == Result.success) {
+        Counselor counselor = Counselor.fromJson(result.response);
+        return counselor;
       } else {
         throw Exception('Failed to getUser');
       }

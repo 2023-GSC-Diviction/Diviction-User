@@ -46,37 +46,46 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
   Widget build(BuildContext context) {
     final counselorList = ref.watch(counselorListProvider);
 
-    return Stack(children: [
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Text('Counselor List', style: TextStyles.titleTextStyle),
-            ),
-            searchBar(),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 15),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: const [
+                    Text('Counselor', style: TextStyles.titleTextStyle),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(bottom: 2),
+                        child: Text('contact us!',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w300)))
+                  ])),
+          // searchBar(),
+
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            optionButton(0),
             const SizedBox(
-              height: 10,
+              width: 10,
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              optionButton(0),
-              const SizedBox(
-                width: 10,
-              ),
-              optionButton(1)
-            ]),
-            Expanded(
-                child: counselorList.isEmpty
-                    ? const Center(child: Text('Loading...'))
-                    : CounselorList(
-                        counselor: counselorList,
-                      ))
-          ],
-        ),
-      )
-    ]);
+            optionButton(1)
+          ]),
+          Expanded(
+              child: counselorList.isEmpty
+                  ? const Center(child: Text('Loading...'))
+                  : CounselorList(
+                      counselor: counselorList,
+                    ))
+        ],
+      ),
+    );
   }
 
   Widget searchBar() {
@@ -97,7 +106,6 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
   Widget optionButton(int type) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
-            side: const BorderSide(width: 1, color: Palette.borderColor),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18))),
         onPressed: () {

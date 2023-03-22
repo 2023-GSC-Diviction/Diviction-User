@@ -2,7 +2,9 @@ import 'package:diviction_user/screen/survey/alcohol_survey.dart';
 import 'package:diviction_user/screen/survey/drug_survey.dart';
 import 'package:diviction_user/screen/survey/psychological_survey.dart';
 import 'package:diviction_user/screen/survey/survey_result.dart';
+import 'package:diviction_user/util/getUserData.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../config/style.dart';
@@ -17,13 +19,28 @@ class HomeSceen extends StatefulWidget {
 
 class _HomeSceenState extends State<HomeSceen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
+  }
+
+  getUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('name')!;
+    });
+  }
+
+  String name = 'User';
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const MyAppbar(
           isMain: true,
           hasBack: false,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Palette.appColor,
         body: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -64,12 +81,24 @@ class _HomeSceenState extends State<HomeSceen> {
     return Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 20),
-        child: const Text.rich(
+        child: Text.rich(
           TextSpan(
-              text: '이번달 참은 일 수 \'13일\'\n',
-              style: TextStyles.titleTextStyle,
+              text: 'Hello, ',
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  letterSpacing: 0.02,
+                  fontWeight: FontWeight.w400),
               children: <TextSpan>[
-                TextSpan(text: '잘 하고 있어요!', style: TextStyles.titleTextStyle)
+                TextSpan(
+                  text: '\n$name!',
+                  style: const TextStyle(
+                      fontSize: 30,
+                      color: Colors.white,
+                      height: 1.4,
+                      letterSpacing: 0.02,
+                      fontWeight: FontWeight.w700),
+                )
               ]),
           textAlign: TextAlign.start,
         ));

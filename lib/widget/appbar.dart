@@ -34,28 +34,23 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
               onPressed: () => hasDialog != null && hasDialog == false
                   ? Navigator.pop(context)
                   : backDialog(context))
-          : IconButton(
-              icon: const Icon(
-                Icons.notifications,
-                color: Colors.white,
-              ),
-              onPressed: () {},
-            ),
+          : Container(),
       title: Center(
           child: Text(
         title ?? 'Diviction',
-        style: TextStyle(color: Colors.black54),
+        style: TextStyle(color: Colors.white, fontSize: 20),
       )),
       actions: isMain
           ? [
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.black54),
+                icon: const Icon(Icons.notifications, color: Colors.white),
                 onPressed: () {},
               ),
             ]
           : [
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.white),
+                icon:
+                    const Icon(Icons.notifications, color: Colors.transparent),
                 onPressed: () {},
               ),
             ],
