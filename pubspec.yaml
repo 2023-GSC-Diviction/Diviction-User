@@ -64,6 +64,7 @@ dependencies:
   firebase_database: ^10.0.16
   cloud_firestore: ^4.4.5
   firebase_storage: ^11.0.16
+  http: ^0.13.3
 
 dev_dependencies:
   flutter_test:

@@ -1,15 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:diviction_user/service/image_picker_service.dart';
-import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
 
-import '../../model/user.dart';
 import '../../provider/auth_provider.dart';
 import '../../widget/profile_image.dart';
 import '../../widget/sign/custom_round_button.dart';
 import '../../widget/sign/title_header.dart';
 import 'login_screen.dart';
+import 'package:http/http.dart' as http;
+
 
 final authProvider = StateNotifierProvider.autoDispose<AuthState, LoadState>(
     (ref) => AuthState());
@@ -35,6 +37,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   // 회원가입시 프로필 이미지의 path를 DB에 저장하고 프로필 탭에서 DB에 접근하여 사진 로딩하기.
   bool isChoosedPicture = false;
   String path = 'asset/image/DefaultProfileImage.png';
+  XFile? ImageFile;
 
   bool isGenderchoosed = false;
   String userGender = 'MALE';
@@ -165,12 +168,13 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   onProfileImagePressed() async {
     print("onProfileImagePressed 실행완료");
     final ImagePickerService pickerService = ImagePickerService();
-    final image = await pickerService.pickSingleImage();
+    final XFile? image = await pickerService.pickSingleImage();
 
     if (image != null) {
       setState(() {
         this.isChoosedPicture = true;
         this.path = image.path;
+        this.ImageFile = image;
       });
     }
     print(image);
@@ -201,18 +205,22 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     print('주소 : ${textEditingControllerForAddress.text}');
     print('성별 : ${userGender}');
     print('프로필 이미지 경로 : ${path}');
-
+    // MultipartFile multipartFile = await MultipartFile.fromFile(ImageFile!.path, filename: 'upload');
+    // print(multipartFile.toString());
     Map<String, String> user = {
       'email': widget.id,
       'password': widget.password,
-      'name': textEditingControllerForName.text,
-      'address': textEditingControllerForAddress.text,
+      'name': 'name', // textEditingControllerForName.text
+      'address': 'address', // textEditingControllerForAddress.text
       'birth': textEditingControllerForBirth.text,
       'gender': userGender,
-      'profile_img_url': path
+      // 'multipartFile': multipartFile,
+      // 'profile_img_url': path
     };
-
-    ref.read(authProvider.notifier).signUp(user);
+    print(user.toString());
+    if(ImageFile != null) {
+      ref.read(authProvider.notifier).SignupWithloadImage(ImageFile!, user);
+    }
   }
 }
 

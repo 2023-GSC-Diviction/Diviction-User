@@ -2,6 +2,7 @@ import 'package:diviction_user/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
@@ -35,9 +36,9 @@ class AuthState extends StateNotifier<LoadState> {
     }
   }
 
-  Future signUp(Map<String, String> user) async {
+  Future SignupWithloadImage(XFile file, Map<String, String> user) async {
     try {
-      var result = await AuthService().signUp(user);
+      var result = await AuthService().SignupWithloadImage(file: file, user: user);
       if (result) {
         state = LoadState.success;
       } else {
