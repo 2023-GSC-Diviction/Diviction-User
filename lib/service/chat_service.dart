@@ -120,8 +120,12 @@ class ChatService {
       } else {
         final chat = MyChat(
             chatRoomId: chatRoomId,
-            otherEmail: chatRoomId.split('&')[0],
-            otherName: chatRoomId.split('&')[0],
+            otherEmail: chatRoomId.split('&')[0] == id
+                ? chatRoomId.split('&')[1]
+                : chatRoomId.split('&')[0],
+            otherName: chatRoomId.split('&')[0] == id
+                ? chatRoomId.split('&')[1]
+                : chatRoomId.split('&')[0],
             otherPhotoUrl: '1',
             lastMessage: message.content,
             lastTime: message.createdAt);
@@ -131,8 +135,12 @@ class ChatService {
       if (e is FirebaseException && e.code == 'not-found') {
         final chat = MyChat(
             chatRoomId: chatRoomId,
-            otherEmail: chatRoomId.split('&')[0],
-            otherName: chatRoomId.split('&')[0],
+            otherEmail: chatRoomId.split('&')[0] == id
+                ? chatRoomId.split('&')[1]
+                : chatRoomId.split('&')[0],
+            otherName: chatRoomId.split('&')[0] == id
+                ? chatRoomId.split('&')[1]
+                : chatRoomId.split('&')[0],
             otherPhotoUrl: '1',
             lastMessage: message.content,
             lastTime: message.createdAt);

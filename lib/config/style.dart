@@ -91,9 +91,22 @@ class TextStyles {
       height: 1.4,
       letterSpacing: 0.02,
       fontWeight: FontWeight.w700);
+  static const TextStyle chatHeading = TextStyle(
+    color: Color(0xff686795),
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 1.5,
+  );
+  static const TextStyle chatbodyText = TextStyle(
+      color: Color(0xffAEABC9),
+      fontSize: 14,
+      letterSpacing: 1.2,
+      fontWeight: FontWeight.w500);
 }
 
 class Palette {
+  static const Color appColor = Colors.blue;
+  static const Color appColor2 = Color.fromARGB(255, 255, 255, 255);
   static const Color mainTextColor = Color.fromRGBO(51, 51, 51, 1);
   static const Color chatGrayColor = Color.fromARGB(255, 224, 224, 230);
   static const Color borderColor = Color.fromARGB(255, 203, 203, 209);
@@ -101,7 +114,7 @@ class Palette {
 }
 
 Container dividingLine = Container(
-  decoration: BoxDecoration(
+  decoration: const BoxDecoration(
     border: Border(
       top: BorderSide(
         width: 1,

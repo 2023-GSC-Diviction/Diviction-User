@@ -1,5 +1,6 @@
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
+import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as fss;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,6 +71,7 @@ class AuthService {
       if (result.result == Result.success) {
         User user = User.fromJson(result.response);
         user.savePreference(user);
+        ChatService();
 
         return true;
       } else {
