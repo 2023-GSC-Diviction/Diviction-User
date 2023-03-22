@@ -1,7 +1,7 @@
 import 'package:diviction_user/screen/community/community_screen.dart';
 import 'package:diviction_user/screen/counselor/counselor_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
-import 'package:diviction_user/screen/profile_screen.dart';
+import 'package:diviction_user/screen/profile/user_profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,10 +54,7 @@ class BottomNavigation extends ConsumerWidget {
         const HomeSceen(),
         CounselorScreen(),
         const CommunityScreen(),
-        ProfileScreen(
-          email: 'lin019@naver.com',
-          isMe: true,
-        )
+        const UserProfileScreen()
       ].elementAt(currentPage)),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

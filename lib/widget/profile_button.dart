@@ -10,27 +10,27 @@ import '../screen/day_check_screen.dart';
 class ProfileButton extends StatelessWidget {
   const ProfileButton(
       {required this.nickname,
-      required this.id,
+      required this.path,
       this.onProfilePressed,
       super.key});
 
-  final id;
-  final nickname;
+  final String nickname;
+  final String? path;
   final onProfilePressed;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 25,
+      height: 40,
       child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         ProfileImage(
           onProfileImagePressed: () => onProfilePressed(context),
           isChoosedPicture: false,
-          path: null,
+          path: path,
           type: 1,
-          imageSize: 25,
+          imageSize: 40,
         ),
-        const SizedBox(width: 5),
+        const SizedBox(width: 10),
         GestureDetector(
             onTap: () => onProfilePressed(context),
             child: Text(nickname, style: TextStyles.chatNicknameTextStyle)),

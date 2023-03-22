@@ -2,8 +2,9 @@ import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/model/chat.dart';
 import 'package:diviction_user/model/counselor.dart';
+import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
-import 'package:diviction_user/screen/profile_screen.dart';
+import 'package:diviction_user/screen/profile/user_profile_screen.dart';
 import 'package:diviction_user/widget/chat/chat_time_format.dart';
 import 'package:diviction_user/widget/profile_button.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class ChatBubbles extends StatelessWidget {
                   BubbleSpecialOne(
                       text: message.content,
                       isSender: true,
-                      color: Colors.blue,
+                      color: Palette.appColor,
                       textStyle: TextStyles.blueBottonTextStyle),
                 ])),
           if (!isMe)
@@ -43,10 +44,10 @@ class ChatBubbles extends StatelessWidget {
                     children: [
                       ProfileButton(
                           nickname: counselor.name,
-                          id: 'id',
+                          path: counselor.profileUrl,
                           onProfilePressed: onProfilePressed),
                       Padding(
-                          padding: const EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(left: 40),
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -68,9 +69,8 @@ class ChatBubbles extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProfileScreen(
-                  email: counselor.email,
-                  isMe: false,
+            builder: (context) => CounselorProfileScreen(
+                  counselor: counselor,
                 )));
   }
 }

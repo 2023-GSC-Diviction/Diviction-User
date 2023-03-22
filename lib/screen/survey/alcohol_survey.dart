@@ -23,8 +23,7 @@ final int MaxValue = 11;
 class _AlcoholSurveyState extends State<AlcoholSurvey> {
   int currentIndex = 1;
   // choosedAnswers : 1번 질문 부터 11번 질문까지에 대한 응답을 저장함 12개
-  List<int> choosedAnswers =
-      List.generate(MaxValue + 1, (index) => -1);
+  List<int> choosedAnswers = List.generate(MaxValue + 1, (index) => -1);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
   }
 
   void onNextButtonPressed() async {
-    int? userId = await getUserData.getUserId();
+    int? userId = await GetUser.getUserId();
     setState(() {
       // currentIndex 문항에 대해 응답하지 않은 경우 - 개발을 위해 주석처리
       // if (choosedAnswers[currentIndex] == -1) {
@@ -129,7 +128,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
         // 화면 전환 - 결과화면으로 이동
         SurveyAUDIT surveyAUDIT = SurveyAUDIT(
           memberId: userId,
-          q1: AnswerResult[AnswerResult.length-1],
+          q1: AnswerResult[AnswerResult.length - 1],
           score: sum,
         );
         Navigator.of(context).push(MaterialPageRoute(

@@ -1,55 +1,3 @@
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-
-// class ProfileImage extends StatefulWidget {
-//   final path;
-//   final double imageSize;
-
-//   const ProfileImage({
-//     Key? key,
-//     required this.path,
-//     required this.imageSize,
-//   }) : super(key: key);
-
-//   @override
-//   State<ProfileImage> createState() => _ProfileImageState();
-// }
-
-// class _ProfileImageState extends State<ProfileImage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return ClipOval(
-//         child: Container(
-//             width: widget.imageSize,
-//             height: widget.imageSize,
-//             alignment: Alignment.center,
-//             decoration: const BoxDecoration(
-//                 color: Colors.blue,
-//                 image: DecorationImage(
-//                     image: AssetImage('assets/icons/psychological_icon.png'),
-//                     fit: BoxFit.cover))));
-//   }
-
-//   Widget choosedImage() {
-//     return Image.file(
-//       File(widget.path),
-//       width: widget.imageSize,
-//       height: widget.imageSize,
-//       fit: BoxFit.cover,
-//     );
-//   }
-
-//   Widget defaultImage() {
-//     return Image.asset(
-//       'assets/icons/psychological_icon.png',
-//       width: widget.imageSize,
-//       height: widget.imageSize,
-//       fit: BoxFit.cover,
-//     );
-//   }
-// }
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -85,13 +33,14 @@ class _ProfileImageState extends State<ProfileImage> {
             height: widget.imageSize,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
               color: Colors.white,
+              shape: BoxShape.circle,
               image: DecorationImage(
-                  image: true
+                  image: widget.path != null
                       ? NetworkImage(
-                          'https://www.gravatar.com/avatar/e639d0534d6d5202f4f088ffe95f7b48?s=192&d=identicon&r=PG')
-                      : const AssetImage('assets/images/test.png')
+                          // widget.path,
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
+                      : const AssetImage('/assets/icons/counselor.png')
                           as ImageProvider,
                   fit: BoxFit.cover),
             ),

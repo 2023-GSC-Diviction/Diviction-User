@@ -104,7 +104,7 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
   }
 
   void onNextButtonPressed() async {
-    int? userId = await getUserData.getUserId();
+    int? userId = await GetUser.getUserId();
     setState(() {
       if (currentIndex == 1) {
         currentIndex += 1;
@@ -125,11 +125,12 @@ class _PsychologicalSurveyState extends State<PsychologicalSurvey> {
         // 점수 합산 - (psychological) 제일 앞 값 제거
         var AnswerResult = choosedAnswers.sublist(1, choosedAnswers.length);
         for (int i = 0; i < AnswerResult.length; i++) {
-          var type = Question_type.substring(i, i+1);
+          var type = Question_type.substring(i, i + 1);
           sumScore[type] = sumScore[type]! + AnswerResult[i];
         }
         print('1~21번 문항에 대한 응답값 : $AnswerResult');
-        print('우울 : ${sumScore['D']}, 불안 : ${sumScore['A']}, 스트레스 : ${sumScore['S']}');
+        print(
+            '우울 : ${sumScore['D']}, 불안 : ${sumScore['A']}, 스트레스 : ${sumScore['S']}');
 
         // 화면 전환 - 결과화면으로 이동
         SurveyDASS surveyDASS = SurveyDASS(

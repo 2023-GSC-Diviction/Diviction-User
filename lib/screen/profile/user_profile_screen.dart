@@ -3,11 +3,14 @@ import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/survey_result.dart';
-import '../widget/custom_textfiled.dart';
-import '../widget/profile_image.dart';
-import '../widget/survey/survey_chart.dart';
+import '../../model/counselor.dart';
+import '../../model/survey_result.dart';
+import '../../service/auth_service.dart';
+import '../../widget/custom_textfiled.dart';
+import '../../widget/profile_image.dart';
+import '../../widget/survey/survey_chart.dart';
 
 final surdata = [
   SurveyData(
@@ -41,116 +44,118 @@ final surdata = [
 ];
 
 final editModeProvider = StateProvider((ref) => false);
+final userProvider = FutureProvider((ref) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String email = prefs.getString('email')!;
 
-class ProfileScreen extends ConsumerStatefulWidget {
-  const ProfileScreen({Key? key, required this.email, required this.isMe})
-      : super(key: key);
+  final user = await AuthService().getUser(email);
+  return user;
+});
 
-  final String email;
-  final bool isMe;
+@override
+class UserProfileScreen extends ConsumerStatefulWidget {
+  const UserProfileScreen({Key? key}) : super(key: key);
+
   @override
-  ProfileScreenState createState() => ProfileScreenState();
+  UserProfileScreenState createState() => UserProfileScreenState();
 }
 
-class ProfileScreenState extends ConsumerState<ProfileScreen> {
-  // '대표 서비스', '한줄소개', '활동 지역', '연락 가능 시간', '질문답변'
-  List<String> Title = [
-    // 'Name',
+class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
+  List<String> title = [
     'Introduction',
-    'Representative Service',
     'Activity Area',
     'Contact Hours',
     'Question Answer' // Q&A에 대해서 질문 준비해야함(중독자, 상담자)
   ];
   List<TextEditingController> textEditingController = [
-    // TextEditingController(), // 0 이름
-    TextEditingController(), // 1 대표 서비스
-    TextEditingController(), // 2 한줄 소개
-    TextEditingController(), // 3 활동 지역
-    TextEditingController(), // 4 연락 가능 시간
-    TextEditingController(), // 5 질문과 답변
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    ref.invalidate(editModeProvider);
+  }
 
   @override
   Widget build(BuildContext context) {
     final editMode = ref.watch(editModeProvider);
+
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: SafeArea(
-          child: Scaffold(
-              backgroundColor: Palette.appColor,
-              floatingActionButton: FloatingActionButton.extended(
-                onPressed: () {
-                  // 상담 요청
-                },
-                label: const Text('request consult'),
-                icon: const Icon(Icons.add_reaction_sharp),
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SafeArea(
+            child: Scaffold(
                 backgroundColor: Palette.appColor,
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              body: NestedScrollView(
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return <Widget>[
-                      SliverAppBar(
-                          backgroundColor: Palette.appColor,
-                          expandedHeight:
-                              MediaQuery.of(context).size.height * 0.4,
-                          floating: false,
-                          pinned: true,
-                          flexibleSpace: FlexibleSpaceBar(
-                              background: _Header(isMe: widget.isMe))),
-                    ];
-                  },
-                  body: SingleChildScrollView(
-                      child: Column(children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(top: 30),
-                      child: Column(
-                        children: [
-                          Column(
-                            children: [0, 1, 2, 3, 4]
-                                .map(
-                                  (index) => IntrinsicHeight(
-                                    child: CustomTextEditor(
-                                      TitleContent: Title[index],
-                                      textEditingController:
-                                          textEditingController[index],
-                                      isreadOnly: !editMode,
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                body: NestedScrollView(
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                      return <Widget>[
+                        SliverAppBar(
+                            backgroundColor: Palette.appColor,
+                            leading: null,
+                            toolbarHeight: 0,
+                            automaticallyImplyLeading: false,
+                            expandedHeight:
+                                MediaQuery.of(context).size.height * 0.4,
+                            floating: false,
+                            pinned: true,
+                            flexibleSpace:
+                                const FlexibleSpaceBar(background: _Header())),
+                      ];
+                    },
+                    body: SingleChildScrollView(
+                        child: Column(children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
                           ),
-                          const SizedBox(height: 20),
-                          SurveyChart(
-                            list: surdata,
-                          )
-                        ],
-                      ),
-                    )
-                  ]))))),
-    );
+                        ),
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Column(
+                          children: [
+                            Column(
+                              children: [0, 1, 2, 3]
+                                  .map(
+                                    (index) => IntrinsicHeight(
+                                      child: CustomTextEditor(
+                                        TitleContent: title[index],
+                                        textEditingController:
+                                            textEditingController[index],
+                                        isreadOnly: !editMode,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            const SizedBox(height: 20),
+                            SurveyChart(
+                              list: surdata,
+                            )
+                          ],
+                        ),
+                      )
+                    ]))))));
   }
 }
 
 class _Header extends ConsumerStatefulWidget {
   const _Header({
     Key? key,
-    required this.isMe,
   }) : super(key: key);
-
-  final bool isMe;
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -167,17 +172,51 @@ class _HeaderState extends ConsumerState<_Header> {
     final editMode = ref.watch(editModeProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _TopBar(
-            isMyPage: widget.isMe, onEditButtonpressed: onEditButtonpressed),
+        _TopBar(onEditButtonpressed: onEditButtonpressed),
         SizedBox(height: MediaQuery.of(context).size.height * 0.0115),
         Padding(
           padding: const EdgeInsets.only(top: 12, left: 35, right: 35),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ProfileImage(
+                          onProfileImagePressed: onProfileImagePressed,
+                          isChoosedPicture: isChoosedPicture,
+                          path: path,
+                          type: editMode ? 0 : 1,
+                          imageSize: MediaQuery.of(context).size.height * 0.15,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            // ReviewCountTexts(
+                            //   subContent: '200',
+                            //   titleContent: 'Contacted',
+                            // ),
+                            // SizedBox(child: right_line()),
+                            // ReviewCountTexts(
+                            //   subContent: '125',
+                            //   titleContent: 'Consulting',
+                            // ),
+                            // // SizedBox(child: right_line()),
+                            // ReviewCountTexts(
+                            //   subContent: '29Y',
+                            //   titleContent: 'Career',
+                            // ),
+                          ],
+                        ),
+                      ]),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.032),
                 const Text(
                   'Exodus Trivellan', // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
                   style: TextStyle(
@@ -193,43 +232,6 @@ class _HeaderState extends ConsumerState<_Header> {
                     color: Colors.white54,
                     fontWeight: FontWeight.w500,
                   ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.032),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ProfileImage(
-                          onProfileImagePressed: onProfileImagePressed,
-                          isChoosedPicture: isChoosedPicture,
-                          path: path,
-                          type: editMode ? 0 : 1,
-                          imageSize: MediaQuery.of(context).size.height * 0.15,
-                        ),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.05),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            // ReviewCountTexts(
-                            //   subContent: '200',
-                            //   titleContent: 'Contacted',
-                            // ),
-                            // SizedBox(child: right_line()),
-                            ReviewCountTexts(
-                              subContent: '125',
-                              titleContent: 'Consulting',
-                            ),
-                            // SizedBox(child: right_line()),
-                            ReviewCountTexts(
-                              subContent: '29Y',
-                              titleContent: 'Career',
-                            ),
-                          ],
-                        ),
-                      ]),
                 ),
               ]),
         ),
@@ -260,12 +262,10 @@ class _HeaderState extends ConsumerState<_Header> {
 }
 
 class _TopBar extends ConsumerWidget {
-  final bool isMyPage;
   final VoidCallback onEditButtonpressed;
 
   const _TopBar({
     Key? key,
-    required this.isMyPage,
     required this.onEditButtonpressed,
   }) : super(key: key);
   @override
@@ -290,20 +290,19 @@ class _TopBar extends ConsumerWidget {
               fontSize: 23,
             ),
           ),
-          if (isMyPage)
-            TextButton(
-              onPressed: onEditButtonpressed,
-              child: Text(
-                isEditMode ? 'Done' : 'Edit',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isEditMode
-                      ? Colors.redAccent
-                      : Color.fromARGB(255, 227, 250, 247),
-                  // color: Colors.white,
-                ),
+          TextButton(
+            onPressed: onEditButtonpressed,
+            child: Text(
+              isEditMode ? 'Done' : 'Edit',
+              style: TextStyle(
+                fontSize: 18,
+                color: isEditMode
+                    ? Colors.redAccent
+                    : const Color.fromARGB(255, 227, 250, 247),
+                // color: Colors.white,
               ),
-            )
+            ),
+          )
         ],
       ),
     );
@@ -340,7 +339,7 @@ class ReviewCountTexts extends StatelessWidget {
             ),
             Text(
               titleContent,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Color.fromARGB(165, 255, 255, 255),

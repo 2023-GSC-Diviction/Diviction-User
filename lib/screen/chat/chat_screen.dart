@@ -2,6 +2,7 @@ import 'package:chat_bubbles/message_bars/message_bar.dart';
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/model/chat.dart';
 import 'package:diviction_user/model/counselor.dart';
+import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
 import 'package:diviction_user/service/auth_service.dart';
 import 'package:diviction_user/service/chat_service.dart';
 import 'package:diviction_user/widget/appbar.dart';
@@ -15,7 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widget/profile_image.dart';
-import '../profile_screen.dart';
+import '../profile/user_profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen(
@@ -67,7 +68,7 @@ class ChatScreenState extends State<ChatScreen> {
               toolbarHeight: MediaQuery.of(context).size.height * 0.12,
               backgroundColor: Palette.appColor,
               title: GestureDetector(
-                onTap: () => onProfilePressed(context, widget.counselor.email),
+                onTap: () => onProfilePressed(context, widget.counselor),
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,10 +76,10 @@ class ChatScreenState extends State<ChatScreen> {
                       Row(
                         children: [
                           ProfileImage(
-                            onProfileImagePressed: () => onProfilePressed(
-                                context, widget.counselor.email),
+                            onProfileImagePressed: () =>
+                                onProfilePressed(context, widget.counselor),
                             isChoosedPicture: false,
-                            path: null,
+                            path: widget.counselor.profileUrl,
                             type: 1,
                             imageSize:
                                 MediaQuery.of(context).size.height * 0.08,
@@ -280,13 +281,12 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  onProfilePressed(BuildContext context, String email) {
+  onProfilePressed(BuildContext context, Counselor counselor) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProfileScreen(
-                  isMe: false,
-                  email: email,
+            builder: (context) => CounselorProfileScreen(
+                  counselor: counselor,
                 )));
   }
 }

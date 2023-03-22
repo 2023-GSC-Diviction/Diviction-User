@@ -1,6 +1,8 @@
 import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/screen/chat/chat_screen.dart';
-import 'package:diviction_user/screen/profile_screen.dart';
+import 'package:diviction_user/screen/counselor/counselor_screen.dart';
+import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
+import 'package:diviction_user/screen/profile/user_profile_screen.dart';
 import 'package:diviction_user/service/chat_service.dart';
 import 'package:diviction_user/widget/profile_image.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,12 @@ class CounselorList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    onProfilePressed(BuildContext context, String counselorEmail) async {
+    onProfilePressed(BuildContext context, Counselor counselor) async {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfileScreen(
-                    email: counselorEmail,
-                    isMe: false,
+              builder: (context) => CounselorProfileScreen(
+                    counselor: counselor,
                   )));
     }
 
@@ -78,15 +79,15 @@ class CounselorList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () => onProfilePressed(
-                        context, counselor!.elementAt(index).email),
+                    onTap: () =>
+                        onProfilePressed(context, counselor!.elementAt(index)),
                     child: Row(
                       children: [
                         ProfileImage(
                           onProfileImagePressed: () => onProfilePressed(
-                              context, counselor!.elementAt(index).email),
+                              context, counselor!.elementAt(index)),
                           isChoosedPicture: false,
-                          path: null,
+                          path: counselor!.elementAt(index).profileUrl,
                           type: 1,
                           imageSize: 60,
                         ),

@@ -1,5 +1,6 @@
 import 'package:diviction_user/model/counselor.dart';
-import 'package:diviction_user/screen/profile_screen.dart';
+import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
+import 'package:diviction_user/screen/profile/user_profile_screen.dart';
 import 'package:diviction_user/screen/chat/chat_screen.dart';
 import 'package:diviction_user/service/auth_service.dart';
 import 'package:diviction_user/service/chat_service.dart';
@@ -20,12 +21,12 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     onProfilePressed(BuildContext context, String counselorEmail) async {
+      final counselor = await AuthService().getCounselor(counselorEmail);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfileScreen(
-                    email: counselorEmail,
-                    isMe: false,
+              builder: (context) => CounselorProfileScreen(
+                    counselor: counselor,
                   )));
     }
 
@@ -75,7 +76,7 @@ class ChatList extends StatelessWidget {
                               onProfileImagePressed: () => onProfilePressed(
                                   context, chats!.elementAt(index).otherEmail),
                               isChoosedPicture: false,
-                              path: null,
+                              path: chats![index].otherPhotoUrl,
                               type: 1,
                               imageSize: 50,
                             ),

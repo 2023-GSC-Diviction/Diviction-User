@@ -125,7 +125,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
   }
 
   void onNextButtonPressed() async {
-    String userEmail = await getUserData.getUserEmail();
+    String userEmail = await GetUser.getUserEmail();
     setState(() {
       if (currentIndex == -1) {
         if (SelectedDrugsName.length == 0) {
