@@ -1,10 +1,14 @@
+import 'package:diviction_user/model/checklist.dart';
 import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
 import 'package:diviction_user/screen/survey/alcohol_survey.dart';
 import 'package:diviction_user/screen/survey/drug_survey.dart';
 import 'package:diviction_user/screen/survey/psychological_survey.dart';
 import 'package:diviction_user/screen/survey/survey_result.dart';
+import 'package:diviction_user/service/auth_service.dart';
+import 'package:diviction_user/service/checklist_service.dart';
 import 'package:diviction_user/service/counselor_service.dart';
+import 'package:diviction_user/service/match_service.dart';
 import 'package:diviction_user/util/getUserData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,9 +18,34 @@ import 'package:table_calendar/table_calendar.dart';
 import '../config/style.dart';
 import '../provider/counselor_provider.dart';
 import '../widget/appbar.dart';
+import '../widget/survey/survey_button.dart';
 
-final counselorListProvider = FutureProvider.autoDispose<List<Counselor>>(
-    (ref) => CounselorService().getCounselors({}));
+final counselorProvider = FutureProvider.autoDispose<List<Counselor>>((ref) {
+  final isMatched = ref.watch(matchingProvider);
+  if (isMatched) {
+    return CounselorService().getCounselors({});
+  } else {
+    return [
+      Counselor(
+        id: 6,
+        email: 'email',
+        password: 'password',
+        name: 'Nick',
+        address: 'address',
+        birth: 'birth',
+        gender: 'gender',
+        profileUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU',
+        confirm: true,
+      )
+    ];
+  }
+});
+
+final checkListProvider = FutureProvider.autoDispose<List<CheckList>>(
+    (ref) => ChecklistService().getChecklists());
+
+final matchingProvider = StateProvider<bool>((ref) => false);
 
 class HomeSceen extends StatefulWidget {
   const HomeSceen({super.key});
@@ -33,14 +62,17 @@ class _HomeSceenState extends State<HomeSceen> {
     getUserData();
   }
 
+  bool isMatched = false;
+  String name = 'User';
+
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       name = prefs.getString('name')!;
+      isMatched = prefs.getBool('isMatched') ?? false;
     });
   }
 
-  String name = 'User';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,88 +91,24 @@ class _HomeSceenState extends State<HomeSceen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      recordText(),
+                      _Header(name: name),
                       const SizedBox(
                         height: 20,
                       ),
-                      // const Text('My Check List',
-                      //     style: TextStyle(
-                      //         fontSize: 23,
-                      //         color: Colors.white,
-                      //         height: 1.4,
-                      //         letterSpacing: 0.02,
-                      //         fontWeight: FontWeight.w600)),
-                      // const SizedBox(
-                      //   height: 20,
-                      // ),
-                      checkList(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text('Survey',
-                          style: TextStyle(
-                              fontSize: 23,
-                              color: Colors.white,
-                              height: 1.4,
-                              letterSpacing: 0.02,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(children: const [
-                        SurveyButton(
-                          title: 'Drug',
-                          screen: DrugSurvey(),
-                        ),
-                        SizedBox(width: 20),
-                        SurveyButton(
-                          title: 'Alcohol',
-                          screen: AlcoholSurvey(),
-                        ),
-                        SizedBox(width: 20),
-                        SurveyButton(
-                          title: 'Psychological',
-                          screen: PsychologicalSurvey(),
-                        )
-                      ]),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text('Recommend Counselor',
-                          style: TextStyle(
-                              fontSize: 23,
-                              color: Colors.white,
-                              height: 1.4,
-                              letterSpacing: 0.02,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final counselor = ref.watch(counselorListProvider);
-                          return counselor.when(
-                            data: (data) {
-                              if (data.isEmpty) {
-                                return const Text('No Counselor');
-                              } else {
-                                return CounselorCard(counselor: data);
-                              }
-                            },
-                            loading: () => const Text('Loading...',
-                                style: TextStyle(color: Colors.white)),
-                            error: (error, stackTrace) => const Text('Error...',
-                                style: TextStyle(color: Colors.white)),
-                          );
-                        },
-                      )
+                      _Bottom(isMatched: isMatched)
                     ],
                   )),
             )));
   }
+}
 
-  Widget recordText() {
-    return Container(
+class _Header extends StatelessWidget {
+  const _Header({super.key, required this.name});
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget recordText() => Container(
         width: MediaQuery.of(context).size.width,
         child: Text.rich(
           TextSpan(
@@ -163,59 +131,217 @@ class _HomeSceenState extends State<HomeSceen> {
               ]),
           textAlign: TextAlign.start,
         ));
-  }
 
-  Widget checkList() {
-    List<bool> checkBoxList = [false, true, false];
-    List<String> list = [
-      '한시간 이상 운동하기',
-      '물 많이 마시기',
-      '약 챙겨먹기',
-    ];
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      recordText(),
+      const SizedBox(
+        height: 20,
+      ),
+      // const Text('My Check List',
+      //     style: TextStyle(
+      //         fontSize: 23,
+      //         color: Colors.white,
+      //         height: 1.4,
+      //         letterSpacing: 0.02,
+      //         fontWeight: FontWeight.w600)),
+      // const SizedBox(
+      //   height: 20,
+      // ),
+      CheckListWidget(),
+      const SizedBox(
+        height: 20,
+      ),
+      const Text('Survey',
+          style: TextStyle(
+              fontSize: 23,
+              color: Colors.white,
+              height: 1.4,
+              letterSpacing: 0.02,
+              fontWeight: FontWeight.w600)),
+      const SizedBox(
+        height: 20,
+      ),
+      Row(children: const [
+        SurveyButton(
+          title: 'Drug',
+          screen: DrugSurvey(),
+        ),
+        SizedBox(width: 20),
+        SurveyButton(
+          title: 'Alcohol',
+          screen: AlcoholSurvey(),
+        ),
+        SizedBox(width: 20),
+        SurveyButton(
+          title: 'Psychological',
+          screen: PsychologicalSurvey(),
+        )
+      ]),
+    ]);
+  }
+}
+
+class _Bottom extends StatelessWidget {
+  const _Bottom({super.key, required this.isMatched});
+
+  final bool isMatched;
+
+  @override
+  Widget build(BuildContext context) {
+    return !isMatched
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Recommend Counselor',
+                  style: TextStyle(
+                      fontSize: 23,
+                      color: Colors.white,
+                      height: 1.4,
+                      letterSpacing: 0.02,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(
+                height: 20,
+              ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final counselor = ref.watch(counselorProvider);
+                  return counselor.when(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return const Text('No Counselor');
+                      } else {
+                        return CounselorCard(counselor: data);
+                      }
+                    },
+                    loading: () => const Text('Loading...',
+                        style: TextStyle(color: Colors.white)),
+                    error: (error, stackTrace) => const Text('Error...',
+                        style: TextStyle(color: Colors.white)),
+                  );
+                },
+              )
+            ],
+          )
+        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('My Counselor',
+                style: TextStyle(
+                    fontSize: 23,
+                    color: Colors.white,
+                    height: 1.4,
+                    letterSpacing: 0.02,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(
+              height: 20,
+            ),
+            Consumer(builder: (context, ref, child) {
+              final counselor = ref.watch(counselorProvider);
+              return counselor.when(
+                data: (data) {
+                  if (data.isEmpty) {
+                    return const Text('No Counselor');
+                  } else {
+                    return CounselorCard(
+                      counselor: data,
+                      size: MediaQuery.of(context).size.width - 60,
+                    );
+                  }
+                },
+                loading: () => const Text('Loading...',
+                    style: TextStyle(color: Colors.white)),
+                error: (error, stackTrace) => const Text('Error...',
+                    style: TextStyle(color: Colors.white)),
+              );
+            })
+          ]);
+  }
+}
+
+class CheckListWidget extends ConsumerWidget {
+  const CheckListWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final checkList = ref.watch(checkListProvider);
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white54,
+          color: Colors.white38,
           borderRadius: BorderRadius.circular(20),
         ),
+        width: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: checkBoxList
-              .map(
-                (e) => Row(
-                  children: [
-                    Checkbox(
-                      fillColor: MaterialStateProperty.all(Palette.appColor),
-                      value: e,
-                      onChanged: (value) {
-                        checkBoxList[checkBoxList.indexOf(e)] = value!;
-                      },
-                    ),
-                    Text(
-                      list[checkBoxList.indexOf(e)],
-                      style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
-                          height: 1.4,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              )
-              .toList(),
-        ));
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: checkList.when(
+                data: ((data) {
+                  if (data.isEmpty) {
+                    return [
+                      Container(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: const Text(
+                          'no checkList in today',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              height: 1.4,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    ];
+                  } else {
+                    return data
+                        .map(
+                          (e) => Row(
+                            children: [
+                              Checkbox(
+                                fillColor:
+                                    MaterialStateProperty.all(Palette.appColor),
+                                value: false,
+                                onChanged: (value) {
+                                  if (value!) {
+                                    e.state = CheckListState.SUCCESS;
+                                  } else {
+                                    e.state = CheckListState.FAILL;
+                                  }
+                                },
+                              ),
+                              Text(
+                                e.content,
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black87,
+                                    height: 1.4,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList();
+                  }
+                }),
+                loading: () => [const Text('Loading...')],
+                error: (error, stackTrace) => [
+                      const Text(
+                        'fail to load checkList',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black87,
+                            height: 1.4,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ])));
   }
 }
 
 class CounselorCard extends StatelessWidget {
-  const CounselorCard({super.key, required this.counselor});
+  const CounselorCard({super.key, required this.counselor, this.size});
 
   final List<Counselor> counselor;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: MediaQuery.of(context).size.width * 0.6,
+        height: size ?? MediaQuery.of(context).size.width * 0.6,
         child: ListView.builder(
           itemCount: counselor.length,
           scrollDirection: Axis.horizontal,
@@ -228,20 +354,20 @@ class CounselorCard extends StatelessWidget {
                               counselor: counselor[index])),
                     ),
                 child: Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: MediaQuery.of(context).size.width * 0.6,
+                    width: size ?? MediaQuery.of(context).size.width * 0.6,
+                    height: size ?? MediaQuery.of(context).size.width * 0.6,
                     alignment: Alignment.bottomCenter,
                     child: Stack(children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        height: MediaQuery.of(context).size.width * 0.6,
+                        width: size ?? MediaQuery.of(context).size.width * 0.6,
+                        height: size ?? MediaQuery.of(context).size.width * 0.6,
                         margin: const EdgeInsets.only(right: 20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(
                               image: counselor[index].profileUrl != null
-                                  ? NetworkImage(
+                                  ? const NetworkImage(
                                       // widget.path,
                                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
                                   : const AssetImage(
@@ -260,7 +386,7 @@ class CounselorCard extends StatelessWidget {
                               bottom: MediaQuery.of(context).size.width * 0.03,
                             ),
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 255, 189, 193),
+                              color: const Color.fromARGB(255, 255, 189, 193),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             alignment: Alignment.center,
@@ -292,91 +418,5 @@ class CounselorCard extends StatelessWidget {
                     ])));
           },
         ));
-  }
-}
-
-class SurveyButton extends StatelessWidget {
-  const SurveyButton({super.key, required this.title, required this.screen});
-
-  final String title;
-  final Widget screen;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-        flex: 1,
-        child: InkWell(
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => screen)),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              height: MediaQuery.of(context).size.height * 0.14,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Icon(
-                    Icons.medication_liquid,
-                    size: MediaQuery.of(context).size.height * 0.06,
-                    color: Palette.appColor,
-                  ),
-                  Text(title,
-                      style: const TextStyle(
-                          fontSize: 16, color: Palette.mainTextColor))
-                ],
-              ),
-            )));
-  }
-}
-
-class CalendarWidget extends StatelessWidget {
-  const CalendarWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final defalutBoxDeco = BoxDecoration(
-      color: Colors.grey[200], // 평일 색상지정
-      borderRadius: BorderRadius.circular(6),
-    );
-    final defaultTextStyle = TextStyle(
-      color: Colors.grey[600], // 평일 색상지정
-      fontWeight: FontWeight.w700,
-    );
-    const PRIMARY_COLOR = Color(0xFF0DB2B2);
-    return TableCalendar(
-      locale: 'en_US',
-      focusedDay: DateTime.now(),
-      firstDay: DateTime.utc(2023, 1, 1),
-      lastDay: DateTime.utc(2023, 12, 31),
-      calendarStyle: CalendarStyle(
-          isTodayHighlighted: false, // 오늘 날짜를 하이라이트 처리할지 말지에 대해
-
-          // 평일 날짜 디자인
-          defaultDecoration: defalutBoxDeco,
-          defaultTextStyle: defaultTextStyle,
-          // 주말
-          weekendDecoration: defalutBoxDeco,
-          weekendTextStyle: defaultTextStyle,
-          // 선택한 날짜
-          selectedDecoration: BoxDecoration(
-            color: Colors.white, // 평일 색상지정
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(
-              color: PRIMARY_COLOR,
-              width: 1,
-            ),
-          ),
-          selectedTextStyle: defaultTextStyle.copyWith(
-            color: PRIMARY_COLOR,
-          ),
-          // 해당 월이 아닌 이전달의 날이나 다음달의 날들
-          outsideDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-          )),
-    );
   }
 }

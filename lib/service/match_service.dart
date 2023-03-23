@@ -1,6 +1,10 @@
+import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
+import 'package:diviction_user/service/auth_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:diviction_user/model/match.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchingService {
   static final MatchingService _authService = MatchingService._internal();
@@ -27,6 +31,27 @@ class MatchingService {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<Match?> getMatched() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getInt('id');
+      if (id != null) {
+        NetWorkResult result = await DioClient()
+            .get('$_baseUrl/member/match/$id', {'id': id}, true);
+        if (result.result == Result.success && result.response != null) {
+          Match match = Match.fromJson(result.response);
+          return match;
+        } else if (result.result == Result.success && result.response == null) {
+          return null;
+        } else {
+          throw Exception('Failed to getMatched');
+        }
+      }
+    } catch (e) {
+      throw e;
     }
   }
 
