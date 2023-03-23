@@ -1,4 +1,5 @@
 import 'package:diviction_user/model/counselor.dart';
+
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/service/chat_service.dart';
@@ -162,26 +163,6 @@ class AuthService {
       }
     } catch (e) {
       throw Exception('Failed to getUser');
-    }
-  }
-
-  getMatched() async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final id = prefs.getString('id');
-      if (id != null) {
-        NetWorkResult result = await DioClient()
-            .get('$_baseUrl/member/match/$id', {'id': id}, true);
-        if (result.result == Result.success) {
-          final email = prefs.getString('email');
-          return ('${result.response['counselorEmail']}&$email')
-              .replaceAll('.', '');
-        } else {
-          throw false;
-        }
-      }
-    } catch (e) {
-      throw e;
     }
   }
 }

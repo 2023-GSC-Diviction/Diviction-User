@@ -82,6 +82,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
+    super.dispose();
     ref.invalidate(editModeProvider);
   }
 

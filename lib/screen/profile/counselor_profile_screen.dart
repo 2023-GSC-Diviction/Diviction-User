@@ -1,14 +1,18 @@
-import 'package:diviction_user/network/dio_client.dart';
 import 'package:diviction_user/service/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/style.dart';
 import '../../model/counselor.dart';
-import '../../service/auth_service.dart';
 import '../../util/getUserData.dart';
-import '../../widget/custom_textfiled.dart';
 import '../../widget/profile_image.dart';
+
+class CounselorProfileData {
+  String title;
+  String answer;
+
+  CounselorProfileData({required this.title, required this.answer});
+}
 
 @override
 class CounselorProfileScreen extends ConsumerStatefulWidget {
@@ -22,31 +26,38 @@ class CounselorProfileScreen extends ConsumerStatefulWidget {
 
 class CounselorProfileScreenState
     extends ConsumerState<CounselorProfileScreen> {
-  // '대표 서비스', '한줄소개', '활동 지역', '연락 가능 시간', '질문답변'
-  List<String> title = [
-    // 'Name',
-    'Introduction',
-    'Representative Service',
-    'Activity Area',
-    'Contact Hours',
-  ];
-  List<TextEditingController> textEditingController = [
-    // TextEditingController(), // 0 이름
-    TextEditingController(), // 1 대표 서비스
-    TextEditingController(), // 2 한줄 소개
-    TextEditingController(), // 3 활동 지역
-    TextEditingController(), // 4 연락 가능 시간
-    TextEditingController(), // 5 질문과 답변
+  bool isMatched = false;
+
+  List<CounselorProfileData> profileData = [
+    CounselorProfileData(
+      title: 'Introduction',
+      answer:
+          'Hello, I\'m James working at The Center for Health and Rehabilitation. This center provide Adult Addictive Diseases & Substance Abuse services.\nI hope our service helps you',
+    ),
+    CounselorProfileData(
+        title: 'Representative Service', answer: 'Substance Abuse'),
+    CounselorProfileData(
+        title: 'Activity Area', answer: 'Georgia, Atlanta, Fulton County, USA'),
+    CounselorProfileData(
+        title: 'Contact Hours',
+        answer: 'Monday ~ Friday\n 9:00AM ~ 12:00PM, 1:00PM ~ 8:30PM'),
+    CounselorProfileData(
+        title: 'Contact',
+        answer:
+            "Web: http://www.fultoncountyga.gov/judicial-services-bh \nphone: 404-613-1650\nfax:404-332-0455")
   ];
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    getMatchingData();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
+  void getMatchingData() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    isMatched = sharedPreferences.getBool('isMatched') ?? false;
   }
 
   @override
@@ -58,29 +69,31 @@ class CounselorProfileScreenState
         child: SafeArea(
             child: Scaffold(
                 backgroundColor: Palette.appColor,
-                floatingActionButton: FloatingActionButton.extended(
-                  onPressed: () async {
-                    final user = await GetUser.getUserId();
-                    MatchingService()
-                        .createMatch(user, widget.counselor.id)
-                        .then((value) {
-                      if (value) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('request success'),
-                        ));
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('request fail'),
-                        ));
-                      }
-                    });
-                  },
-                  label: const Text('request consult'),
-                  icon: const Icon(Icons.add_reaction_sharp),
-                  backgroundColor: Palette.appColor,
-                ),
+                floatingActionButton: isMatched
+                    ? FloatingActionButton.extended(
+                        onPressed: () async {
+                          final user = await GetUser.getUserId();
+                          MatchingService()
+                              .createMatch(user, widget.counselor.id)
+                              .then((value) {
+                            if (value) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('request success'),
+                              ));
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('request fail'),
+                              ));
+                            }
+                          });
+                        },
+                        label: const Text('request consult'),
+                        icon: const Icon(Icons.add_reaction_sharp),
+                        backgroundColor: Palette.appColor,
+                      )
+                    : null,
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
                 body: NestedScrollView(
@@ -93,8 +106,9 @@ class CounselorProfileScreenState
                                 icon: const Icon(Icons.arrow_back_ios_new),
                                 onPressed: () => Navigator.pop(context)),
                             expandedHeight:
-                                MediaQuery.of(context).size.height * 0.45,
+                                MediaQuery.of(context).size.height * 0.47,
                             floating: false,
+                            forceElevated: innerBoxIsScrolled,
                             pinned: true,
                             toolbarHeight:
                                 MediaQuery.of(context).size.height * 0.08,
@@ -125,7 +139,7 @@ class CounselorProfileScreenState
                       child: Column(
                         children: [
                           Column(
-                            children: title
+                            children: profileData
                                 .map((e) => Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10, horizontal: 20),
@@ -133,12 +147,33 @@ class CounselorProfileScreenState
                                         children: [
                                           Container(
                                             margin: const EdgeInsets.only(
-                                                bottom: 8),
+                                                bottom: 10, left: 5),
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
                                             child: Text(
-                                              e,
+                                              e.title,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 8),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                                color: Palette.appColor
+                                                    .withOpacity(0.2),
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            padding: EdgeInsets.all(20),
+                                            child: Text(
+                                              e.answer,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w600,
@@ -234,6 +269,12 @@ class _HeaderState extends ConsumerState<_Header> {
                           ),
                         ],
                       ),
+                      // SizedBox(
+                      //     height: MediaQuery.of(context).size.height * 0.03),
+                      // Text(
+                      //   'I\'m James working at the addiction center. I usually consult drug addiction, and I consult alcohol addiction. The address of the consultation center is - and it\'s always open, so feel free to visit',
+                      //   style: TextStyles.blueBottonTextStyle,
+                      // )
                     ]),
               ]),
         ),
