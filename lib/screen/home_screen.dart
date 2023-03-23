@@ -4,27 +4,21 @@ import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
 import 'package:diviction_user/screen/survey/alcohol_survey.dart';
 import 'package:diviction_user/screen/survey/drug_survey.dart';
 import 'package:diviction_user/screen/survey/psychological_survey.dart';
-import 'package:diviction_user/screen/survey/survey_result.dart';
-import 'package:diviction_user/service/auth_service.dart';
 import 'package:diviction_user/service/checklist_service.dart';
 import 'package:diviction_user/service/counselor_service.dart';
-import 'package:diviction_user/service/match_service.dart';
-import 'package:diviction_user/util/getUserData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 import '../config/style.dart';
-import '../provider/counselor_provider.dart';
 import '../widget/appbar.dart';
 import '../widget/survey/survey_button.dart';
+import 'bottom_nav.dart';
 
 final counselorProvider = FutureProvider.autoDispose<List<Counselor>>((ref) {
   final isMatched = ref.watch(matchingProvider);
   if (isMatched) {
-    return CounselorService().getCounselors({});
-  } else {
+    // return [MatchingService().getMatched()];
     return [
       Counselor(
         id: 6,
@@ -39,6 +33,8 @@ final counselorProvider = FutureProvider.autoDispose<List<Counselor>>((ref) {
         confirm: true,
       )
     ];
+  } else {
+    return CounselorService().getCounselors({});
   }
 });
 
@@ -47,34 +43,34 @@ final checkListProvider = FutureProvider.autoDispose<List<CheckList>>(
 
 final matchingProvider = StateProvider<bool>((ref) => false);
 
-class HomeSceen extends StatefulWidget {
+class HomeSceen extends ConsumerStatefulWidget {
   const HomeSceen({super.key});
 
   @override
-  State<HomeSceen> createState() => _HomeSceenState();
+  _HomeSceenState createState() => _HomeSceenState();
 }
 
-class _HomeSceenState extends State<HomeSceen> {
+class _HomeSceenState extends ConsumerState<HomeSceen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserData();
   }
 
-  bool isMatched = false;
   String name = 'User';
 
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    ref.read(matchingProvider.notifier).state =
+        prefs.getBool('isMatched') ?? false;
     setState(() {
       name = prefs.getString('name')!;
-      isMatched = prefs.getBool('isMatched') ?? false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isMatched = ref.watch(matchingProvider);
     return Scaffold(
         appBar: const MyAppbar(
           isMain: true,
@@ -137,17 +133,7 @@ class _Header extends StatelessWidget {
       const SizedBox(
         height: 20,
       ),
-      // const Text('My Check List',
-      //     style: TextStyle(
-      //         fontSize: 23,
-      //         color: Colors.white,
-      //         height: 1.4,
-      //         letterSpacing: 0.02,
-      //         fontWeight: FontWeight.w600)),
-      // const SizedBox(
-      //   height: 20,
-      // ),
-      CheckListWidget(),
+      const CheckListWidget(),
       const SizedBox(
         height: 20,
       ),
@@ -181,78 +167,95 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Bottom extends StatelessWidget {
+class _Bottom extends ConsumerWidget {
   const _Bottom({super.key, required this.isMatched});
 
   final bool isMatched;
 
   @override
-  Widget build(BuildContext context) {
-    return !isMatched
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Recommend Counselor',
-                  style: TextStyle(
-                      fontSize: 23,
-                      color: Colors.white,
-                      height: 1.4,
-                      letterSpacing: 0.02,
-                      fontWeight: FontWeight.w600)),
-              const SizedBox(
-                height: 20,
-              ),
-              Consumer(
-                builder: (context, ref, child) {
-                  final counselor = ref.watch(counselorProvider);
-                  return counselor.when(
-                    data: (data) {
-                      if (data.isEmpty) {
-                        return const Text('No Counselor');
-                      } else {
-                        return CounselorCard(counselor: data);
-                      }
-                    },
-                    loading: () => const Text('Loading...',
-                        style: TextStyle(color: Colors.white)),
-                    error: (error, stackTrace) => const Text('Error...',
-                        style: TextStyle(color: Colors.white)),
-                  );
-                },
-              )
-            ],
-          )
-        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('My Counselor',
-                style: TextStyle(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final counselor = ref.watch(counselorProvider);
+
+    Widget titleWidget(String title) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(title,
+                style: const TextStyle(
                     fontSize: 23,
                     color: Colors.white,
                     height: 1.4,
                     letterSpacing: 0.02,
                     fontWeight: FontWeight.w600)),
+            InkWell(
+                child: const Text('see more  ',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        height: 1.4,
+                        letterSpacing: 0.02,
+                        fontWeight: FontWeight.w400)),
+                onTap: () {
+                  if (isMatched) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CounselorProfileScreen(
+                              counselor: counselor.asData!.value.first)),
+                    );
+                  } else {
+                    ref.read(bottomNavProvider.notifier).state = 1;
+                  }
+                })
+          ],
+        );
+
+    return isMatched
+        ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            titleWidget('My Counselor'),
             const SizedBox(
               height: 20,
             ),
-            Consumer(builder: (context, ref, child) {
-              final counselor = ref.watch(counselorProvider);
-              return counselor.when(
+            counselor.when(
+              data: (data) {
+                if (data.isEmpty) {
+                  return const Text('No Counselor');
+                } else {
+                  return CounselorCard(
+                    counselor: data,
+                    size: MediaQuery.of(context).size.width - 60,
+                  );
+                }
+              },
+              loading: () => const Text('Loading...',
+                  style: TextStyle(color: Colors.white)),
+              error: (error, stackTrace) =>
+                  const Text('Error...', style: TextStyle(color: Colors.white)),
+            )
+          ])
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              titleWidget('Recommend Counselor'),
+              const SizedBox(
+                height: 20,
+              ),
+              counselor.when(
                 data: (data) {
                   if (data.isEmpty) {
                     return const Text('No Counselor');
                   } else {
-                    return CounselorCard(
-                      counselor: data,
-                      size: MediaQuery.of(context).size.width - 60,
-                    );
+                    return CounselorCard(counselor: data);
                   }
                 },
                 loading: () => const Text('Loading...',
                     style: TextStyle(color: Colors.white)),
                 error: (error, stackTrace) => const Text('Error...',
                     style: TextStyle(color: Colors.white)),
-              );
-            })
-          ]);
+              )
+            ],
+          );
   }
 }
 
@@ -382,7 +385,7 @@ class CounselorCard extends StatelessWidget {
                           right: MediaQuery.of(context).size.width * 0.03,
                           child: Container(
                             margin: EdgeInsets.only(
-                              right: 20,
+                              right: size == null ? 0 : 20,
                               bottom: MediaQuery.of(context).size.width * 0.03,
                             ),
                             decoration: BoxDecoration(
