@@ -2,14 +2,13 @@ import 'package:diviction_user/screen/community/community_screen.dart';
 import 'package:diviction_user/screen/counselor/counselor_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
 import 'package:diviction_user/screen/profile/user_profile_screen.dart';
-import 'package:diviction_user/model/match.dart';
 import 'package:diviction_user/service/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/counselor.dart';
 import '../provider/bottom_nav_provider.dart';
-import '../service/auth_service.dart';
 import 'chat/chat_screen.dart';
 
 final bottomNavProvider =
@@ -53,7 +52,18 @@ class BottomNavigationState extends ConsumerState<BottomNavigation> {
               chatroomId: '${data.counselorEmail}&${data.user.email}'
                   .replaceAll(',', ''),
               isNew: false,
-              counselor: null,
+              counselor: Counselor(
+                id: 6,
+                email: 'email',
+                password: 'password',
+                name: 'Nick',
+                address: 'address',
+                birth: 'birth',
+                gender: 'gender',
+                profileUrl:
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU',
+                confirm: true,
+              ),
             ),
             const CommunityScreen(),
             const UserProfileScreen()
