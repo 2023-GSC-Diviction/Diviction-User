@@ -136,13 +136,14 @@ class AuthService {
     }
   }
 
-  Future getUser(String email) async {
+  Future<User> getUser(String email) async {
     try {
       NetWorkResult result = await DioClient().get(
           '$_baseUrl/member/get/email/$email', {'user_email': email}, true);
       if (result.result == Result.success) {
         User user = User.fromJson(result.response);
         user.savePreference(user);
+        return user;
       } else {
         throw Exception('Failed to getUser');
       }

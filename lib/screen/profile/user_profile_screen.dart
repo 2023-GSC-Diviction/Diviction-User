@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/counselor.dart';
 import '../../model/survey_result.dart';
+import '../../model/user.dart';
 import '../../service/auth_service.dart';
 import '../../widget/custom_textfiled.dart';
 import '../../widget/profile_image.dart';
@@ -44,13 +45,6 @@ final surdata = [
 ];
 
 final editModeProvider = StateProvider((ref) => false);
-final userProvider = FutureProvider((ref) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String email = prefs.getString('email')!;
-
-  final user = await AuthService().getUser(email);
-  return user;
-});
 
 @override
 class UserProfileScreen extends ConsumerStatefulWidget {
@@ -107,7 +101,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             toolbarHeight: 0,
                             automaticallyImplyLeading: false,
                             expandedHeight:
-                                MediaQuery.of(context).size.height * 0.4,
+                                MediaQuery.of(context).size.height * 0.37,
                             floating: false,
                             pinned: true,
                             flexibleSpace:
@@ -153,6 +147,13 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   }
 }
 
+final userProvider = FutureProvider<User>((ref) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String email = prefs.getString('email')!;
+
+  return await AuthService().getUser(email);
+});
+
 class _Header extends ConsumerStatefulWidget {
   const _Header({
     Key? key,
@@ -171,6 +172,7 @@ class _HeaderState extends ConsumerState<_Header> {
   @override
   Widget build(BuildContext context) {
     final editMode = ref.watch(editModeProvider);
+    final user = ref.watch(userProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -178,64 +180,56 @@ class _HeaderState extends ConsumerState<_Header> {
         _TopBar(onEditButtonpressed: onEditButtonpressed),
         SizedBox(height: MediaQuery.of(context).size.height * 0.0115),
         Padding(
-          padding: const EdgeInsets.only(top: 12, left: 35, right: 35),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ProfileImage(
-                          onProfileImagePressed: onProfileImagePressed,
-                          isChoosedPicture: isChoosedPicture,
-                          path: path,
-                          type: editMode ? 0 : 1,
-                          imageSize: MediaQuery.of(context).size.height * 0.15,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            // ReviewCountTexts(
-                            //   subContent: '200',
-                            //   titleContent: 'Contacted',
-                            // ),
-                            // SizedBox(child: right_line()),
-                            // ReviewCountTexts(
-                            //   subContent: '125',
-                            //   titleContent: 'Consulting',
-                            // ),
-                            // // SizedBox(child: right_line()),
-                            // ReviewCountTexts(
-                            //   subContent: '29Y',
-                            //   titleContent: 'Career',
-                            // ),
-                          ],
-                        ),
-                      ]),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.032),
-                const Text(
-                  'Exodus Trivellan', // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                const Text(
-                  'Alcoholism Counselor', // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.white54,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ]),
-        ),
+            padding: const EdgeInsets.only(top: 12, left: 35, right: 35),
+            child: user.when(
+              data: (data) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ProfileImage(
+                              onProfileImagePressed: onProfileImagePressed,
+                              isChoosedPicture: isChoosedPicture,
+                              path: data.profile_img_url,
+                              type: editMode ? 0 : 1,
+                              imageSize:
+                                  MediaQuery.of(context).size.height * 0.15,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: const [],
+                            ),
+                          ]),
+                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.032),
+                    Text(
+                      data.name, // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
+                      style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                    Text(
+                      data.address, // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
+                      style: const TextStyle(
+                        fontSize: 17,
+                        color: Colors.white54,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ]),
+              loading: () => const CircularProgressIndicator(),
+              error: (error, stackTrace) => const Center(
+                child: Text('fail to load'),
+              ),
+            )),
       ],
     );
   }
