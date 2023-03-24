@@ -18,16 +18,16 @@ class SurveyService {
   }
 
   SurveyService._internal() {
-    getUserId();
+    // getUserId();
   }
 
   int userId = 1;
   late SharedPreferences prefs;
 
-  getUserId() async {
-    prefs = await SharedPreferences.getInstance();
-    userId = prefs.getInt('id')!;
-  }
+  // getUserId() async {
+  //   prefs = await SharedPreferences.getInstance();
+  //   userId = prefs.getInt('id')!;
+  // }
 
   final String? _baseUrl = dotenv.env['BASE_URL'];
 
@@ -76,48 +76,52 @@ class SurveyService {
     }
   }
 
-  Future<NetWorkResult> DASTdataGet() async {
+  Future<List<Map<String, dynamic>>> DASTdataGet() async {
     try {
       NetWorkResult result = await DioClient()
           .get('$_baseUrl/dast/list/member/${userId}', {}, false);
-      print(result.response);
+      print('result.response.runtimeType : ${result.response.runtimeType}, result.response : ${result.response}');
+      print('return type : ${result.response.cast<Map<String, dynamic>>().runtimeType}');
       if (result.result == Result.success) {
-        return NetWorkResult(result: Result.success, response: result.response);
+        return result.response.cast<Map<String, dynamic>>();
       } else {
-        return NetWorkResult(result: Result.fail);
+        return [];
       }
     } catch (e) {
-      return NetWorkResult(result: Result.fail, response: e);
+      print('Error : $e');
+      return [];
     }
   }
 
-  Future<NetWorkResult> DASSdataGet() async {
+  Future<List<Map<String, dynamic>>> DASSdataGet() async {
     try {
       NetWorkResult result = await DioClient()
           .get('$_baseUrl/dass/list/member/$userId', {}, false);
-      print(result.response);
+      // print(result.response);
       if (result.result == Result.success) {
-        return NetWorkResult(result: Result.success, response: result.response);
+        return result.response.cast<Map<String, dynamic>>();
       } else {
-        return NetWorkResult(result: Result.fail);
+        return [];
       }
     } catch (e) {
-      return NetWorkResult(result: Result.fail, response: e);
+      print('Error : $e');
+      return [];
     }
   }
 
-  Future<NetWorkResult> AUDITdataGet() async {
+  Future<List<Map<String, dynamic>>> AUDITdataGet() async {
     try {
       NetWorkResult result = await DioClient()
           .get('$_baseUrl/audit/list/member/$userId', {}, false);
-      print(result.response);
+      // print(result.response);
       if (result.result == Result.success) {
-        return NetWorkResult(result: Result.success, response: result.response);
+        return result.response.cast<Map<String, dynamic>>();
       } else {
-        return NetWorkResult(result: Result.fail);
+        return [];
       }
     } catch (e) {
-      return NetWorkResult(result: Result.fail, response: e);
+      print('Error : $e');
+      return [];
     }
   }
 }

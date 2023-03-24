@@ -8,8 +8,13 @@ import '../../model/survey_result.dart';
 import '../../util/date_formatter.dart';
 
 class SurveyChart extends StatefulWidget {
-  final List<SurveyData> list;
-  const SurveyChart({super.key, required this.list});
+  final List<Map<String, dynamic>> list;
+  final double maxY;
+  const SurveyChart({
+    super.key,
+    required this.list,
+    required this.maxY,
+  });
 
   @override
   State<SurveyChart> createState() => _SurveyChartState();
@@ -23,13 +28,12 @@ class _SurveyChartState extends State<SurveyChart> {
   void initState() {
     super.initState();
 
-    widget.list.sort((a, b) => DateTimeFormatter.parse(a.date)
-        .compareTo(DateTimeFormatter.parse(b.date)));
+    widget.list.sort((a, b) => DateTimeFormatter.parse(a['date'])
+        .compareTo(DateTimeFormatter.parse(b['date'])));
 
     max = widget.list
-        .reduce(
-            (value, element) => value.score > element.score ? value : element)
-        .score
+        .reduce((value, element) =>
+            value['score'] > element['score'] ? value : element)['score']
         .toDouble();
   }
 
@@ -106,11 +110,11 @@ class _SurveyChartState extends State<SurveyChart> {
       minX: 0,
       maxX: widget.list.length.toDouble() - 1,
       minY: 0,
-      maxY: max,
+      maxY: widget.maxY,
       lineBarsData: [
         LineChartBarData(
           spots: widget.list.asMap().entries.map((e) {
-            return FlSpot(e.key.toDouble(), e.value.score.toDouble());
+            return FlSpot(e.key.toDouble(), e.value['score'].toDouble());
           }).toList(),
           isCurved: true,
           gradient: LinearGradient(
@@ -119,7 +123,7 @@ class _SurveyChartState extends State<SurveyChart> {
           barWidth: 3,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
             show: true,
@@ -136,7 +140,7 @@ class _SurveyChartState extends State<SurveyChart> {
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     String date =
-        DateTimeFormatter.formatCustom(widget.list[value.toInt()].date);
+        DateTimeFormatter.formatCustom(widget.list[value.toInt()]['date']);
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(

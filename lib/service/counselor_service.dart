@@ -7,7 +7,7 @@ import '../model/network_result.dart';
 
 class CounselorService {
   static final CounselorService _counselorService =
-      CounselorService._internal();
+  CounselorService._internal();
   factory CounselorService() {
     return _counselorService;
   }
@@ -21,8 +21,8 @@ class CounselorService {
       var res = response.response;
       List<Counselor> counselors = res
           .map((counselor) {
-            return Counselor.fromJson(counselor);
-          })
+        return Counselor.fromJson(counselor);
+      })
           .cast<Counselor>()
           .toList();
 

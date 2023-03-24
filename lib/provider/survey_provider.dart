@@ -74,54 +74,54 @@ class SurveyState extends StateNotifier<SaveState> {
     }
   }
 
-  Future DASTdataGet() async {
-    try {
-      var result = await SurveyService().DASTdataGet();
-      if (result.result == Result.success) {
-        state = SaveState.success;
-        print("DAST 데이터 불러오기 완료");
-      } else {
-        state = SaveState.fail;
-        print("DAST 데이터 불러오기 실패");
-      }
-    } catch (e) {
-      print(e);
-      state = SaveState.fail;
-      print("DAST 데이터 불러오기 오류");
-    }
-  }
-
-  Future DASSdataGet() async {
-    try {
-      var result = await SurveyService().DASSdataGet();
-      if (result.result == Result.success) {
-        state = SaveState.success;
-        print("DASS 데이터 불러오기 완료");
-      } else {
-        state = SaveState.fail;
-        print("DASS 데이터 불러오기 실패");
-      }
-    } catch (e) {
-      print(e);
-      state = SaveState.fail;
-      print("DASS 데이터 불러오기 오류");
-    }
-  }
-
-  Future AUDITdataGet() async {
-    try {
-      var result = await SurveyService().AUDITdataGet();
-      if (result.result == Result.success) {
-        state = SaveState.success;
-        print("AUDIT 데이터 불러오기 완료");
-      } else {
-        state = SaveState.fail;
-        print("AUDIT 데이터 불러오기 실패");
-      }
-    } catch (e) {
-      print(e);
-      state = SaveState.fail;
-      print("AUDIT 데이터 불러오기 오류");
-    }
-  }
+  // Future DASTdataGet() async {
+  //   try {
+  //     var result = await SurveyService().DASTdataGet();
+  //     if (result.result == Result.success) {
+  //       state = SaveState.success;
+  //       print("DAST 데이터 불러오기 완료");
+  //     } else {
+  //       state = SaveState.fail;
+  //       print("DAST 데이터 불러오기 실패");
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     state = SaveState.fail;
+  //     print("DAST 데이터 불러오기 오류");
+  //   }
+  // }
+  //
+  // Future DASSdataGet() async {
+  //   try {
+  //     var result = await SurveyService().DASSdataGet();
+  //     if (result.result == Result.success) {
+  //       state = SaveState.success;
+  //       print("DASS 데이터 불러오기 완료");
+  //     } else {
+  //       state = SaveState.fail;
+  //       print("DASS 데이터 불러오기 실패");
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     state = SaveState.fail;
+  //     print("DASS 데이터 불러오기 오류");
+  //   }
+  // }
+  //
+  // Future AUDITdataGet() async {
+  //   try {
+  //     var result = await SurveyService().AUDITdataGet();
+  //     if (result.result == Result.success) {
+  //       state = SaveState.success;
+  //       print("AUDIT 데이터 불러오기 완료");
+  //     } else {
+  //       state = SaveState.fail;
+  //       print("AUDIT 데이터 불러오기 실패");
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     state = SaveState.fail;
+  //     print("AUDIT 데이터 불러오기 오류");
+  //   }
+  // }
 }

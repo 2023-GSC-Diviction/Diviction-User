@@ -33,12 +33,6 @@ final surdata = [
 ];
 
 final editModeProvider = StateProvider((ref) => false);
-final DASSsurveyProvider =
-    FutureProvider.autoDispose((ref) => SurveyService().DASSdataGet());
-final DASTsurveyProvider =
-    FutureProvider.autoDispose((ref) => SurveyService().DASTdataGet());
-final AUDITsurveyProvider =
-    FutureProvider.autoDispose((ref) => SurveyService().AUDITdataGet());
 
 @override
 class UserProfileScreen extends ConsumerStatefulWidget {
@@ -62,131 +56,197 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     TextEditingController(),
   ];
 
+  late Map<String, List<Map<String, dynamic>>> datas;
+  late Future<Map<String, List<Map<String, dynamic>>>> futureData;
+
+  @override
+  void initState() {
+    super.initState();
+    futureData = loadData();
+  }
+
+  Future<Map<String, List<Map<String, dynamic>>>> loadData() async {
+    final List<Map<String, dynamic>> DASS_result =
+        await SurveyService().DASSdataGet();
+    final List<Map<String, dynamic>> DAST_result =
+        await SurveyService().DASTdataGet();
+    final List<Map<String, dynamic>> AUDIT_result =
+        await SurveyService().AUDITdataGet();
+    datas = {
+      'DASS': [],
+      'DAST': [],
+      'AUDIT': [],
+    };
+    setState(() {
+      DASS_result.forEach((data) {
+        datas['DASS']!.add({
+          'date': data['date'],
+          'melancholyScore': data['melancholyScore'],
+          'unrestScore': data['unrestScore'],
+          'stressScore': data['stressScore'],
+        });
+      });
+      print('DAST_result.length : ${DAST_result.length}');
+      DAST_result.forEach((data) {
+        Map<String, dynamic> surveyData = {
+          'date': data['date'],
+          'score': data['question'],
+        };
+        datas['DAST']!.add(surveyData);
+      });
+      print(datas);
+      AUDIT_result.forEach((data) {
+        Map<String, dynamic> surveyData = {
+          'date': data['date'],
+          'score': data['score'],
+        };
+        datas['AUDIT']!.add(surveyData);
+      });
+    });
+    return datas;
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     ref.invalidate(editModeProvider);
-    ref.invalidate(DASSsurveyProvider);
-    ref.invalidate(DASTsurveyProvider);
-    ref.invalidate(AUDITsurveyProvider);
   }
 
   @override
   Widget build(BuildContext context) {
-    final DASSdata = ref.watch(DASSsurveyProvider);
-    final DASTdata = ref.watch(DASTsurveyProvider);
-    final AUDITdata = ref.watch(AUDITsurveyProvider);
     final editMode = ref.watch(editModeProvider);
 
     return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: SafeArea(
-            child: Scaffold(
-                backgroundColor: Palette.appColor,
-                body: NestedScrollView(
-                    headerSliverBuilder:
-                        (BuildContext context, bool innerBoxIsScrolled) {
-                      return <Widget>[
-                        SliverAppBar(
-                            backgroundColor: Palette.appColor,
-                            leading: null,
-                            toolbarHeight: 0,
-                            automaticallyImplyLeading: false,
-                            expandedHeight:
-                                MediaQuery.of(context).size.height * 0.37,
-                            floating: false,
-                            pinned: true,
-                            flexibleSpace:
-                                const FlexibleSpaceBar(background: _Header())),
-                      ];
-                    },
-                    body: SingleChildScrollView(
-                        child: Column(children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Palette.appColor,
+          body: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                    backgroundColor: Palette.appColor,
+                    leading: null,
+                    toolbarHeight: 0,
+                    automaticallyImplyLeading: false,
+                    expandedHeight: MediaQuery.of(context).size.height * 0.37,
+                    floating: false,
+                    pinned: true,
+                    flexibleSpace:
+                        const FlexibleSpaceBar(background: _Header())),
+              ];
+            },
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                    ),
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [0, 1, 2, 3]
+                              .map(
+                                (index) => IntrinsicHeight(
+                                  child: CustomTextEditor(
+                                    TitleContent: title[index],
+                                    textEditingController:
+                                        textEditingController[index],
+                                    isreadOnly: !editMode,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              // color: Colors.white, // grey[100], Color(0x00FFFFFF)
+                              borderRadius: BorderRadius.circular(16),
+                              border:
+                                  Border.all(width: 1, color: Colors.black12),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.33,
+                            child: FutureBuilder<
+                                Map<String, List<Map<String, dynamic>>>>(
+                              future: futureData,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  // 로딩 중일 때 표시할 UI
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasData) {
+                                  // 데이터를 성공적으로 받아올 때 표시할 UI
+                                  Map<String, List<Map<String, dynamic>>> data =
+                                      snapshot.data!;
+                                  return ContainedTabBarView(
+                                    tabs: [
+                                      Text('DASS',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                      Text('DAST',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                      Text('AUDIT',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ],
+                                    views: [
+                                      Survey_Chart(data: data['DASS']!, maxY: 42),
+                                      Survey_Chart(data: data['DAST']!, maxY: 10),
+                                      Survey_Chart(data: data['DAST']!, maxY: 40), // AUDIT
+                                    ],
+                                    onChange: (index) => print(index),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  // 에러가 발생했을 때 표시할 UI
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  // 아직 로딩 중이거나 데이터를 받아오지 못했을 때 표시할 UI
+                                  return Center(child: Text('Data Load Error'));
+                                }
+                              },
+                            ),
                           ),
                         ),
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [0, 1, 2, 3]
-                                  .map(
-                                    (index) => IntrinsicHeight(
-                                      child: CustomTextEditor(
-                                        TitleContent: title[index],
-                                        textEditingController:
-                                            textEditingController[index],
-                                        isreadOnly: !editMode,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  // color: Colors.white, // grey[100], Color(0x00FFFFFF)
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                      width: 1, color: Colors.black12),
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.33,
-                                child: ContainedTabBarView(
-                                  tabs: [
-                                    Text(
-                                      'DASS',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      'DAST',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      'AUDIT',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ],
-                                  views: [
-                                    Survey_Chart(data : DASTdata, type: 'DAST'),
-                                    Survey_Chart(data : DASTdata, type: 'DAST'),
-                                    Survey_Chart(data : DASTdata, type: 'DAST'),
-                                    // Survey_Chart(data : DASSdata, type: 'DASS'),
-                                    // Survey_Chart(data : DASTdata, type: 'DAST'),
-                                    // Survey_Chart(data : AUDITdata, type: 'AUDIT'),
-                                  ],
-                                  onChange: (index) => print(index),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ]))))));
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class Survey_Chart extends StatefulWidget {
-  final dynamic data;
-  final String type;
+  final List<Map<String, dynamic>> data;
+  final double maxY;
+
   const Survey_Chart({
     Key? key,
     required this.data,
-    required this.type,
+    required this.maxY,
   }) : super(key: key);
 
   @override
@@ -196,30 +256,7 @@ class Survey_Chart extends StatefulWidget {
 class _Survey_ChartState extends State<Survey_Chart> {
   @override
   Widget build(BuildContext context) {
-    List<SurveyData> datas = [];
-    switch(widget.type) {
-      case "DAST":
-        (widget.data).map((index) =>
-            datas.add(
-                SurveyData(
-                  date: widget.data[index]['date'],
-                  score: widget.data[index]['question'],
-                )
-            )
-        );
-        break;
-      case "DASS":
-        (widget.data).map((index) =>
-            datas.add(
-                SurveyData(
-                  date: widget.data[index]['date'],
-                  score: widget.data[index]['score'],
-                )
-            )
-        );
-      break;
-    }
-
+    print('widget.data : ${widget.data.toString()}');
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,14 +264,18 @@ class _Survey_ChartState extends State<Survey_Chart> {
         // dividingLine,
         Padding(
           padding: const EdgeInsets.only(left: 3),
-          child: SurveyChart(
-            list: datas,
-          ),
+          child: (widget.data != null && widget.data != [])
+              ? SurveyChart(
+                  list: widget.data,
+                  maxY: widget.maxY,
+                )
+              : Center(child: CircularProgressIndicator()),
         ),
       ],
     );
   }
 }
+
 final userProvider = FutureProvider<User>((ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String email = prefs.getString('email')!;
