@@ -86,7 +86,6 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           'stressScore': data['stressScore'],
         });
       });
-      print('DAST_result.length : ${DAST_result.length}');
       DAST_result.forEach((data) {
         Map<String, dynamic> surveyData = {
           'date': data['date'],
@@ -94,7 +93,6 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         };
         datas['DAST']!.add(surveyData);
       });
-      print(datas);
       AUDIT_result.forEach((data) {
         Map<String, dynamic> surveyData = {
           'date': data['date'],
@@ -123,6 +121,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       },
       child: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Palette.appColor,
           body: NestedScrollView(
             headerSliverBuilder:
@@ -182,7 +181,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             ),
                             padding: const EdgeInsets.all(8.0),
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.33,
+                            height: MediaQuery.of(context).size.height * 0.40,
                             child: FutureBuilder<
                                 Map<String, List<Map<String, dynamic>>>>(
                               future: futureData,
@@ -197,7 +196,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                   Map<String, List<Map<String, dynamic>>> data =
                                       snapshot.data!;
                                   return ContainedTabBarView(
-                                    tabs: [
+                                    tabs: const [
                                       Text('DASS',
                                           style:
                                               TextStyle(color: Colors.black)),
@@ -209,9 +208,21 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                               TextStyle(color: Colors.black)),
                                     ],
                                     views: [
-                                      Survey_Chart(data: data['DASS']!, maxY: 42),
-                                      Survey_Chart(data: data['DAST']!, maxY: 10),
-                                      Survey_Chart(data: data['DAST']!, maxY: 40), // AUDIT
+                                      Survey_Chart(
+                                        data: data['DASS']!,
+                                        multiLine: true,
+                                        maxY: 42,
+                                      ),
+                                      Survey_Chart(
+                                        data: data['DAST']!,
+                                        multiLine: false,
+                                        maxY: 10,
+                                      ),
+                                      Survey_Chart(
+                                        data: data['DAST']!,
+                                        multiLine: false,
+                                        maxY: 40,
+                                      ), // AUDIT
                                     ],
                                     onChange: (index) => print(index),
                                   );
@@ -242,11 +253,13 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
 class Survey_Chart extends StatefulWidget {
   final List<Map<String, dynamic>> data;
   final double maxY;
+  final bool multiLine;
 
   const Survey_Chart({
     Key? key,
     required this.data,
     required this.maxY,
+    required this.multiLine,
   }) : super(key: key);
 
   @override
@@ -256,22 +269,24 @@ class Survey_Chart extends StatefulWidget {
 class _Survey_ChartState extends State<Survey_Chart> {
   @override
   Widget build(BuildContext context) {
-    print('widget.data : ${widget.data.toString()}');
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // dividingLine,
-        Padding(
-          padding: const EdgeInsets.only(left: 3),
-          child: (widget.data != null && widget.data != [])
-              ? SurveyChart(
-                  list: widget.data,
-                  maxY: widget.maxY,
-                )
-              : Center(child: CircularProgressIndicator()),
-        ),
-      ],
+    // print('widget.data : ${widget.data.toString()}');
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // dividingLine,
+          Padding(
+            padding: const EdgeInsets.only(left: 3),
+            child: (widget.data != null && widget.data != [])
+                ? SurveyChart(
+                    list: widget.data,
+                    maxY: widget.maxY == null ? 1 : widget.maxY,
+                    multiLine: widget.multiLine)
+                : Center(child: CircularProgressIndicator()),
+          ),
+        ],
+      ),
     );
   }
 }
