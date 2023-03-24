@@ -41,8 +41,8 @@ class _SurveyChartState extends State<SurveyChart> {
           aspectRatio: 1.70,
           child: Padding(
             padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
+              right: 24,
+              left: 6,
               top: 24,
               bottom: 12,
             ),

@@ -65,6 +65,8 @@ dependencies:
   cloud_firestore: ^4.4.5
   firebase_storage: ^11.0.16
   http: ^0.13.3
+  # 테스트 결과용 그래프 분류를 위한 Tab Bar
+  contained_tab_bar_view: ^0.8.0
 
 dev_dependencies:
   flutter_test:

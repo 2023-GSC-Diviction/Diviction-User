@@ -1,4 +1,7 @@
 import 'package:diviction_user/config/style.dart';
+import 'package:diviction_user/model/network_result.dart';
+import 'package:diviction_user/provider/survey_provider.dart';
+import 'package:diviction_user/service/survey_service.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +14,7 @@ import '../../service/auth_service.dart';
 import '../../widget/custom_textfiled.dart';
 import '../../widget/profile_image.dart';
 import '../../widget/survey/survey_chart.dart';
+import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 
 final surdata = [
   SurveyData(
@@ -25,25 +29,16 @@ final surdata = [
     date: '2021-08-06',
     score: 22,
   ),
-  SurveyData(
-    date: '2021-08-08',
-    score: 14,
-  ),
-  SurveyData(
-    date: '2021-08-02',
-    score: 38,
-  ),
-  SurveyData(
-    date: '2021-08-01',
-    score: 33,
-  ),
-  SurveyData(
-    date: '2021-08-09',
-    score: 7,
-  ),
 ];
 
 final editModeProvider = StateProvider((ref) => false);
+final DASSsurveyProvider =
+    FutureProvider.autoDispose((ref) => SurveyService().DASSdataGet());
+final DASTsurveyProvider =
+    FutureProvider.autoDispose((ref) => SurveyService().DASTdataGet());
+final AUDITsurveyProvider =
+    FutureProvider.autoDispose((ref) => SurveyService().AUDITdataGet());
+
 final userProvider = FutureProvider((ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String email = prefs.getString('email')!;
@@ -75,19 +70,20 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     ref.invalidate(editModeProvider);
+    ref.invalidate(DASSsurveyProvider);
+    ref.invalidate(DASTsurveyProvider);
+    ref.invalidate(AUDITsurveyProvider);
   }
 
   @override
   Widget build(BuildContext context) {
+    final DASSdata = ref.watch(DASSsurveyProvider);
+    final DASTdata = ref.watch(DASTsurveyProvider);
+    final AUDITdata = ref.watch(AUDITsurveyProvider);
     final editMode = ref.watch(editModeProvider);
 
     return GestureDetector(
@@ -143,13 +139,104 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                   .toList(),
                             ),
                             const SizedBox(height: 20),
-                            SurveyChart(
-                              list: surdata,
-                            )
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  // color: Colors.white, // grey[100], Color(0x00FFFFFF)
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                      width: 1, color: Colors.black12),
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.33,
+                                child: ContainedTabBarView(
+                                  tabs: [
+                                    Text(
+                                      'DASS',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    Text(
+                                      'DAST',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    Text(
+                                      'AUDIT',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                  views: [
+                                    Survey_Chart(data : DASSdata, type: 'DASS'),
+                                    Survey_Chart(data : DASTdata, type: 'DAST'),
+                                    Survey_Chart(data : AUDITdata, type: 'AUDIT'),
+                                  ],
+                                  onChange: (index) => print(index),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       )
                     ]))))));
+  }
+}
+
+class Survey_Chart extends StatefulWidget {
+  final dynamic data;
+  final String type;
+  const Survey_Chart({
+    Key? key,
+    required this.data,
+    required this.type,
+  }) : super(key: key);
+
+  @override
+  State<Survey_Chart> createState() => _Survey_ChartState();
+}
+
+class _Survey_ChartState extends State<Survey_Chart> {
+  @override
+  Widget build(BuildContext context) {
+    List<SurveyData> datas = [];
+    switch(widget.type) {
+      case "DAST":
+        (widget.data).map((index) =>
+            datas.add(
+                SurveyData(
+                  date: widget.data[index]['date'],
+                  score: widget.data[index]['question'],
+                )
+            )
+        );
+        break;
+      case "DASS":
+        (widget.data).map((index) =>
+            datas.add(
+                SurveyData(
+                  date: widget.data[index]['date'],
+                  score: widget.data[index]['score'],
+                )
+            )
+        );
+      break;
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // dividingLine,
+        Padding(
+          padding: const EdgeInsets.only(left: 3),
+          child: SurveyChart(
+            list: datas,
+          ),
+        ),
+      ],
+    );
   }
 }
 

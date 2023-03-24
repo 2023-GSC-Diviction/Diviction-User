@@ -48,6 +48,13 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
       TextEditingController();
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    ref.invalidate(authProvider);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isComplete = ref.watch(authProvider);
 

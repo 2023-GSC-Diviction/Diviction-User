@@ -21,7 +21,7 @@ class SurveyService {
     getUserId();
   }
 
-  int userId = -1;
+  int userId = 1;
   late SharedPreferences prefs;
 
   getUserId() async {

@@ -35,7 +35,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    ref.read(idCheckProvider.notifier).state = EmailDuplicateState.proceeding; // 초기화
+    ref.invalidate(idCheckProvider);
     super.dispose();
   }
 
