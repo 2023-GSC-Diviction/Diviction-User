@@ -49,22 +49,10 @@ class BottomNavigationState extends ConsumerState<BottomNavigation> {
           return [
             const HomeSceen(),
             ChatScreen(
-              chatroomId: '${data.counselorEmail}&${data.user.email}'
-                  .replaceAll(',', ''),
-              isNew: false,
-              counselor: Counselor(
-                id: 6,
-                email: 'email',
-                password: 'password',
-                name: 'Nick',
-                address: 'address',
-                birth: 'birth',
-                gender: 'gender',
-                profileUrl:
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU',
-                confirm: true,
-              ),
-            ),
+                chatroomId: '${data.counselor.email}&${data.user.email}'
+                    .replaceAll(',', ''),
+                isNew: false,
+                counselor: data.counselor),
             const CommunityScreen(),
             const UserProfileScreen()
           ].elementAt(currentPage);

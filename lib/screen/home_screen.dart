@@ -11,28 +11,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/style.dart';
+import '../service/match_service.dart';
 import '../widget/appbar.dart';
 import '../widget/survey/survey_button.dart';
 import 'bottom_nav.dart';
 
-final counselorProvider = FutureProvider.autoDispose<List<Counselor>>((ref) {
+final counselorProvider =
+    FutureProvider.autoDispose<List<Counselor>>((ref) async {
   final isMatched = ref.watch(matchingProvider);
   if (isMatched) {
-    // return [MatchingService().getMatched()];
-    return [
-      Counselor(
-        id: 6,
-        email: 'email',
-        password: 'password',
-        name: 'Nick',
-        address: 'address',
-        birth: 'birth',
-        gender: 'gender',
-        profileUrl:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU',
-        confirm: true,
-      )
-    ];
+    final counselor = await MatchingService().getMatched();
+    return [counselor!.counselor];
   } else {
     return CounselorService().getCounselors({});
   }
