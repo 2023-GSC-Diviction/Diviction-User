@@ -27,6 +27,19 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
       TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref.read(idCheckProvider.notifier).state = EmailDuplicateState.proceeding; // 초기화
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    ref.read(idCheckProvider.notifier).state = EmailDuplicateState.proceeding; // 초기화
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final idCheckState = ref.watch(idCheckProvider);
 
@@ -48,6 +61,7 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
           break;
         default:
       }
+      ref.read(idCheckProvider.notifier).state = EmailDuplicateState.proceeding;
     });
 
     // GestureDetector를 최상단으로 두고, requestFocus(FocusNode())를 통해서 키보드를 닫을 수 있음.
