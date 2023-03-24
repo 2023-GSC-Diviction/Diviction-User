@@ -55,6 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(

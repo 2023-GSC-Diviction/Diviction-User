@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:diviction_user/model/counselor.dart';
 
 import 'package:diviction_user/model/network_result.dart';
@@ -107,7 +109,7 @@ class AuthService {
       var result = await http.Response.fromStream(streamedResponse);
       print(result.body);
       if (result.statusCode == 200) {
-        User user = User.fromJson(result.body as Map<String, dynamic>);
+        User user = User.fromJson(json.decode(result.body));
         user.savePreference(user);
         ChatService();
         return true;

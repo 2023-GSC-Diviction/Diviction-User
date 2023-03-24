@@ -124,3 +124,20 @@ Container dividingLine = Container(
     ),
   ),
 );
+
+/*
+0xFF63C9DB / Color.fromARGB(255, 99, 201, 219)과 비슷한 채도와 명암을 가지는 보라색 계열 색상
+0xFF5B84B1 -> DD
+0xFF7E8AA2
+0xFF5F5AA2
+0xFF9D7CBF
+0xFF7C5295
+----------
+0xFFC77DFF
+----------
+0xFF2EC4B6
+0xFF48B5A8
+---
+0xFF7F8B8C
+0xFF95A5A6
+ */
