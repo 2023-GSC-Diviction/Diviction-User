@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ProfileImage extends StatefulWidget {
   final onProfileImagePressed;
   final isChoosedPicture;
-  final path;
+  final String? path;
   final int type;
   final double imageSize;
 
@@ -83,21 +83,21 @@ class _ProfileImageState extends State<ProfileImage> {
     ]);
   }
 
-  Widget choosedImage() {
-    return Image.file(
-      File(widget.path),
-      width: widget.imageSize,
-      height: widget.imageSize,
-      fit: BoxFit.cover,
-    );
-  }
+  // Widget choosedImage() {
+  //   return Image.file(
+  //     File(widget.path!),
+  //     width: widget.imageSize,
+  //     height: widget.imageSize,
+  //     fit: BoxFit.cover,
+  //   );
+  // }
 
-  Widget defaultImage() {
-    return Image.asset(
-      'assets/images/test.png',
-      width: widget.imageSize,
-      height: widget.imageSize,
-      fit: BoxFit.cover,
-    );
-  }
+  // Widget defaultImage() {
+  //   return Image.asset(
+  //     'assets/images/test.png',
+  //     width: widget.imageSize,
+  //     height: widget.imageSize,
+  //     fit: BoxFit.cover,
+  //   );
+  // }
 }
