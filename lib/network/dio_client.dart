@@ -84,6 +84,7 @@ class DioClient {
       }
     }
   }
+
   // "Content-Type": "multipart/form-data"
   Future<NetWorkResult> post(String url, dynamic data, bool useToken) async {
     try {
@@ -129,7 +130,8 @@ class DioClient {
     }
   }
 
-  Future<NetWorkResult> Signup_post(String url, dynamic data, bool useToken) async {
+  Future<NetWorkResult> Signup_post(
+      String url, dynamic data, bool useToken) async {
     try {
       print("요청한 url : ${url}");
       _getToken();
@@ -137,13 +139,13 @@ class DioClient {
           data: data,
           options: useToken
               ? Options(
-            contentType: Headers.jsonContentType,
-            headers: {
-              HttpHeaders.authorizationHeader: 'Bearer $_acToken',
-              'RT':
-              _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
-            },
-          )
+                  contentType: Headers.jsonContentType,
+                  headers: {
+                    HttpHeaders.authorizationHeader: 'Bearer $_acToken',
+                    'RT':
+                        _refToken, // 이거는 토큰이 만료되었을 때, 새로운 토큰을 받아오기 위해 필요한 헤더입니다.
+                  },
+                )
               : Options(contentType: "multipart/form-data"));
       if (response.statusCode == 200) {
         print("${response.realUri} [200] 요청성공");

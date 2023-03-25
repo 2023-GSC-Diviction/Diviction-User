@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:chat_bubbles/bubbles/bubble_normal_image.dart';
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/model/chat.dart';
@@ -23,19 +26,43 @@ class ChatBubbles extends StatelessWidget {
         mainAxisAlignment:
             isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (isMe)
-            Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child:
-                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  Text(dataTimeFormat(message.createdAt),
-                      style: TextStyles.shadowTextStyle),
-                  BubbleSpecialOne(
-                      text: message.content,
-                      isSender: true,
-                      color: Palette.appColor,
-                      textStyle: TextStyles.blueBottonTextStyle),
-                ])),
+          if (isMe) ...{
+            if (message.content.contains('image@')) ...{
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(dataTimeFormat(message.createdAt),
+                            style: TextStyles.shadowTextStyle),
+                        SizedBox(
+                            width: 220,
+                            height: 190,
+                            child: BubbleNormalImage(
+                              id: '1',
+                              color: Palette.appColor,
+                              image: Image.file(
+                                  File(message.content.split('@')[1]),
+                                  width: 250,
+                                  height: 250),
+                            ))
+                      ])),
+            } else ...{
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(dataTimeFormat(message.createdAt),
+                            style: TextStyles.shadowTextStyle),
+                        BubbleSpecialOne(
+                            text: message.content,
+                            isSender: true,
+                            color: Palette.appColor,
+                            textStyle: TextStyles.blueBottonTextStyle),
+                      ]))
+            },
+          },
           if (!isMe)
             Padding(
                 padding: const EdgeInsets.only(bottom: 15),

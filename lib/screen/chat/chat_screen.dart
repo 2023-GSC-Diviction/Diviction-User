@@ -82,24 +82,27 @@ class ChatScreenState extends State<ChatScreen> {
                             path: widget.counselor.profileUrl,
                             type: 1,
                             imageSize:
-                                MediaQuery.of(context).size.height * 0.08,
+                                MediaQuery.of(context).size.height * 0.07,
                           ),
                           const SizedBox(width: 20),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('nickname',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold)),
-                              Text('address  ',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400)),
-                            ],
-                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(widget.counselor.name,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.bold)),
+                                Text(widget.counselor.address,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400)),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                       Column(
@@ -269,7 +272,7 @@ class ChatScreenState extends State<ChatScreen> {
           isChoosedPicture = true;
         });
         final message = Message(
-            content: '@image/${image.path}',
+            content: 'image@${image.path}',
             sender: userId,
             createdAt:
                 DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()));

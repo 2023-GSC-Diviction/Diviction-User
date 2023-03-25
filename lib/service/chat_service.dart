@@ -24,13 +24,17 @@ class ChatService {
 
   String userEmail = '';
 
-  getUserEmail() async {
+  Future getUserEmail() async {
     prefs = await SharedPreferences.getInstance();
     userEmail = prefs.getString('email')!.replaceAll('.', '');
   }
 
   Future<List<MyChat>> getChatList() async {
     try {
+      if (userEmail == '') {
+        await getUserEmail();
+      }
+      ;
       final snapshot =
           await _firestore.collection('users').doc(userEmail).get();
       if (snapshot.exists) {
@@ -45,12 +49,15 @@ class ChatService {
         return [];
       }
     } catch (e) {
-      throw e;
+      return [];
     }
   }
 
   Stream<List<MyChat>> getChatListData() async* {
     try {
+      if (userEmail == '') {
+        await getUserEmail();
+      }
       final data = _firestore
           .collection('users')
           .doc(userEmail)
@@ -67,7 +74,8 @@ class ChatService {
       });
       yield* data;
     } catch (e) {
-      throw e;
+      print(e);
+      if (e is FirebaseException && e.code == 'path.isNotEmpty') yield [];
     }
   }
 
@@ -111,7 +119,11 @@ class ChatService {
       final snapshot = await _firestore.collection('users').doc(id).get();
       if (snapshot.exists) {
         final chat = MyChat.fromJson(snapshot.data()![chatRoomId]);
-        chat.lastMessage = message.content;
+        if (message.content.contains('image@')) {
+          chat.lastMessage = '사진';
+        } else {
+          chat.lastMessage = message.content;
+        }
         chat.lastTime = message.createdAt;
         _firestore
             .collection('users')
