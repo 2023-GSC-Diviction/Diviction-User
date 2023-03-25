@@ -19,7 +19,7 @@ class DayCheckScreen extends StatelessWidget {
             const Center(
               child: Text('Success?',
                   style: TextStyle(
-                      fontSize: 38,
+                      fontSize: 30,
                       color: Colors.black,
                       decoration: TextDecoration.none)),
             ),
