@@ -1,6 +1,7 @@
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/screen/day_check_screen.dart';
 import 'package:diviction_user/screen/bottom_nav.dart';
+import 'package:diviction_user/screen/sign/input_addict_screen.dart';
 import 'package:diviction_user/screen/sign/login_screen.dart';
 import 'package:diviction_user/service/auth_service.dart';
 import 'package:flutter/material.dart';

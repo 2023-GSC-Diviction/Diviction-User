@@ -24,7 +24,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   TextEditingController textEditingControllerForPw = TextEditingController();
 
   @override
-  void disposelin() {
+  void dispose() {
     // TODO: implement dispose
     super.dispose();
     ref.invalidate(authProvider);
@@ -45,6 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           break;
         case LoadState.fail:
           showSnackbar();
+          ref.refresh(authProvider);
           break;
         default:
       }

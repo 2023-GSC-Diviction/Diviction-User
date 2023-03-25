@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:diviction_user/service/image_picker_service.dart';
-import 'package:diviction_user/widget/image_input.dart';
+import 'package:diviction_user/widget/edit_profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';

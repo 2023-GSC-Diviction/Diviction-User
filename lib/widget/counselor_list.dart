@@ -89,22 +89,25 @@ class CounselorList extends StatelessWidget {
                           isChoosedPicture: false,
                           path: counselor!.elementAt(index).profileUrl,
                           type: 1,
-                          imageSize: 60,
+                          imageSize: MediaQuery.of(context).size.width * 0.12,
                         ),
                         const SizedBox(
                           width: 10,
                         ),
-                        Text.rich(
-                          TextSpan(
-                              text: '${counselor![index].name}\n',
-                              style: TextStyles.chatHeading,
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: counselor!.elementAt(index).address,
-                                    style: TextStyles.chatbodyText),
-                              ]),
-                          textAlign: TextAlign.start,
-                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Text.rich(
+                              TextSpan(
+                                  text: '${counselor![index].name}\n',
+                                  style: TextStyles.chatHeading,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text:
+                                            counselor!.elementAt(index).address,
+                                        style: TextStyles.chatbodyText),
+                                  ]),
+                              textAlign: TextAlign.start,
+                            )),
                       ],
                     ),
                   ),
@@ -113,6 +116,7 @@ class CounselorList extends StatelessWidget {
                           counselor!.elementAt(index).email,
                           counselor!.elementAt(index)),
                       child: Container(
+                        width: MediaQuery.of(context).size.width * 0.24,
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 30,
                         decoration: BoxDecoration(
@@ -120,7 +124,7 @@ class CounselorList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Center(
-                          child: Text('request consult',
+                          child: Text('request',
                               style: TextStyles.blueBottonTextStyle),
                         ),
                       ))

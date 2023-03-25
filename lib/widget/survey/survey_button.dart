@@ -34,7 +34,7 @@ class SurveyButton extends StatelessWidget {
                   ),
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 16, color: Palette.mainTextColor))
+                          fontSize: 13, color: Palette.mainTextColor))
                 ],
               ),
             )));
