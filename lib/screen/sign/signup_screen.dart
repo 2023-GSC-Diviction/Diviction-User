@@ -30,8 +30,10 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref.read(idCheckProvider.notifier).state = EmailDuplicateState.proceeding; // 초기화
+    ref.read(idCheckProvider.notifier).state =
+        EmailDuplicateState.proceeding; // 초기화
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -71,13 +73,13 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
         },
         child: Scaffold(
             body: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
                       Column(
                         children: [
                           SizedBox(
@@ -112,12 +114,14 @@ class SignupScreenState extends ConsumerState<SignupScreen> {
                           const _PopLoginPage(),
                         ],
                       ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05),
                       CustomRoundButton(
                           title: 'Create Account',
                           onPressed: onPressedSignupButton),
                       SizedBox(
                           height: MediaQuery.of(context).size.height * 0.10),
-                    ]))));
+                    ])))));
   }
 
   void showSnackbar(String message) {

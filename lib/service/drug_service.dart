@@ -12,8 +12,10 @@ class DrugService {
   Future<List<Drug>> getDrugs() async {
     var response = await DioClient().get('$_baseUrl/drug/list', {}, true);
     if (response.result == Result.success) {
-      List<Drug> drugs =
-          response.response.map((post) => Drug.fromJson(post)).toList();
+      List<Drug> drugs = response.response
+          .map((post) => Drug.fromJson(post))
+          .cast<Drug>()
+          .toList();
       return drugs;
     } else {
       throw Exception('Failed to load drugs');

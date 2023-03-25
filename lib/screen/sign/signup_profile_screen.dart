@@ -12,7 +12,6 @@ import '../../widget/sign/title_header.dart';
 import 'login_screen.dart';
 import 'package:http/http.dart' as http;
 
-
 final authProvider = StateNotifierProvider.autoDispose<AuthState, LoadState>(
     (ref) => AuthState());
 
@@ -179,10 +178,11 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
 
     if (image != null) {
       setState(() {
-        this.isChoosedPicture = true;
-        this.path = image.path;
-        this.ImageFile = image;
+        isChoosedPicture = true;
+        path = image.path;
+        ImageFile = image;
       });
+      print(image.readAsBytes());
     }
     print(image);
   }
@@ -225,7 +225,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
       // 'profile_img_url': path
     };
     print(user.toString());
-    if(ImageFile != null) {
+    if (ImageFile != null) {
       ref.read(authProvider.notifier).SignupWithloadImage(ImageFile!, user);
     }
   }
