@@ -2,7 +2,7 @@ import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 
 Future<bool> backDialog(BuildContext context) async {
-  String text = '취소하고 뒤로 가시겠습니까?\n';
+  String text = 'Are you sure you want to cancel\nthe current task and go back?\n';
 
   return await showDialog(
       context: context,
@@ -21,7 +21,7 @@ Future<bool> backDialog(BuildContext context) async {
                       style: TextStyles.dialogTextStyle,
                       children: const <TextSpan>[
                         TextSpan(
-                          text: '(기록이 삭제됩니다)',
+                          text: '(Respondents will be deleted)',
                           style: TextStyles.dialogTextStyle2,
                         )
                       ]),
@@ -44,7 +44,7 @@ Future<bool> backDialog(BuildContext context) async {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Text(
-                            '취소',
+                            'Cancel',
                             style: TextStyles.dialogCancelTextStyle,
                             textAlign: TextAlign.center,
                           ),
@@ -64,7 +64,7 @@ Future<bool> backDialog(BuildContext context) async {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Text(
-                            '확인',
+                            'OK',
                             style: TextStyles.dialogConfirmTextStyle,
                             textAlign: TextAlign.center,
                           ),

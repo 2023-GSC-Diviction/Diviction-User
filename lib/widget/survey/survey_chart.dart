@@ -33,10 +33,13 @@ class _SurveyChartState extends State<SurveyChart> {
   List<Color> gradientColors2 = [Color(0xFFFF975B), Color(0xD7FF975B)]; // A 불안
   List<Color> gradientColors3 = [Color(0xFFEA6763), Color(0xD7EA6763)]; // S 스트레스
   double max = 30;
+  int numberPrintOnGraph = 7; // 7개
+  int touchedIndex = -1;
 
   @override
   void initState() {
     super.initState();
+    touchedIndex = -1;
     widget.list.sort((a, b) => DateTimeFormatter.parse(a['date'])
         .compareTo(DateTimeFormatter.parse(b['date'])));
 
@@ -89,6 +92,38 @@ class _SurveyChartState extends State<SurveyChart> {
 
   LineChartData mainData() {
     return LineChartData(
+      lineTouchData: LineTouchData(
+        handleBuiltInTouches: true,
+        touchCallback: (FlTouchEvent touchEvent, LineTouchResponse? touchResponse) {
+          if (touchResponse == null || touchResponse.lineBarSpots!.isEmpty) {
+            setState(() {
+              touchedIndex = -1;
+            });
+          } else {
+            final firstSpot = touchResponse.lineBarSpots!.first;
+            setState(() {
+              touchedIndex = firstSpot.spotIndex;
+            });
+          }
+        },
+        getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
+          return spotIndexes.map((spotIndex) {
+            return TouchedSpotIndicatorData(
+              FlLine(color: Colors.blue, strokeWidth: 4),
+              FlDotData(
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 8,
+                    color: Colors.white,
+                    strokeWidth: 5,
+                    strokeColor: Colors.blue,
+                  );
+                },
+              ),
+            );
+          }).toList();
+        },
+      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -125,7 +160,7 @@ class _SurveyChartState extends State<SurveyChart> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 1,
+            interval: 5,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 42,
           ),
@@ -136,21 +171,36 @@ class _SurveyChartState extends State<SurveyChart> {
         border: Border.all(color: Colors.black54.withOpacity(0.3), width: 1.0),
       ),
       minX: 0,
-      maxX: widget.list.length.toDouble() - 1,
+      maxX: numberPrintOnGraph - 1, // 원래 widget.list.length.toDouble() - 1
       minY: 0,
       maxY: widget.maxY,
       lineBarsData: (!widget.multiLine)
           ? [
               // DAST, AUDIT
-              GraphLineDatas(widget.list, gradientColors),
+              GraphLineDatas(DataProcessing(widget.list), gradientColors),
             ]
           : widget.list3 != null ? [
               // DASS
-              GraphLineDatas(widget.list1!, gradientColors1),
-              GraphLineDatas(widget.list2!, gradientColors2),
-              GraphLineDatas(widget.list3!, gradientColors3)
+              GraphLineDatas(DataProcessing(widget.list1!), gradientColors1),
+              GraphLineDatas(DataProcessing(widget.list2!), gradientColors2),
+              GraphLineDatas(DataProcessing(widget.list3!), gradientColors3)
             ] : [],
+
     );
+  }
+
+  /** 데이터가 7개 이상이라면 앞(과거)의 데이터를 자르고, 7개 이하라면 앞쪽에 빈 데이터 추가 */
+  List<Map<String, dynamic>> DataProcessing(List<Map<String, dynamic>> dataList) {
+    if (dataList.length > numberPrintOnGraph) {
+      int temp = dataList.length - numberPrintOnGraph;
+      dataList = dataList.sublist(temp, dataList.length);
+    } else {
+      final diff = numberPrintOnGraph - dataList.length;
+      for (var i = 0; i < diff; i++) {
+        dataList.insert(0, {"score": 0, "date": null});
+      }
+    }
+    return dataList;
   }
 
   LineChartBarData GraphLineDatas(

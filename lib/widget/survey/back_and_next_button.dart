@@ -1,3 +1,4 @@
+import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 
 class PreOrNextButton extends StatelessWidget {
@@ -19,7 +20,7 @@ class PreOrNextButton extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.07,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: Palette.appColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

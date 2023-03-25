@@ -47,7 +47,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     'Introduction',
     'Activity Area',
     'Contact Hours',
-    'Question Answer' // Q&A에 대해서 질문 준비해야함(중독자, 상담자)
+    // 'Question Answer' // Q&A에 대해서 질문 준비해야함(중독자, 상담자)
   ];
   List<TextEditingController> textEditingController = [
     TextEditingController(),
@@ -155,7 +155,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     child: Column(
                       children: [
                         Column(
-                          children: [0, 1, 2, 3]
+                          children: List.generate(title.length, (index) => index)
                               .map(
                                 (index) => IntrinsicHeight(
                                   child: CustomTextEditor(
@@ -169,6 +169,21 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                               .toList(),
                         ),
                         const SizedBox(height: 20),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                'Addiction self-diagnosis result',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    height: 1.4,
+                                    letterSpacing: 0.02,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            )),
+                        const SizedBox(height: 5),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 8),
@@ -181,7 +196,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             ),
                             padding: const EdgeInsets.all(8.0),
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.40,
+                            height: 360,
                             child: FutureBuilder<
                                 Map<String, List<Map<String, dynamic>>>>(
                               future: futureData,
@@ -196,16 +211,19 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                   Map<String, List<Map<String, dynamic>>> data =
                                       snapshot.data!;
                                   return ContainedTabBarView(
+                                    tabBarProperties: TabBarProperties(
+                                      indicatorColor: Colors.blue,
+                                    ),
                                     tabs: const [
-                                      Text('DASS',
+                                      Text('Psychological',
                                           style:
-                                              TextStyle(color: Colors.black)),
-                                      Text('DAST',
+                                              TextStyle(fontSize: 16, color: Colors.black)),
+                                      Text('Drug',
                                           style:
-                                              TextStyle(color: Colors.black)),
-                                      Text('AUDIT',
+                                              TextStyle(fontSize: 16, color: Colors.black)),
+                                      Text('Alcohol',
                                           style:
-                                              TextStyle(color: Colors.black)),
+                                              TextStyle(fontSize: 16, color: Colors.black)),
                                     ],
                                     views: [
                                       Survey_Chart(

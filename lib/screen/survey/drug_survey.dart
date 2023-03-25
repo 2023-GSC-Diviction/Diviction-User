@@ -55,7 +55,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
                   currentValue: ((currentIndex + 2) / (MaxValue + 2)) * 100,
                   displayText: '%',
                   size: 24, // 높이
-                  progressColor: Colors.blue,
+                  progressColor: Palette.appColor,
                   border: Border.all(width: 1.5, color: Colors.black12),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
