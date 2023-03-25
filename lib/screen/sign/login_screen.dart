@@ -1,8 +1,10 @@
 import 'package:diviction_user/provider/auth_provider.dart';
+import 'package:diviction_user/screen/sign/input_addict_screen.dart';
 import 'package:diviction_user/screen/sign/signup_screen.dart';
 import 'package:diviction_user/service/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/style.dart';
 import '../../widget/sign/custom_round_button.dart';
@@ -109,11 +111,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  toMain() {
-    Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
-        );
+  toMain() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getString('drug') == null) {
+      Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  const InputAddictScreen()) // 리버팟 적용된 HomeScreen 만들기
+          );
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
+          );
+    }
   }
 
   onPressedLoginButton() async {

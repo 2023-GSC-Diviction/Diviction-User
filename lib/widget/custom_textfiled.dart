@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../config/style.dart';
+
 class CustomTextEditor extends StatefulWidget {
   final String TitleContent;
   final TextEditingController textEditingController;
@@ -31,7 +33,7 @@ class _CustomTextEditorState extends State<CustomTextEditor> {
             child: Text(
               widget.TitleContent,
               style: const TextStyle(
-                fontSize: 17,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
@@ -39,6 +41,11 @@ class _CustomTextEditorState extends State<CustomTextEditor> {
           ),
           Expanded(
             child: TextField(
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
               maxLines: null,
               readOnly: widget.isreadOnly,
               controller: widget.textEditingController,
@@ -50,7 +57,7 @@ class _CustomTextEditorState extends State<CustomTextEditor> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true, // 이걸 true로 해야 색상을 넣어줄 수 있음
-                fillColor: Color.fromARGB(20, 0, 0, 0),
+                fillColor: Palette.appColor.withOpacity(0.2),
               ),
             ),
           ),
