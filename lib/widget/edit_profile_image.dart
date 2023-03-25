@@ -1,28 +1,28 @@
+
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ProfileImage extends StatefulWidget {
+class EditProfileImage extends StatefulWidget {
   final onProfileImagePressed;
-  final isChoosedPicture;
   final String? path;
   final int type;
   final double imageSize;
 
-  const ProfileImage({
+  const EditProfileImage({
     Key? key,
     required this.onProfileImagePressed,
-    required this.isChoosedPicture,
     required this.path,
     required this.type,
     required this.imageSize,
   }) : super(key: key);
 
   @override
-  State<ProfileImage> createState() => _ProfileImageState();
+  State<EditProfileImage> createState() => EditProfileImageState();
 }
 
-class _ProfileImageState extends State<ProfileImage> {
+class EditProfileImageState extends State<EditProfileImage> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -37,16 +37,12 @@ class _ProfileImageState extends State<ProfileImage> {
               shape: BoxShape.circle,
               image: DecorationImage(
                   image: widget.path != null
-                      ? const NetworkImage(
-                          // widget.path,
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
+                      ? FileImage(File(widget.path!))
                       : const AssetImage('/assets/icons/counselor.png')
                           as ImageProvider,
                   fit: BoxFit.cover),
             ),
           )),
-      // IconButton(
-
       widget.type == 0
           ? Positioned(
               // Positioned : 위치 정렬에 쓰임. 아래는 오른쪽 아래로 부터 0.01만큼 떨어지게 배치하라는 코드
