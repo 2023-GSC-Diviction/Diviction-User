@@ -43,6 +43,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   scroll_date_picker: ^3.6.1
   chat_bubbles: ^1.4.1
+  file_picker: ^5.2.6
 
   # 설문조사 UI의 상단에 진행상황을 알리기 위함
   flutter_animation_progress_bar: ^2.3.1

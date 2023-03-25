@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:diviction_user/service/image_picker_service.dart';
+import 'package:diviction_user/widget/edit_profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,6 +17,8 @@ import 'package:http/http.dart' as http;
 
 final authProvider = StateNotifierProvider.autoDispose<AuthState, LoadState>(
     (ref) => AuthState());
+
+final imageProvider = StateProvider<String?>((ref) => null);
 
 class SignUpProfileScreen extends ConsumerStatefulWidget {
   final String id;
@@ -36,7 +41,6 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   // 회원가입시 프로필 이미지의 path를 DB에 저장하고 프로필 탭에서 DB에 접근하여 사진 로딩하기.
   bool isChoosedPicture = false;
   String path = 'asset/image/DefaultProfileImage.png';
-  XFile? ImageFile;
 
   bool isGenderchoosed = false;
   String userGender = 'MALE';
@@ -50,12 +54,14 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
   void dispose() {
     // TODO: implement dispose
     ref.invalidate(authProvider);
+    ref.invalidate(imageProvider);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final isComplete = ref.watch(authProvider);
+    final userImage = ref.watch(imageProvider);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (isComplete) {
@@ -80,11 +86,12 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
         child: Scaffold(
           body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
+              child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
                     Column(
                       children: [
                         SizedBox(
@@ -95,11 +102,10 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
                         ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.025),
-                        ProfileImage(
+                        EditProfileImage(
                           onProfileImagePressed: onProfileImagePressed,
-                          isChoosedPicture: isChoosedPicture,
-                          path: path,
-                          type: 0,
+                          path: userImage,
+                          type: 1,
                           imageSize: MediaQuery.of(context).size.height * 0.12,
                         ),
                         SizedBox(
@@ -140,10 +146,11 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                     CustomRoundButton(
                         title: 'Profile completed!',
-                        onPressed: onPressedSignupButton),
-                  ])),
+                        onPressed: () => onPressedSignupButton(userImage)),
+                  ]))),
         ));
   }
 
@@ -173,18 +180,15 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
 
   onProfileImagePressed() async {
     print("onProfileImagePressed 실행완료");
-    final ImagePickerService pickerService = ImagePickerService();
-    final XFile? image = await pickerService.pickSingleImage();
+    final String? imagePath = await ImagePickerService().pickSingleImage();
 
-    if (image != null) {
+    if (imagePath != null) {
+      ref.read(imageProvider.notifier).state = imagePath;
       setState(() {
         isChoosedPicture = true;
-        path = image.path;
-        ImageFile = image;
       });
-      print(image.readAsBytes());
     }
-    print(image);
+    print(imagePath);
   }
 
   onGenderChoosedMale() {
@@ -203,7 +207,7 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     print(userGender);
   }
 
-  onPressedSignupButton() async {
+  onPressedSignupButton(String? image) async {
     print('프로필 완성 버튼 눌림');
     print('email : ${widget.id}');
     print('password : ${widget.password}');
@@ -225,8 +229,8 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
       // 'profile_img_url': path
     };
     print(user.toString());
-    if (ImageFile != null) {
-      ref.read(authProvider.notifier).SignupWithloadImage(ImageFile!, user);
+    if (image != null) {
+      ref.read(authProvider.notifier).SignupWithloadImage(image, user);
     }
   }
 }

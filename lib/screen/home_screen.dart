@@ -128,7 +128,7 @@ class _Header extends StatelessWidget {
       ),
       const Text('Survey',
           style: TextStyle(
-              fontSize: 23,
+              fontSize: 20,
               color: Colors.white,
               height: 1.4,
               letterSpacing: 0.02,
@@ -172,7 +172,7 @@ class _Bottom extends ConsumerWidget {
           children: [
             Text(title,
                 style: const TextStyle(
-                    fontSize: 23,
+                    fontSize: 20,
                     color: Colors.white,
                     height: 1.4,
                     letterSpacing: 0.02,
@@ -180,10 +180,9 @@ class _Bottom extends ConsumerWidget {
             InkWell(
                 child: const Text('see more  ',
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 13,
                         color: Colors.white,
                         height: 1.4,
-                        letterSpacing: 0.02,
                         fontWeight: FontWeight.w400)),
                 onTap: () {
                   if (isMatched) {
@@ -345,69 +344,74 @@ class CounselorCard extends StatelessWidget {
                           builder: (context) => CounselorProfileScreen(
                               counselor: counselor[index])),
                     ),
-                child: Container(
-                    width: size ?? MediaQuery.of(context).size.width * 0.6,
-                    height: size ?? MediaQuery.of(context).size.width * 0.6,
-                    alignment: Alignment.bottomCenter,
-                    child: Stack(children: [
-                      Container(
-                        width: size ?? MediaQuery.of(context).size.width * 0.6,
-                        height: size ?? MediaQuery.of(context).size.width * 0.6,
-                        margin: const EdgeInsets.only(right: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          image: DecorationImage(
-                              image: counselor[index].profileUrl != null
-                                  ? const NetworkImage(
-                                      // widget.path,
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
-                                  : const AssetImage(
-                                          '/assets/icons/counselor.png')
-                                      as ImageProvider,
-                              fit: BoxFit.cover),
+                child: Row(children: [
+                  Container(
+                      width: size ?? MediaQuery.of(context).size.width * 0.6,
+                      height: size ?? MediaQuery.of(context).size.width * 0.6,
+                      alignment: Alignment.bottomCenter,
+                      child: Stack(children: [
+                        Container(
+                          width:
+                              size ?? MediaQuery.of(context).size.width * 0.6,
+                          height:
+                              size ?? MediaQuery.of(context).size.width * 0.6,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                            image: DecorationImage(
+                                image: counselor[index].profileUrl != null
+                                    ? const NetworkImage(
+                                        // widget.path,
+                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
+                                    : const AssetImage(
+                                            '/assets/icons/counselor.png')
+                                        as ImageProvider,
+                                fit: BoxFit.cover),
+                          ),
                         ),
-                      ),
-                      Positioned(
-                          bottom: 0,
-                          left: MediaQuery.of(context).size.width * 0.03,
-                          right: MediaQuery.of(context).size.width * 0.03,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                              right: size == null ? 0 : 20,
-                              bottom: MediaQuery.of(context).size.width * 0.03,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 189, 193),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width * 0.54,
-                            height: MediaQuery.of(context).size.width * 0.2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  counselor[index].name,
-                                  style: const TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                      letterSpacing: 0.02,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  counselor[index].address,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      letterSpacing: 0.02,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                          ))
-                    ])));
+                        Positioned(
+                            bottom: 0,
+                            left: 15,
+                            right: 15,
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                right: size == null ? 0 : 20,
+                                bottom:
+                                    MediaQuery.of(context).size.width * 0.03,
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 189, 193),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              alignment: Alignment.center,
+                              height: MediaQuery.of(context).size.width * 0.2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    counselor[index].name,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        letterSpacing: 0.02,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    counselor[index].address,
+                                    style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.white,
+                                        letterSpacing: 0.02,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                            ))
+                      ])),
+                  SizedBox(width: 20)
+                ]));
           },
         ));
   }

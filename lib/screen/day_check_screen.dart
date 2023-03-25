@@ -17,7 +17,11 @@ class DayCheckScreen extends StatelessWidget {
         child: Stack(
           children: [
             const Center(
-              child: Text('Success?', style: TextStyles.titleTextStyle),
+              child: Text('Success?',
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                      decoration: TextDecoration.none)),
             ),
             Positioned(
                 bottom: 0,
@@ -47,7 +51,11 @@ class DayCheckScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
                 child: Text(data == true ? 'Yes 😁' : 'No 😂',
-                    style: TextStyles.mainTextStyle))));
+                    style: TextStyle(
+                        fontSize: 23,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        decoration: TextDecoration.none)))));
   }
 
   saveData(bool data) async {

@@ -1,14 +1,10 @@
 import 'package:diviction_user/config/style.dart';
-import 'package:diviction_user/model/network_result.dart';
-import 'package:diviction_user/provider/survey_provider.dart';
 import 'package:diviction_user/service/survey_service.dart';
-import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../model/counselor.dart';
 import '../../model/survey_result.dart';
 import '../../model/user.dart';
 import '../../service/auth_service.dart';
@@ -34,6 +30,13 @@ final surdata = [
 
 final editModeProvider = StateProvider((ref) => false);
 
+List<String> title = [
+  'Introduction',
+  'Activity Area',
+  'Contact Hours',
+  'Question Answer' // Q&A에 대해서 질문 준비해야함(중독자, 상담자)
+];
+
 @override
 class UserProfileScreen extends ConsumerStatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -53,7 +56,6 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     TextEditingController(),
     TextEditingController(),
     TextEditingController(),
-    TextEditingController(),
   ];
 
   late Map<String, List<Map<String, dynamic>>> datas;
@@ -63,6 +65,15 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   void initState() {
     super.initState();
     futureData = loadData();
+    getProfileData();
+  }
+
+  void getProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    textEditingController[0].text = prefs.getString('Introduction') ?? '';
+    textEditingController[1].text = prefs.getString('Activity Area') ?? '';
+    textEditingController[2].text = prefs.getString('Contact Hours') ?? '';
+    textEditingController[3].text = prefs.getString('Question Answer') ?? '';
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> loadData() async {
@@ -109,6 +120,9 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     // TODO: implement dispose
     super.dispose();
     ref.invalidate(editModeProvider);
+    textEditingController.forEach((element) {
+      element.dispose();
+    });
   }
 
   @override
@@ -135,8 +149,10 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     expandedHeight: MediaQuery.of(context).size.height * 0.37,
                     floating: false,
                     pinned: true,
-                    flexibleSpace:
-                        const FlexibleSpaceBar(background: _Header())),
+                    flexibleSpace: FlexibleSpaceBar(
+                        background: _Header(
+                      textEditingController: textEditingController,
+                    ))),
               ];
             },
             body: SingleChildScrollView(
@@ -316,10 +332,15 @@ final userProvider = FutureProvider<User>((ref) async {
   return await AuthService().getUser(email);
 });
 
+// final imageProvider2 = StateProvider<String?>((ref) => null);
+
 class _Header extends ConsumerStatefulWidget {
   const _Header({
     Key? key,
+    required this.textEditingController,
   }) : super(key: key);
+
+  final List<TextEditingController> textEditingController;
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -335,6 +356,8 @@ class _HeaderState extends ConsumerState<_Header> {
   Widget build(BuildContext context) {
     final editMode = ref.watch(editModeProvider);
     final user = ref.watch(userProvider);
+    // final image = ref.watch(imageProvider2);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -344,49 +367,60 @@ class _HeaderState extends ConsumerState<_Header> {
         Padding(
             padding: const EdgeInsets.only(top: 12, left: 35, right: 35),
             child: user.when(
-              data: (data) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ProfileImage(
-                              onProfileImagePressed: onProfileImagePressed,
-                              isChoosedPicture: isChoosedPicture,
-                              path: data.profile_img_url,
-                              type: editMode ? 0 : 1,
-                              imageSize:
-                                  MediaQuery.of(context).size.height * 0.15,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const [],
-                            ),
-                          ]),
-                    ),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.032),
-                    Text(
-                      data.name, // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
-                      style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                    Text(
-                      data.address, // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
-                      style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.white54,
-                        fontWeight: FontWeight.w500,
+              data: (data) {
+                // if (data.profile_img_url != null) {
+                //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                //     ref.read(imageProvider2.notifier).state =
+                //         data.profile_img_url!;
+                //   });
+                // }
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.15,
+                        child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ProfileImage(
+                                onProfileImagePressed: () {},
+                                isChoosedPicture: isChoosedPicture,
+                                path: data.profile_img_url,
+                                type: 1,
+                                // type: editMode ? 0 : 1,
+                                imageSize:
+                                    MediaQuery.of(context).size.height * 0.15,
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: const [],
+                              ),
+                            ]),
                       ),
-                    ),
-                  ]),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.032),
+                      Text(
+                        data.name, // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
+                        style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01),
+                      Text(
+                        data.address, // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
+                        style: const TextStyle(
+                          fontSize: 17,
+                          color: Colors.white54,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ]);
+              },
               loading: () => const CircularProgressIndicator(),
               error: (error, stackTrace) => const Center(
                 child: Text('fail to load'),
@@ -397,21 +431,25 @@ class _HeaderState extends ConsumerState<_Header> {
   }
 
   onProfileImagePressed() async {
-    print("onProfileImagePressed 실행완료");
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    // print("onProfileImagePressed 실행완료");
+    // final image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      setState(() {
-        this.isChoosedPicture = true;
-        this.path = image.path;
-      });
-    }
-    print(image);
+    // if (image != null) {
+    //   ref.read(imageProvider2.notifier).state = image.path;
+    //   setState(() {
+    //     this.isChoosedPicture = true;
+    //   });
+    // }
+    // print(image);
   }
 
-  onEditButtonpressed() {
+  onEditButtonpressed() async {
     // 수정후 Done 버튼이 눌렸을 때 API Call을 통해서 내용 업데이트 해줘야 함
     if (ref.read(editModeProvider.notifier).state) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      for (var i in [0, 1, 2, 3]) {
+        prefs.setString(title[i], widget.textEditingController[i].text);
+      }
       // API Call - 회원 프로필 업데이트
     }
     ref.read(editModeProvider.notifier).state = !ref.read(editModeProvider);

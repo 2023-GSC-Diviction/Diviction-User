@@ -89,7 +89,7 @@ class AuthService {
   // }
 
   Future SignupWithloadImage({
-    required XFile file,
+    required String path,
     required Map<String, String> user,
   }) async {
     try {
@@ -97,7 +97,7 @@ class AuthService {
       final request = http.MultipartRequest('POST', url);
       // 파일 업로드를 위한 http.MultipartRequest 생성
       http.MultipartFile multipartFile =
-          await http.MultipartFile.fromPath('multipartFile', file.path);
+          await http.MultipartFile.fromPath('multipartFile', path);
       request.headers.addAll(
           {"Content-Type": "multipart/form-data"}); // request에 header 추가
 
