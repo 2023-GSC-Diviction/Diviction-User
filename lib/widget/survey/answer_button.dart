@@ -43,15 +43,18 @@ class SurveyAnswerButton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(width: 1, color: Colors.black12),
                     ),
-                    child: Center(
-                      child: Text(
-                        type != 'psychological'
-                            ? answerText[currentIndex]![index]
-                            : answerText['All']![index],
-                        style: choosedAnswer[currentIndex] == index
-                            ? const TextStyle(fontSize: 20, color: Colors.white)
-                            : const TextStyle(
-                                fontSize: 20, color: Colors.black87),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Center(
+                        child: Text(
+                          type != 'psychological'
+                              ? answerText[currentIndex]![index]
+                              : answerText['All']![index],
+                          style: choosedAnswer[currentIndex] == index
+                              ? const TextStyle(fontSize: 20, color: Colors.white)
+                              : const TextStyle(
+                                  fontSize: 20, color: Colors.black87),
+                        ),
                       ),
                     ),
                   ),

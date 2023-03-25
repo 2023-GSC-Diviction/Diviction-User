@@ -59,7 +59,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
                 // 몇 잔에 대한 기준을 추가로 설명해야 하는 문항이 있음 -> 2, 3번 문항
                 if ([2, 3].contains(currentIndex))
                   Text(
-                      '1잔의 기준 : 맥주 12온스(355mL) / 와인 5온스(148mL) / 독주 1.5온스(44mL)'),
+                      'One drink equals: beer 12 oz. / wine 5 oz. / liquor(one shot) 1.5 oz.'),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 45),

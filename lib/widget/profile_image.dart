@@ -38,7 +38,6 @@ class _ProfileImageState extends State<ProfileImage> {
               image: DecorationImage(
                   image: widget.path != null
                       ? NetworkImage(
-                          // widget.path,
                           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
                       : const AssetImage('/assets/icons/counselor.png')
                           as ImageProvider,

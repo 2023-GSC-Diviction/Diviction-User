@@ -151,7 +151,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                         topRight: Radius.circular(30),
                       ),
                     ),
-                    padding: const EdgeInsets.only(top: 30),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Column(
                       children: [
                         Column(
