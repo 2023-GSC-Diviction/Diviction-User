@@ -16,20 +16,25 @@ class SurveyResult extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    int _progress = 0;
+    int _maxprogress = 0;
     // data[0] == data, data[1]은 type으로 'DASS', 'DAST', 'AUDIT'등이 옴
     final data = ModalRoute.of(context)?.settings.arguments as List;
     switch (data[1]) {
       case 'DAST':
         ref.read(surveyProvider.notifier).DASTdataSave(data[0]);
-        // ref.read(surveyProvider.notifier).DASTdataGet();
+        _progress = data[0]['question'];
+        _maxprogress = 10;
         break;
       case 'DASS':
         ref.read(surveyProvider.notifier).DASSdataSave(data[0]);
-        // ref.read(surveyProvider.notifier).DASSdataGet();
+        _progress = data[0]['melancholyScore'];
+        _maxprogress = 42;
         break;
       case 'AUDIT':
         ref.read(surveyProvider.notifier).AUDITdataSave(data[0]);
-        // ref.read(surveyProvider.notifier).AUDITdataGet();
+        _progress = data[0]['score'];
+        _maxprogress = 40;
         break;
     }
 
@@ -45,8 +50,6 @@ class SurveyResult extends ConsumerWidget {
     );
     double RoundDistance = 100;
 
-    int _progress = 30;
-    int _maxprogress = 40;
 
     List<Color> Linear_colors = const [
       Colors.blue,

@@ -242,10 +242,19 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                               TextStyle(fontSize: 16, color: Colors.black)),
                                     ],
                                     views: [
-                                      Survey_Chart(
-                                        data: data['DASS']!,
-                                        multiLine: true,
-                                        maxY: 42,
+                                      Column(
+                                        children: [
+                                          Survey_Chart(
+                                            data: data['DASS']!,
+                                            multiLine: true,
+                                            maxY: 42,
+                                          ),
+                                          Image.asset(
+                                            width: 360,
+                                            height: 50,
+                                            'assets/images/Legend.png',
+                                          ),
+                                        ],
                                       ),
                                       Survey_Chart(
                                         data: data['DAST']!,
