@@ -20,21 +20,19 @@ class SurveyButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               height: MediaQuery.of(context).size.height * 0.14,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Palette.appColor2.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Icon(
-                    Icons.medication_liquid,
-                    size: MediaQuery.of(context).size.height * 0.06,
-                    color: Palette.appColor,
-                  ),
+                  Icon(Icons.medication_liquid,
+                      size: MediaQuery.of(context).size.height * 0.06,
+                      color: Palette.appColor2),
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 13, color: Palette.mainTextColor))
+                          fontSize: 13, color: Palette.appColor2))
                 ],
               ),
             )));

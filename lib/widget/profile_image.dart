@@ -38,15 +38,12 @@ class _ProfileImageState extends State<ProfileImage> {
               image: DecorationImage(
                   image: widget.path != null
                       ? NetworkImage(
-                          widget.path!,
-                        )
-                      : const AssetImage('/assets/icons/counselor.png')
+                          'https://storage.cloud.google.com/diviction/user-profile/cf234752-9666-420b-afcc-b20e27e30d03')
+                      : const AssetImage('assets/icons/counselor.png')
                           as ImageProvider,
                   fit: BoxFit.cover),
             ),
           )),
-      // IconButton(
-
       widget.type == 0
           ? Positioned(
               // Positioned : 위치 정렬에 쓰임. 아래는 오른쪽 아래로 부터 0.01만큼 떨어지게 배치하라는 코드

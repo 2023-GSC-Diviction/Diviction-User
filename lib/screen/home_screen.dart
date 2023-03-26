@@ -100,7 +100,7 @@ class _Header extends StatelessWidget {
               text: 'Hello, ',
               style: const TextStyle(
                   fontSize: 20,
-                  color: Colors.white,
+                  color: Palette.appColor2,
                   letterSpacing: 0.02,
                   fontWeight: FontWeight.w400),
               children: <TextSpan>[
@@ -108,7 +108,7 @@ class _Header extends StatelessWidget {
                   text: '\n$name!',
                   style: const TextStyle(
                       fontSize: 30,
-                      color: Colors.white,
+                      color: Palette.appColor2,
                       height: 1.4,
                       letterSpacing: 0.02,
                       fontWeight: FontWeight.w700),
@@ -129,7 +129,7 @@ class _Header extends StatelessWidget {
       const Text('Survey',
           style: TextStyle(
               fontSize: 20,
-              color: Colors.white,
+              color: Palette.appColor2,
               height: 1.4,
               letterSpacing: 0.02,
               fontWeight: FontWeight.w600)),
@@ -173,7 +173,7 @@ class _Bottom extends ConsumerWidget {
             Text(title,
                 style: const TextStyle(
                     fontSize: 20,
-                    color: Colors.white,
+                    color: Palette.appColor2,
                     height: 1.4,
                     letterSpacing: 0.02,
                     fontWeight: FontWeight.w600)),
@@ -181,7 +181,7 @@ class _Bottom extends ConsumerWidget {
                 child: const Text('see more  ',
                     style: TextStyle(
                         fontSize: 13,
-                        color: Colors.white,
+                        color: Palette.appColor2,
                         height: 1.4,
                         fontWeight: FontWeight.w400)),
                 onTap: () {
@@ -217,7 +217,7 @@ class _Bottom extends ConsumerWidget {
                 }
               },
               loading: () => const Text('Loading...',
-                  style: TextStyle(color: Colors.white)),
+                  style: TextStyle(color: Palette.appColor2)),
               error: (error, stackTrace) =>
                   const Text('Error...', style: TextStyle(color: Colors.white)),
             )
@@ -238,9 +238,9 @@ class _Bottom extends ConsumerWidget {
                   }
                 },
                 loading: () => const Text('Loading...',
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Palette.appColor2)),
                 error: (error, stackTrace) => const Text('Error...',
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Palette.appColor2)),
               )
             ],
           );
@@ -256,7 +256,7 @@ class CheckListWidget extends ConsumerWidget {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white38,
+          color: Colors.black12,
           borderRadius: BorderRadius.circular(20),
         ),
         width: double.infinity,
@@ -272,7 +272,7 @@ class CheckListWidget extends ConsumerWidget {
                           'no checkList in today',
                           style: TextStyle(
                               fontSize: 18,
-                              color: Colors.white,
+                              color: Palette.appColor2,
                               height: 1.4,
                               fontWeight: FontWeight.w600),
                         ),
@@ -284,8 +284,8 @@ class CheckListWidget extends ConsumerWidget {
                           (e) => Row(
                             children: [
                               Checkbox(
-                                fillColor:
-                                    MaterialStateProperty.all(Palette.appColor),
+                                fillColor: MaterialStateProperty.all(
+                                    Palette.appColor2),
                                 value: false,
                                 onChanged: (value) {
                                   if (value!) {
@@ -299,7 +299,7 @@ class CheckListWidget extends ConsumerWidget {
                                 e.content,
                                 style: const TextStyle(
                                     fontSize: 18,
-                                    color: Colors.black87,
+                                    color: Palette.appColor2,
                                     height: 1.4,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -315,7 +315,7 @@ class CheckListWidget extends ConsumerWidget {
                         'fail to load checkList',
                         style: TextStyle(
                             fontSize: 18,
-                            color: Colors.black87,
+                            color: Palette.appColor2,
                             height: 1.4,
                             fontWeight: FontWeight.w600),
                       ),
@@ -356,15 +356,14 @@ class CounselorCard extends StatelessWidget {
                           height:
                               size ?? MediaQuery.of(context).size.width * 0.6,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Palette.appColor2,
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
                                 image: counselor[index].profileUrl != null
-                                    ? const NetworkImage(
-                                        // widget.path,
-                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeCrEganpCMO0qMEgtrYGYcyc9BLr6nQflaA&usqp=CAU')
+                                    ? NetworkImage(
+                                        'https://storage.cloud.google.com/diviction/user-profile/cf234752-9666-420b-afcc-b20e27e30d03')
                                     : const AssetImage(
-                                            '/assets/icons/counselor.png')
+                                            'assets/icons/counselor.png')
                                         as ImageProvider,
                                 fit: BoxFit.cover),
                           ),
@@ -381,7 +380,7 @@ class CounselorCard extends StatelessWidget {
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 5),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 189, 193),
+                                color: Palette.appColor.withOpacity(0.95),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               alignment: Alignment.center,
@@ -394,7 +393,7 @@ class CounselorCard extends StatelessWidget {
                                     counselor[index].name,
                                     style: const TextStyle(
                                         fontSize: 20,
-                                        color: Colors.white,
+                                        color: Palette.appColor2,
                                         letterSpacing: 0.02,
                                         fontWeight: FontWeight.w600),
                                   ),
@@ -402,7 +401,7 @@ class CounselorCard extends StatelessWidget {
                                     counselor[index].address,
                                     style: const TextStyle(
                                         fontSize: 13,
-                                        color: Colors.white,
+                                        color: Palette.appColor2,
                                         letterSpacing: 0.02,
                                         fontWeight: FontWeight.w400),
                                   ),

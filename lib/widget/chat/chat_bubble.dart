@@ -58,7 +58,7 @@ class ChatBubbles extends StatelessWidget {
                         BubbleSpecialOne(
                             text: message.content,
                             isSender: true,
-                            color: Palette.appColor,
+                            color: Colors.blue,
                             textStyle: TextStyles.blueBottonTextStyle),
                       ]))
             },
@@ -81,7 +81,7 @@ class ChatBubbles extends StatelessWidget {
                                 BubbleSpecialOne(
                                   text: message.content,
                                   isSender: false,
-                                  color: Palette.chatGrayColor,
+                                  color: Palette.appColor2.withOpacity(0.3),
                                   textStyle:
                                       TextStyles.chatNotMeBubbleTextStyle,
                                 ),

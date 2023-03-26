@@ -2,6 +2,7 @@ import 'package:diviction_user/screen/community/community_screen.dart';
 import 'package:diviction_user/screen/counselor/counselor_screen.dart';
 import 'package:diviction_user/screen/home_screen.dart';
 import 'package:diviction_user/screen/profile/user_profile_screen.dart';
+import 'package:diviction_user/screen/sign/input_addict_screen.dart';
 import 'package:diviction_user/service/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +34,7 @@ class BottomNavigationState extends ConsumerState<BottomNavigation> {
     final defaultScreen = [
       const HomeSceen(),
       CounselorScreen(),
-      const CommunityScreen(),
+      const InputAddictScreen(),
       const UserProfileScreen()
     ];
 

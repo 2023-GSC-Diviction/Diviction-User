@@ -65,7 +65,7 @@ class _CounselorScreenState extends ConsumerState<FindCounselorScreen>
                         child: Text('contact us!',
                             style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black,
+                                color: Palette.appColor2,
                                 fontWeight: FontWeight.w300)))
                   ])),
           // searchBar(),

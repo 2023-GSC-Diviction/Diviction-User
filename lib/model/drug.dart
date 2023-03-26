@@ -5,6 +5,6 @@ class Drug {
   Drug({required this.id, required this.drugName});
 
   factory Drug.fromJson(Map<String, dynamic> json) {
-    return Drug(id: json['id'], drugName: json['drugName']);
+    return Drug(id: json['id'], drugName: json['name']);
   }
 }

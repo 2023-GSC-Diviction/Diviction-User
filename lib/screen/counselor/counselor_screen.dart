@@ -37,7 +37,7 @@ class CounselorScreen extends ConsumerWidget {
               decoration: const BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Color.fromARGB(13, 0, 0, 0),
                     blurRadius: 10,
                     spreadRadius: 5,
                     offset: Offset(0, 0),
@@ -73,8 +73,8 @@ class CounselorScreen extends ConsumerWidget {
                     // ),
                     const Icon(
                       Icons.arrow_right_sharp,
-                      size: 50,
-                      color: Colors.white,
+                      size: 40,
+                      color: Palette.appColor2,
                     )
                   ] else ...[
                     const Text.rich(
@@ -88,8 +88,8 @@ class CounselorScreen extends ConsumerWidget {
                     ),
                     const Icon(
                       Icons.arrow_left_sharp,
-                      size: 50,
-                      color: Colors.white,
+                      size: 40,
+                      color: Palette.appColor2,
                     )
                   ],
                 ],
@@ -98,15 +98,15 @@ class CounselorScreen extends ConsumerWidget {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Palette.appColor,
+          backgroundColor: Color.fromARGB(255, 42, 42, 42),
           title: const Text('Divicion',
-              style: TextStyle(color: Colors.white, fontSize: 23)),
+              style: TextStyle(color: Palette.appColor, fontSize: 23)),
           centerTitle: true,
           elevation: 0,
         ),
         body: Stack(children: [
           Container(
-              color: Palette.appColor,
+              color: Color.fromARGB(255, 42, 42, 42),
               padding: const EdgeInsets.only(top: 30),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +150,7 @@ class CounselorScreen extends ConsumerWidget {
                     Expanded(
                         child: Container(
                       decoration: const BoxDecoration(
-                        color: Palette.appColor2,
+                        color: Palette.appColor,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(30),
                             topRight: Radius.circular(30)),

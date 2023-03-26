@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/style.dart';
+import '../bottom_nav.dart';
 
 final drugProvider = FutureProvider((ref) => DrugService().getDrugs());
 final selectedType = StateProvider((ref) => InputAddictType.alcohol);
@@ -61,7 +62,7 @@ class _InputAddictScreenState extends ConsumerState<InputAddictScreen> {
                         'alcohol',
                         style: TextStyles.answerTextStyle,
                       ),
-                      activeColor: Palette.appColor,
+                      activeColor: Palette.appColor2,
                       value: InputAddictType.alcohol,
                       groupValue: types,
                       onChanged: (value) => ref
@@ -72,7 +73,7 @@ class _InputAddictScreenState extends ConsumerState<InputAddictScreen> {
                         'drug',
                         style: TextStyles.answerTextStyle,
                       ),
-                      activeColor: Palette.appColor,
+                      activeColor: Palette.appColor2,
                       value: InputAddictType.drug,
                       groupValue: types,
                       onChanged: (value) => ref
@@ -160,7 +161,7 @@ class _InputAddictScreenState extends ConsumerState<InputAddictScreen> {
         alignment: Alignment.center,
         height: 55,
         decoration: BoxDecoration(
-          color: Palette.appColor,
+          color: Palette.appColor2,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Text(
@@ -171,7 +172,10 @@ class _InputAddictScreenState extends ConsumerState<InputAddictScreen> {
       ),
       onTap: () {
         DrugService().saveDrug(selectedDrug);
-        Navigator.pop(context, true);
+        Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    const BottomNavigation()) // 리버팟 적용된 HomeScreen 만들기
+            );
       },
     );
   }
