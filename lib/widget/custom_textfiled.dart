@@ -57,7 +57,7 @@ class _CustomTextEditorState extends State<CustomTextEditor> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true, // 이걸 true로 해야 색상을 넣어줄 수 있음
-                fillColor: Palette.appColor.withOpacity(0.2),
+                fillColor: Palette.appColor2.withOpacity(0.15),
               ),
             ),
           ),

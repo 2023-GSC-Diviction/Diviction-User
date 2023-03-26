@@ -68,8 +68,8 @@ class CounselorProfileScreenState
         },
         child: SafeArea(
             child: Scaffold(
-                backgroundColor: Palette.appColor,
-                floatingActionButton: isMatched
+                backgroundColor: Palette.appColor3,
+                floatingActionButton: !isMatched
                     ? FloatingActionButton.extended(
                         onPressed: () async {
                           final user = await GetUser.getUserId();
@@ -91,8 +91,7 @@ class CounselorProfileScreenState
                         },
                         label: const Text('request consult'),
                         icon: const Icon(Icons.add_reaction_sharp),
-                        backgroundColor: Palette.appColor,
-                      )
+                        backgroundColor: Palette.appColor3)
                     : null,
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
@@ -101,9 +100,13 @@ class CounselorProfileScreenState
                         (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
                         SliverAppBar(
-                            backgroundColor: Palette.appColor,
+                            backgroundColor: Color.fromARGB(255, 42, 42, 42),
                             leading: IconButton(
-                                icon: const Icon(Icons.arrow_back_ios_new),
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: Palette.appColor,
+                                  size: 20,
+                                ),
                                 onPressed: () => Navigator.pop(context)),
                             expandedHeight:
                                 MediaQuery.of(context).size.height * 0.47,
@@ -115,9 +118,9 @@ class CounselorProfileScreenState
                             title: Text(
                               'About ${widget.counselor.name}',
                               style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                fontSize: 23,
+                                fontWeight: FontWeight.w600,
+                                color: Palette.appColor,
+                                fontSize: 20,
                               ),
                             ),
                             flexibleSpace: FlexibleSpaceBar(
@@ -127,68 +130,70 @@ class CounselorProfileScreenState
                     },
                     body: SingleChildScrollView(
                         child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(top: 30),
-                      child: Column(
-                        children: [
-                          Column(
-                            children: profileData
-                                .map((e) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 20),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 10, left: 5),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Text(
-                                              e.title,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black,
-                                              ),
+                            height: MediaQuery.of(context).size.height,
+                            decoration: const BoxDecoration(
+                              color: Palette.appColor,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                            ),
+                            padding: const EdgeInsets.only(top: 30),
+                            child: Column(
+                              children: [
+                                Column(
+                                  children: profileData
+                                      .map((e) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 20),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 10, left: 5),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Text(
+                                                    e.title,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Palette.appColor2,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 8),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  decoration: BoxDecoration(
+                                                      color: Palette.appColor2
+                                                          .withOpacity(0.2),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  padding: EdgeInsets.all(20),
+                                                  child: Text(
+                                                    e.answer,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color:
+                                                            Palette.appColor2),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 8),
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            decoration: BoxDecoration(
-                                                color: Palette.appColor
-                                                    .withOpacity(0.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(20)),
-                                            padding: EdgeInsets.all(20),
-                                            child: Text(
-                                              e.answer,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ))
-                                .toList(),
-                          ),
-                        ],
-                      ),
-                    ))))));
+                                          ))
+                                      .toList(),
+                                ),
+                              ],
+                            )))))));
   }
 }
 
@@ -224,17 +229,18 @@ class _HeaderState extends ConsumerState<_Header> {
                   widget.counselor
                       .name, // 이 정보는 회원가입 프로필 작성시에 받아옴. -> DB set -> 여기서 get
                   style: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
+                    fontSize: 25,
+                    fontWeight: FontWeight.w800,
+                    color: Palette.appColor,
+                  ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Text(
                   widget.counselor
                       .address, // 이 정보는 회원가입 프로필 작성시에 받을 수 있게 추가해야 할 듯
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
-                    color: Colors.white54,
+                    color: Palette.appColor.withOpacity(0.5),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -305,7 +311,7 @@ class ReviewCountTexts extends StatelessWidget {
               style: const TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.w900,
-                  color: Colors.white),
+                  color: Palette.appColor),
               maxLines: 1,
             ),
             SizedBox(
@@ -313,7 +319,7 @@ class ReviewCountTexts extends StatelessWidget {
             ),
             Text(
               titleContent,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Color.fromARGB(165, 255, 255, 255),

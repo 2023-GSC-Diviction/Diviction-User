@@ -221,8 +221,8 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
     Map<String, String> user = {
       'email': widget.id,
       'password': widget.password,
-      'name': 'name', // textEditingControllerForName.text
-      'address': 'address', // textEditingControllerForAddress.text
+      'name': textEditingControllerForName.text,
+      'address': textEditingControllerForAddress.text,
       'birth': textEditingControllerForBirth.text,
       'gender': userGender,
       // 'multipartFile': multipartFile,

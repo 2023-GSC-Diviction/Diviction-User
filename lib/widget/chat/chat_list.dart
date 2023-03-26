@@ -63,44 +63,53 @@ class ChatList extends StatelessWidget {
               child: Container(
                   width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.only(top: 20),
-                  child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(children: [
-                          GestureDetector(
-                            onTap: () => onProfilePressed(
-                                context, chats!.elementAt(index).otherEmail),
-                            child: ProfileImage(
-                              onProfileImagePressed: () => onProfilePressed(
+                  child: Stack(children: [
+                    Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(children: [
+                            GestureDetector(
+                              onTap: () => onProfilePressed(
                                   context, chats!.elementAt(index).otherEmail),
-                              isChoosedPicture: false,
-                              path: chats![index].otherPhotoUrl,
-                              type: 1,
-                              imageSize: 50,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(chats![index].otherName,
-                                  style: TextStyles.chatHeading),
-                              const SizedBox(
-                                height: 5,
+                              child: ProfileImage(
+                                onProfileImagePressed: () => onProfilePressed(
+                                    context,
+                                    chats!.elementAt(index).otherEmail),
+                                isChoosedPicture: false,
+                                path: chats![index].otherPhotoUrl,
+                                type: 1,
+                                imageSize: 50,
                               ),
-                              Text(chats![index].lastMessage,
-                                  style: TextStyles.chatbodyText),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(chats![index].otherName,
+                                    style: TextStyles.chatHeading),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(chats![index].lastMessage,
+                                    style: TextStyles.chatbodyText),
+                              ],
+                            ),
+                          ]),
+                          // Text(dataTimeFormat(chats![index].lastTime),
+                          //     style: TextStyles.chatbodyText),
                         ]),
-                        Text(dataTimeFormat(chats![index].lastTime),
-                            style: TextStyles.chatbodyText),
-                      ])));
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Text(dataTimeFormat(chats![index].lastTime),
+                          style: TextStyles.chatTimeText),
+                    )
+                  ])));
         });
   }
 }

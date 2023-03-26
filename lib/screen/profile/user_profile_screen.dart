@@ -136,13 +136,13 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: Palette.appColor,
+          backgroundColor: Palette.appColor3,
           body: NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
-                    backgroundColor: Palette.appColor,
+                    backgroundColor: Palette.appColor3,
                     leading: null,
                     toolbarHeight: 0,
                     automaticallyImplyLeading: false,
@@ -171,29 +171,29 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     child: Column(
                       children: [
                         Column(
-                          children: List.generate(title.length, (index) => index)
-                              .map(
-                                (index) => IntrinsicHeight(
-                                  child: CustomTextEditor(
-                                    TitleContent: title[index],
-                                    textEditingController:
-                                        textEditingController[index],
-                                    isreadOnly: !editMode,
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                          children:
+                              List.generate(title.length, (index) => index)
+                                  .map(
+                                    (index) => IntrinsicHeight(
+                                      child: CustomTextEditor(
+                                        TitleContent: title[index],
+                                        textEditingController:
+                                            textEditingController[index],
+                                        isreadOnly: !editMode,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 'Addiction self-diagnosis result',
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     height: 1.4,
                                     letterSpacing: 0.02,
                                     fontWeight: FontWeight.w600),
@@ -232,14 +232,17 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                     ),
                                     tabs: const [
                                       Text('Psychological',
-                                          style:
-                                              TextStyle(fontSize: 16, color: Colors.black)),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black)),
                                       Text('Drug',
-                                          style:
-                                              TextStyle(fontSize: 16, color: Colors.black)),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black)),
                                       Text('Alcohol',
-                                          style:
-                                              TextStyle(fontSize: 16, color: Colors.black)),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black)),
                                     ],
                                     views: [
                                       Survey_Chart(
@@ -447,7 +450,7 @@ class _HeaderState extends ConsumerState<_Header> {
     // 수정후 Done 버튼이 눌렸을 때 API Call을 통해서 내용 업데이트 해줘야 함
     if (ref.read(editModeProvider.notifier).state) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      for (var i in [0, 1, 2, 3]) {
+      for (var i in [0, 1, 2]) {
         prefs.setString(title[i], widget.textEditingController[i].text);
       }
       // API Call - 회원 프로필 업데이트

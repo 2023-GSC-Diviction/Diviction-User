@@ -66,7 +66,7 @@ class ChatScreenState extends State<ChatScreen> {
         child: Scaffold(
             appBar: AppBar(
               toolbarHeight: MediaQuery.of(context).size.height * 0.12,
-              backgroundColor: Palette.appColor,
+              backgroundColor: Color.fromARGB(255, 42, 42, 42),
               title: GestureDetector(
                 onTap: () => onProfilePressed(context, widget.counselor),
                 child: Row(
@@ -92,12 +92,12 @@ class ChatScreenState extends State<ChatScreen> {
                               children: [
                                 Text(widget.counselor.name,
                                     style: const TextStyle(
-                                        color: Colors.white,
+                                        color: Palette.appColor,
                                         fontSize: 23,
                                         fontWeight: FontWeight.bold)),
                                 Text(widget.counselor.address,
                                     style: const TextStyle(
-                                        color: Colors.white,
+                                        color: Palette.appColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400)),
                               ],
@@ -108,7 +108,10 @@ class ChatScreenState extends State<ChatScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: const [
-                          Icon(Icons.arrow_right),
+                          Icon(
+                            Icons.arrow_right,
+                            color: Palette.appColor,
+                          ),
                           // Text('go to request',
                           //     style: TextStyle(
                           //         color: Colors.white,
@@ -121,13 +124,13 @@ class ChatScreenState extends State<ChatScreen> {
               centerTitle: true,
               elevation: 0,
             ),
-            backgroundColor: Palette.appColor,
+            backgroundColor: Color.fromARGB(255, 42, 42, 42),
             extendBodyBehindAppBar: false,
             body: Stack(
               children: [
                 Container(
                     decoration: const BoxDecoration(
-                      color: Palette.appColor2,
+                      color: Palette.appColor,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30)),
@@ -165,7 +168,7 @@ class ChatScreenState extends State<ChatScreen> {
         boxShadow: [
           BoxShadow(color: Color.fromARGB(18, 0, 0, 0), blurRadius: 10)
         ],
-        color: Color(0xffF4F4F5),
+        color: Palette.appColor,
       ),
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       child: Row(children: [
