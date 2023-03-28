@@ -119,6 +119,7 @@ class Palette {
   static const Color borderColor = Color.fromARGB(255, 203, 203, 209);
   static const Color bottomBoxBorderColor = Color.fromARGB(10, 0, 0, 0);
   static const Color appColor3 = Color.fromARGB(255, 42, 42, 42);
+  static const Color appColor4 = Color.fromRGBO(51, 51, 51, 1);
   // Color.fromARGB(255, 78, 206, 229)
 }
 

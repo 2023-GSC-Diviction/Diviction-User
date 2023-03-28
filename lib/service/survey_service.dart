@@ -18,16 +18,16 @@ class SurveyService {
   }
 
   SurveyService._internal() {
-    // getUserId();
+    getUserId();
   }
 
-  int userId = 1;
+  int userId = 6;
   late SharedPreferences prefs;
 
-  // getUserId() async {
-  //   prefs = await SharedPreferences.getInstance();
-  //   userId = prefs.getInt('id')!;
-  // }
+  getUserId() async {
+    prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('id')!;
+  }
 
   final String? _baseUrl = dotenv.env['BASE_URL'];
 

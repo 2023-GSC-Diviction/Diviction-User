@@ -18,22 +18,35 @@ class SurveyResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     int _progress = 0;
     int _maxprogress = 0;
+
+    String grade = '';
+    String content = '';
+    String result = '';
+
     // data[0] == data, data[1]은 type으로 'DASS', 'DAST', 'AUDIT'등이 옴
     final data = ModalRoute.of(context)?.settings.arguments as List;
     switch (data[1]) {
       case 'DAST':
         ref.read(surveyProvider.notifier).DASTdataSave(data[0]);
-        _progress = data[0]['question'];
+        _progress = data[0].toJson()['question'];
+        var response = getDASTExplane(_progress);
+        grade = response[0];
+        content = response[1];
+        result = response[2];
         _maxprogress = 10;
         break;
       case 'DASS':
         ref.read(surveyProvider.notifier).DASSdataSave(data[0]);
-        _progress = data[0]['melancholyScore'];
+        _progress = data[0].toJson()['melancholyScore'];
         _maxprogress = 42;
         break;
       case 'AUDIT':
         ref.read(surveyProvider.notifier).AUDITdataSave(data[0]);
-        _progress = data[0]['score'];
+        _progress = data[0].toJson()['score'];
+        var response = getAUDITExplane(_progress);
+        grade = response[0];
+        content = response[1];
+        result = response[2];
         _maxprogress = 40;
         break;
     }
@@ -49,7 +62,6 @@ class SurveyResult extends ConsumerWidget {
       zoom: 12,
     );
     double RoundDistance = 100;
-
 
     List<Color> Linear_colors = const [
       Colors.blue,
@@ -84,31 +96,34 @@ class SurveyResult extends ConsumerWidget {
                       height: MediaQuery.of(context).size.height * 0.25,
                       child: Stack(
                         children: [
-                          CircularSeekBar(
-                            width: double.infinity,
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            progress: _progress.toDouble(),
-                            maxProgress: _maxprogress.toDouble(),
-                            barWidth: 8,
-                            startAngle: 45,
-                            sweepAngle: 270,
-                            dashWidth: 5,
-                            dashGap: 1.5,
-                            strokeCap: StrokeCap.butt,
-                            trackColor: Colors.black12,
-                            progressGradientColors: Linear_colors,
-                            innerThumbRadius: 5,
-                            innerThumbStrokeWidth: 3,
-                            innerThumbColor: Colors.white,
-                            outerThumbRadius: 5,
-                            outerThumbStrokeWidth: 10,
-                            outerThumbColor: getColorForValue(
-                                _progress, _maxprogress, Linear_colors),
-                            animation: true,
+                          IgnorePointer(
+                            ignoring: true,
+                            child: CircularSeekBar(
+                              width: double.infinity,
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              progress: _progress.toDouble(),
+                              maxProgress: _maxprogress.toDouble(),
+                              barWidth: 8,
+                              startAngle: 45,
+                              sweepAngle: 270,
+                              dashWidth: 5,
+                              dashGap: 1.5,
+                              strokeCap: StrokeCap.butt,
+                              trackColor: Colors.black12,
+                              progressGradientColors: Linear_colors,
+                              innerThumbRadius: 5,
+                              innerThumbStrokeWidth: 3,
+                              innerThumbColor: Colors.white,
+                              outerThumbRadius: 5,
+                              outerThumbStrokeWidth: 10,
+                              outerThumbColor: getColorForValue(
+                                  _progress, _maxprogress, Linear_colors),
+                              animation: true,
+                            ),
                           ),
                           Center(
                             child: Text(
-                              '$_progress점',
+                              '$_progress / $_maxprogress',
                               maxLines: 1,
                               softWrap: false,
                               style: TextStyle(
@@ -122,25 +137,25 @@ class SurveyResult extends ConsumerWidget {
                     ),
                     _SizedBox(context, 0.03),
                     Text(
-                      "3단계. 유해",
+                      grade,
                       style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
                       ),
                     ),
                     _SizedBox(context, 0.03),
                     Text(
-                      "알코올 사용과 관련된 건강 문제의 위험이 증가하고 경미하거나 중간 정도의 알코올 사용 장애가 발생할 수 있습니다.",
+                      content,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 14,
                       ),
                     ),
                     _SizedBox(context, 0.03),
                     Text(
-                      "검사 결과 : 약물 및 치료 의뢰가 필요합니다.",
+                      result,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 20,
+                        fontSize: 16,
                       ),
                     ),
                     _SizedBox(context, 0.03),
@@ -175,6 +190,42 @@ class SurveyResult extends ConsumerWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * value,
     );
+  }
+
+  List<String> getDASTExplane(int score) {
+    if(score == 0) {
+      return ['I. No risk', 'No risk of related health problems', 'None'];
+    } else if(score < 2) {
+      return ['II – Risky', 'Risk of health problems related to drug use.', 'Offer brief education on the benefits of abstaining from drug use. Monitor at future visits.'];
+    } else if(score < 5) {
+      return [
+        'III – Harmful', 'Risk of health problems related to drug use and a possible mild or moderate substance use disorder',
+        'Brief intervention (offer options that include treatment)'
+      ];
+    } else {
+      return [
+        'IV – Severe', 'Risk of health problems related to drug use and a possible mild or moderate substance use disorder',
+        'Brief intervention (offer options that include treatment)'
+      ];
+    }
+  }
+
+  List<String> getAUDITExplane(int score) {
+    if(score < 5) {
+      return ['I. Low risk', 'Low risk of health problems related to alcohol use', 'Brief education'];
+    } else if(score < 15) {
+      return ['II – Risky', 'Increased risk of health problems related to alcohol use.', 'Brief intervention'];
+    } else if(score < 20) {
+      return [
+        'III – Harmful', 'Increased risk of health problems related to alcohol use and a possible mild or moderate alcohol use disorder.',
+        'Brief intervention (offer options that include medications and referral to treatment)'
+      ];
+    } else {
+      return [
+        'IV – Severe', 'Increased risk of health problems related to alcohol use and a possible moderate or severe alcohol use disorder.',
+        'Brief intervention (offer options that include medications and referral to treatment)'
+      ];
+    }
   }
 
   Color getColorForValue(int value, int maxValue, List<Color> colors) {

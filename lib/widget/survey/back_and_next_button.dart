@@ -20,7 +20,7 @@ class PreOrNextButton extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.07,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Palette.appColor,
+          backgroundColor: Palette.appColor4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

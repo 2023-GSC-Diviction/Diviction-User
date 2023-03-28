@@ -1,3 +1,4 @@
+import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 
 // 0~12번 질문의 예상답변(중복선택x), 라디오 버튼
@@ -38,7 +39,7 @@ class SurveyAnswerButton extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.1,
                     decoration: BoxDecoration(
                       color: choosedAnswer[currentIndex] == index
-                          ? Colors.blue
+                          ? Palette.appColor4
                           : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(width: 1, color: Colors.black12),

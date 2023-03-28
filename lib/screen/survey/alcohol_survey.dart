@@ -43,7 +43,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
                   currentValue: (currentIndex / MaxValue) * 100,
                   displayText: '%',
                   size: 24, // 높이
-                  progressColor: Palette.appColor,
+                  progressColor: Palette.appColor4,
                   border: Border.all(width: 1.5, color: Colors.black12),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -131,7 +131,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
           q1: AnswerResult[AnswerResult.length - 1],
           score: sum,
         );
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => SurveyResult(),
           settings: RouteSettings(arguments: [surveyAUDIT, 'AUDIT']),
         ));

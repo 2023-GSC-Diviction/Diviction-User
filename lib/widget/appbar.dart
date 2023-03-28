@@ -1,3 +1,4 @@
+import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/widget/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,7 +24,7 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       shadowColor: const Color.fromRGBO(255, 255, 255, 0.5),
-      backgroundColor: Colors.transparent,
+      backgroundColor: Palette.appColor4,
       leading: hasBack
           ? IconButton(
               icon: const Icon(

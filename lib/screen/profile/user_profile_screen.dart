@@ -3,6 +3,7 @@ import 'package:diviction_user/service/survey_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/survey_result.dart';
@@ -12,21 +13,6 @@ import '../../widget/custom_textfiled.dart';
 import '../../widget/profile_image.dart';
 import '../../widget/survey/survey_chart.dart';
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
-
-final surdata = [
-  SurveyData(
-    date: '2021-08-01',
-    score: 30,
-  ),
-  SurveyData(
-    date: '2021-08-02',
-    score: 13,
-  ),
-  SurveyData(
-    date: '2021-08-06',
-    score: 22,
-  ),
-];
 
 final editModeProvider = StateProvider((ref) => false);
 
@@ -212,7 +198,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             ),
                             padding: const EdgeInsets.all(8.0),
                             width: MediaQuery.of(context).size.width,
-                            height: 360,
+                            height: 400,
                             child: FutureBuilder<
                                 Map<String, List<Map<String, dynamic>>>>(
                               future: futureData,
@@ -265,7 +251,7 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                         maxY: 10,
                                       ),
                                       Survey_Chart(
-                                        data: data['DAST']!,
+                                        data: data['AUDIT']!,
                                         multiLine: false,
                                         maxY: 40,
                                       ), // AUDIT
@@ -315,7 +301,7 @@ class Survey_Chart extends StatefulWidget {
 class _Survey_ChartState extends State<Survey_Chart> {
   @override
   Widget build(BuildContext context) {
-    // print('widget.data : ${widget.data.toString()}');
+    print('widget.data : ${widget.data.toString()}');
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -324,12 +310,17 @@ class _Survey_ChartState extends State<Survey_Chart> {
           // dividingLine,
           Padding(
             padding: const EdgeInsets.only(left: 3),
-            child: (widget.data != null && widget.data != [])
+            child: (!widget.data.isEmpty)
                 ? SurveyChart(
                     list: widget.data,
                     maxY: widget.maxY == null ? 1 : widget.maxY,
                     multiLine: widget.multiLine)
-                : Center(child: CircularProgressIndicator()),
+                : Center(
+                    child: Text(
+                      "No Data",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
           ),
         ],
       ),
