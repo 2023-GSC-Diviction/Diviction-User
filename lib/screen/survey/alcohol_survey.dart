@@ -35,7 +35,7 @@ class _AlcoholSurveyState extends State<AlcoholSurvey> {
           hasBack: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 32),
           child: SingleChildScrollView(
             child: Column(
               children: [

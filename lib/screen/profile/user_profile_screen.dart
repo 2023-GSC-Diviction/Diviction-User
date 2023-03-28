@@ -232,6 +232,8 @@ class UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                     ],
                                     views: [
                                       Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Survey_Chart(
                                             data: data['DASS']!,

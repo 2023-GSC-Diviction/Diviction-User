@@ -1,9 +1,11 @@
 import 'package:circular_seek_bar/circular_seek_bar.dart';
+import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/provider/survey_provider.dart';
 import 'package:diviction_user/widget/googleMap/google_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:diviction_user/widget/appbar.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -94,46 +96,80 @@ class SurveyResult extends ConsumerWidget {
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.25,
-                      child: Stack(
-                        children: [
-                          IgnorePointer(
-                            ignoring: true,
-                            child: CircularSeekBar(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              progress: _progress.toDouble(),
-                              maxProgress: _maxprogress.toDouble(),
-                              barWidth: 8,
-                              startAngle: 45,
-                              sweepAngle: 270,
-                              dashWidth: 5,
-                              dashGap: 1.5,
-                              strokeCap: StrokeCap.butt,
-                              trackColor: Colors.black12,
-                              progressGradientColors: Linear_colors,
-                              innerThumbRadius: 5,
-                              innerThumbStrokeWidth: 3,
-                              innerThumbColor: Colors.white,
-                              outerThumbRadius: 5,
-                              outerThumbStrokeWidth: 10,
-                              outerThumbColor: getColorForValue(
-                                  _progress, _maxprogress, Linear_colors),
-                              animation: true,
+                      child: data[1] != 'DASS'
+                          ? Stack(
+                              children: [
+                                IgnorePointer(
+                                  ignoring: true,
+                                  child: CircularSeekBar(
+                                    width: double.infinity,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    progress: _progress.toDouble(),
+                                    maxProgress: _maxprogress.toDouble(),
+                                    barWidth: 8,
+                                    startAngle: 45,
+                                    sweepAngle: 270,
+                                    dashWidth: 5,
+                                    dashGap: 1.5,
+                                    strokeCap: StrokeCap.butt,
+                                    trackColor: Colors.black12,
+                                    progressGradientColors: Linear_colors,
+                                    innerThumbRadius: 5,
+                                    innerThumbStrokeWidth: 3,
+                                    innerThumbColor: Colors.white,
+                                    outerThumbRadius: 5,
+                                    outerThumbStrokeWidth: 10,
+                                    outerThumbColor: getColorForValue(
+                                        _progress, _maxprogress, Linear_colors),
+                                    animation: true,
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    '$_progress / $_maxprogress',
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                Image.asset(
+                                  width: 360,
+                                  height: 50,
+                                  'assets/images/Legend.png',
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                _Bar(
+                                    currentValue: data[0]
+                                        .toJson()['melancholyScore']
+                                        .toDouble(),
+                                    color: Color(0xFF177AD1),
+                                    typeText: 'Depress'),
+                                SizedBox(height: 10),
+                                _Bar(
+                                    currentValue: data[0]
+                                        .toJson()['unrestScore']
+                                        .toDouble(),
+                                    color: Color(0xFFFF975B),
+                                    typeText: 'Anxious'),
+                                SizedBox(height: 10),
+                                _Bar(
+                                    currentValue: data[0]
+                                        .toJson()['stressScore']
+                                        .toDouble(),
+                                    color: Color(0xFFEA6763),
+                                    typeText: 'Stress'),
+                              ],
                             ),
-                          ),
-                          Center(
-                            child: Text(
-                              '$_progress / $_maxprogress',
-                              maxLines: 1,
-                              softWrap: false,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 30,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                     _SizedBox(context, 0.03),
                     Text(
@@ -193,36 +229,79 @@ class SurveyResult extends ConsumerWidget {
   }
 
   List<String> getDASTExplane(int score) {
-    if(score == 0) {
+    if (score == 0) {
       return ['I. No risk', 'No risk of related health problems', 'None'];
-    } else if(score < 2) {
-      return ['II – Risky', 'Risk of health problems related to drug use.', 'Offer brief education on the benefits of abstaining from drug use. Monitor at future visits.'];
-    } else if(score < 5) {
+    } else if (score < 2) {
       return [
-        'III – Harmful', 'Risk of health problems related to drug use and a possible mild or moderate substance use disorder',
+        'II – Risky',
+        'Risk of health problems related to drug use.',
+        'Offer brief education on the benefits of abstaining from drug use. Monitor at future visits.'
+      ];
+    } else if (score < 5) {
+      return [
+        'III – Harmful',
+        'Risk of health problems related to drug use and a possible mild or moderate substance use disorder',
         'Brief intervention (offer options that include treatment)'
       ];
     } else {
       return [
-        'IV – Severe', 'Risk of health problems related to drug use and a possible mild or moderate substance use disorder',
+        'IV – Severe',
+        'Risk of health problems related to drug use and a possible mild or moderate substance use disorder',
         'Brief intervention (offer options that include treatment)'
       ];
     }
   }
 
   List<String> getAUDITExplane(int score) {
-    if(score < 5) {
-      return ['I. Low risk', 'Low risk of health problems related to alcohol use', 'Brief education'];
-    } else if(score < 15) {
-      return ['II – Risky', 'Increased risk of health problems related to alcohol use.', 'Brief intervention'];
-    } else if(score < 20) {
+    if (score < 5) {
       return [
-        'III – Harmful', 'Increased risk of health problems related to alcohol use and a possible mild or moderate alcohol use disorder.',
+        'I. Low risk',
+        'Low risk of health problems related to alcohol use',
+        'Brief education'
+      ];
+    } else if (score < 15) {
+      return [
+        'II – Risky',
+        'Increased risk of health problems related to alcohol use.',
+        'Brief intervention'
+      ];
+    } else if (score < 20) {
+      return [
+        'III – Harmful',
+        'Increased risk of health problems related to alcohol use and a possible mild or moderate alcohol use disorder.',
         'Brief intervention (offer options that include medications and referral to treatment)'
       ];
     } else {
       return [
-        'IV – Severe', 'Increased risk of health problems related to alcohol use and a possible moderate or severe alcohol use disorder.',
+        'IV – Severe',
+        'Increased risk of health problems related to alcohol use and a possible moderate or severe alcohol use disorder.',
+        'Brief intervention (offer options that include medications and referral to treatment)'
+      ];
+    }
+  }
+  List<String> getDASSExplane(int score) {
+    if (score < 5) {
+      return [
+        'I. Low risk',
+        'Low risk of health problems related to alcohol use',
+        'Brief education'
+      ];
+    } else if (score < 15) {
+      return [
+        'II – Risky',
+        'Increased risk of health problems related to alcohol use.',
+        'Brief intervention'
+      ];
+    } else if (score < 20) {
+      return [
+        'III – Harmful',
+        'Increased risk of health problems related to alcohol use and a possible mild or moderate alcohol use disorder.',
+        'Brief intervention (offer options that include medications and referral to treatment)'
+      ];
+    } else {
+      return [
+        'IV – Severe',
+        'Increased risk of health problems related to alcohol use and a possible moderate or severe alcohol use disorder.',
         'Brief intervention (offer options that include medications and referral to treatment)'
       ];
     }
@@ -259,6 +338,42 @@ class SurveyResult extends ConsumerWidget {
   //     ));
   //   });
   // }
+}
+
+class _Bar extends StatelessWidget {
+  final currentValue;
+  final typeText;
+  final color;
+  const _Bar({
+    Key? key,
+    required this.currentValue,
+    required this.color,
+    required this.typeText,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        FAProgressBar(
+          currentValue: currentValue,
+          maxValue: 42.0,
+          displayText: '',
+          size: 35, // 높이
+          progressColor: color,
+          border: Border.all(width: 1.5, color: Colors.black12),
+        ),
+        Positioned(
+            left: 10,
+            top: 9,
+            child: Text(
+              typeText,
+              style: TextStyle(color: Colors.white),
+            )),
+        Positioned(right: 10, top: 9, child: Text('42')),
+      ],
+    );
+  }
 }
 
 /*
