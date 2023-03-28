@@ -1,14 +1,11 @@
 import 'package:diviction_user/model/counselor.dart';
 import 'package:diviction_user/screen/chat/chat_screen.dart';
-import 'package:diviction_user/screen/counselor/counselor_screen.dart';
 import 'package:diviction_user/screen/profile/counselor_profile_screen.dart';
-import 'package:diviction_user/screen/profile/user_profile_screen.dart';
 import 'package:diviction_user/service/chat_service.dart';
 import 'package:diviction_user/widget/profile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config/style.dart';
-import '../model/chat.dart';
 
 class CounselorList extends StatelessWidget {
   const CounselorList({this.counselor, super.key});
@@ -120,7 +117,7 @@ class CounselorList extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         height: 30,
                         decoration: BoxDecoration(
-                          color: Palette.appColor,
+                          color: Palette.appColor3,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Center(

@@ -47,7 +47,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
           hasBack: true,
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 32),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -76,7 +76,7 @@ class _DrugSurveyState extends State<DrugSurvey> {
                   ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 45),
+                  padding: const EdgeInsets.symmetric(horizontal: 35),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

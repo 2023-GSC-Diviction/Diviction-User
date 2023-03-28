@@ -176,7 +176,7 @@ class ChatService {
             chatRoomId: chatroom.chatRoomId,
             otherEmail: chatroom.counselor.email,
             otherName: chatroom.counselor.name,
-            otherPhotoUrl: chatroom.counselor.photoUrl ?? '1',
+            otherPhotoUrl: chatroom.counselor.photoUrl!,
             lastMessage: message.content,
             lastTime: message.createdAt));
     saveUserChatlist(
@@ -185,7 +185,7 @@ class ChatService {
             chatRoomId: chatroom.chatRoomId,
             otherEmail: chatroom.user.email,
             otherName: chatroom.user.name,
-            otherPhotoUrl: chatroom.user.photoUrl ?? '1',
+            otherPhotoUrl: chatroom.user.photoUrl!,
             lastMessage: message.content,
             lastTime: message.createdAt));
 

@@ -38,7 +38,8 @@ class _ProfileImageState extends State<ProfileImage> {
               image: DecorationImage(
                   image: widget.path != null
                       ? NetworkImage(
-                          'https://storage.cloud.google.com/diviction/user-profile/cf234752-9666-420b-afcc-b20e27e30d03')
+                          widget.path!,
+                        )
                       : const AssetImage('assets/icons/counselor.png')
                           as ImageProvider,
                   fit: BoxFit.cover),

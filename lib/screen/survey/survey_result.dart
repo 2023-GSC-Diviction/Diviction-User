@@ -2,12 +2,16 @@ import 'package:circular_seek_bar/circular_seek_bar.dart';
 import 'package:diviction_user/config/style.dart';
 import 'package:diviction_user/model/network_result.dart';
 import 'package:diviction_user/provider/survey_provider.dart';
+import 'package:diviction_user/screen/bottom_nav.dart';
+import 'package:diviction_user/screen/home_screen.dart';
 import 'package:diviction_user/widget/googleMap/google_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:diviction_user/widget/appbar.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../widget/survey/back_and_next_button.dart';
 
 final surveyProvider =
     StateNotifierProvider.autoDispose<SurveyState, SaveState>(
@@ -83,7 +87,7 @@ class SurveyResult extends ConsumerWidget {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
             child: Card(
               elevation: 8,
               shape: RoundedRectangleBorder(
@@ -195,6 +199,35 @@ class SurveyResult extends ConsumerWidget {
                       ),
                     ),
                     _SizedBox(context, 0.03),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Palette.appColor4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BottomNavigation(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Ok',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                     /* test를 위해 주석처리함
                     Text(
                       "[내 위치 근처의 치료센터]",
@@ -279,6 +312,7 @@ class SurveyResult extends ConsumerWidget {
       ];
     }
   }
+
   List<String> getDASSExplane(int score) {
     if (score < 5) {
       return [

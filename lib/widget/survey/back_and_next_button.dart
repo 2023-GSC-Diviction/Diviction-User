@@ -16,7 +16,7 @@ class PreOrNextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.3,
+      width: MediaQuery.of(context).size.width * 0.35,
       height: MediaQuery.of(context).size.height * 0.07,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -30,21 +30,21 @@ class PreOrNextButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: content == 'Back'
               ? [
-            Icon(icondata),
-            SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-            Text(
-              content,
-              style: const TextStyle(fontSize: 20),
-            ),
-          ]
+                  Icon(icondata),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                  Text(
+                    content,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ]
               : [
-            Text(
-              content,
-              style: const TextStyle(fontSize: 20),
-            ),
-            SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-            Icon(icondata),
-          ],
+                  Text(
+                    content,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                  Icon(icondata, size: 20),
+                ],
         ),
       ),
     );

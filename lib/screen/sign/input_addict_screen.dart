@@ -124,7 +124,7 @@ class _InputAddictScreenState extends ConsumerState<InputAddictScreen> {
                       drugs[index].drugName,
                       style: TextStyles.answerTextStyle,
                     ),
-                    activeColor: Palette.appColor,
+                    activeColor: Palette.appColor2,
                     value: drugs[index],
                     groupValue: selectedDrug,
                     onChanged: (value) => setState(() {

@@ -2,7 +2,8 @@ import 'package:diviction_user/config/style.dart';
 import 'package:flutter/material.dart';
 
 Future<bool> backDialog(BuildContext context) async {
-  String text = 'Are you sure you want to cancel\nthe current task and go back?\n';
+  String text =
+      'Are you sure you want to cancel\nthe current task and go back?\n';
 
   return await showDialog(
       context: context,
@@ -60,7 +61,7 @@ Future<bool> backDialog(BuildContext context) async {
                           alignment: Alignment.center,
                           height: 55,
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: Palette.appColor4,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Text(

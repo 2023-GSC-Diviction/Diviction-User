@@ -9,7 +9,6 @@ import 'package:diviction_user/service/counselor_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../config/style.dart';
 import '../service/match_service.dart';
 import '../widget/appbar.dart';
@@ -72,7 +71,8 @@ class _HomeSceenState extends ConsumerState<HomeSceen> {
             child: SingleChildScrollView(
               child: Container(
                   width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -360,8 +360,7 @@ class CounselorCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
                                 image: counselor[index].profileUrl != null
-                                    ? NetworkImage(
-                                        'https://storage.cloud.google.com/diviction/user-profile/cf234752-9666-420b-afcc-b20e27e30d03')
+                                    ? NetworkImage(counselor[index].profileUrl!)
                                     : const AssetImage(
                                             'assets/icons/counselor.png')
                                         as ImageProvider,

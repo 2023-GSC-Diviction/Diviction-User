@@ -30,7 +30,7 @@ class MyAppbar extends StatelessWidget with PreferredSizeWidget {
               icon: const Icon(
                 Icons.arrow_back_ios,
                 size: 20,
-                color: Colors.black45,
+                color: Palette.appColor,
               ),
               onPressed: () => hasDialog != null && hasDialog == false
                   ? Navigator.pop(context)
