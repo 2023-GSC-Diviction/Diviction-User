@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../service/image_picker_service.dart';
 import '../../widget/profile_image.dart';
 import '../profile/user_profile_screen.dart';
 
@@ -270,9 +271,8 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   onSendImagePressed() async {
-    final picker = ImagePicker();
     try {
-      final image = await picker.pickImage(source: ImageSource.gallery);
+      final image = await ImagePickerService().pickSingleImage();
       if (image != null) {
         setState(() {
           isChoosedPicture = true;

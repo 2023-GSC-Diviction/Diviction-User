@@ -180,15 +180,14 @@ class SignUpProfileScreenState extends ConsumerState<SignUpProfileScreen> {
 
   onProfileImagePressed() async {
     print("onProfileImagePressed 실행완료");
-    final String? imagePath = await ImagePickerService().pickSingleImage();
+    final File? image = await ImagePickerService().pickSingleImage();
 
-    if (imagePath != null) {
-      ref.read(imageProvider.notifier).state = imagePath;
+    if (image != null) {
+      ref.read(imageProvider.notifier).state = image.path;
       setState(() {
         isChoosedPicture = true;
       });
     }
-    print(imagePath);
   }
 
   onGenderChoosedMale() {

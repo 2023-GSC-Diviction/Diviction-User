@@ -1,25 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../service/image_picker_service.dart';
 
-class ImageState extends StateNotifier<List<XFile>> {
-  ImageState() : super(<XFile>[]);
+class ImageState extends StateNotifier<List<File>> {
+  ImageState() : super([]);
   final ImagePickerService picker = ImagePickerService();
 
   @override
-  set state(List<XFile> value) {
+  set state(List<File> value) {
     super.state = value;
   }
 
-  delImage(XFile image) {
+  delImage(File image) {
     var list = [...super.state];
     list.remove(image);
     state = list;
   }
 
-  void addImage(List<XFile> value) {
+  void addImage(List<File> value) {
     var list = [...super.state];
     if (list.isEmpty) {
       state = value;

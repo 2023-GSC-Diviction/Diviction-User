@@ -163,7 +163,12 @@ class ChatService {
     }
   }
 
-  Future sendImage(String chatRoomId, XFile file, Message message) async {
+  Future sendImage(String chatRoomId, File file, Message message) async {
+    final url = await FirebaseStorageService()
+        .uploadImage('$chatRoomId/${file.path}', file);
+    message.content = 'image@$url';
+    sendMessage(chatRoomId, message);
+
     sendMessage(chatRoomId, message);
     FirebaseStorageService()
         .uploadImage('$chatRoomId/${file.path}', File(file.path));

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:diviction_user/provider/image_pick_provider.dart';
 import 'package:diviction_user/widget/appbar.dart';
-import 'package:diviction_user/widget/profile_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -127,7 +126,7 @@ class NewPostScreenState extends State<NewPostScreen> {
 }
 
 final imagePickerProvider =
-    StateNotifierProvider<ImageState, List<XFile>>((ref) {
+    StateNotifierProvider<ImageState, List<File>>((ref) {
   return ImageState();
 });
 
@@ -138,7 +137,7 @@ class ImageWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final images = ref.watch(imagePickerProvider);
 
-    Widget imageBox(XFile img) {
+    Widget imageBox(File img) {
       double imgBoxSize = ((MediaQuery.of(context).size.width - 32) / 5) - 4;
 
       return GestureDetector(
